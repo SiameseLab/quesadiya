@@ -1,5 +1,5 @@
-Data Annotation Project Management Tool for Siamese Models
-----------------------------------------------------------
+Data Annotation Project Management Tool
+---------------------------------------
 
 Quesdadiya is a data annotation platform where users can easily manage
 data annotation projects to create data sets for developing Siamese models.
