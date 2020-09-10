@@ -1,0 +1,3 @@
+django super user 
+acc     : quesadiya 
+Pass    : quesadiyaisgood

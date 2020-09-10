@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block link %}
+
+<link rel="stylesheet" href='/static/styles/css/signin.css'/>{% endblock %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+{% comment %} <form method="post">
+  <!-- CSRF Attack -->
+  {% csrf_token %}
+  <!--  -->
+  {{ form.as_p }}
+  <button type="submit">Login To me</button>
+</form>
+{% load bootstrap4 %} {% endcomment %}
+
+{# Display a form #}
+<div class="body text-center">
+  <form class="form-signin" method="post">
+      {% csrf_token %}
+   
+        <h1 class="h3 mb-3 font-weight-normal">Quesadiya</h1>
+        <label for="username" class="sr-only">User Name</label>
+        <input type="text" name="username" id="id_username" class="form-control" placeholder="User Name" required autofocus>
+        <label for="id_password" class="sr-only">Password</label>
+        <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required>
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  </form>
+</div>
+{% endblock %}
