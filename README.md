@@ -11,7 +11,7 @@ that allows the data annotation project organizer to manage multiple annotators.
 1. `cd quesadiya`
 1. open your python environment
 1. run `python setup.py develop`
-1. check installation by running `quesadiya`
+1. check installation by running `quesadiya` on your terminal
 
 # Commands
 
