@@ -17,12 +17,12 @@ def cli():
 
 @cli.command()
 @click.argument(
-    "name",
+    "project_name",
     metavar="PROJECT"
 )
-def create(name):
+def create(project_name):
     """create annotation project."""
-    quesadiya.commands.create.operator(project_name=name)
+    quesadiya.commands.create.operator(project_name=project_name)
 
 
 @cli.command()
@@ -60,7 +60,7 @@ def modify(project_name):
     "project_name",
     metavar="PROJECT"
 )
-def delete(name):
+def delete(project_name):
     """delete project indicated by project name."""
     quesadiya.commands.delete.operator(project_name=project_name)
 
@@ -70,6 +70,6 @@ def delete(name):
     "project_name",
     metavar="PROJECT"
 )
-def export(name):
+def export(project_name):
     """export data associated with project indicated by project name."""
     quesadiya.commands.export.operator(project_name=project_name)
