@@ -57,7 +57,7 @@ spec.loader.exec_module(queso)
 db_uri = 'sqlite:///' + os.path.join(projects_dir, "admin.db")
 engine = create_engine(db_uri, echo=True, encoding="utf-8")
 # queso.Base creates tables inside
-queso.Base.metadata.create_all(engine)
+queso.AdminDB.Base.metadata.create_all(engine)
 
 
 setup(
