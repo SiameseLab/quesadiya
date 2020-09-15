@@ -17,17 +17,19 @@ class AdminDB:
     MAX_USER_NAME_CHAR = 30
     MAX_PASSWORD_CHAR = 30
 
+
 # table schemas for admin.db
-class Projects(AdminDB.Base):
+class Project(AdminDB.Base):
     """Table schema for `projects` table in `admin.db`."""
     __tablename__ = "projects"
     project_id = Column(Integer, index=True, primary_key=True)
     project_name = Column(String(AdminDB.MAX_PROJECT_NAME_CHAR), nullable=False)
-    owner_name = Column(String(AdminDB.MAX_USER_NAME_CHAR), nullable=False)
-    owner_password = Column(String(AdminDB.MAX_PASSWORD_CHAR), nullable=False)
+    admin_name = Column(String(AdminDB.MAX_USER_NAME_CHAR), nullable=False)
+    admin_password = Column(String(AdminDB.MAX_PASSWORD_CHAR), nullable=False)
     date_created = Column(Date(), nullable=False)
 
-class Collaborators(AdminDB.Base):
+
+class Collaborator(AdminDB.Base):
     """Table schema for `collaborators` table in `admin.db`."""
     __tablename__ = "collaborators"
     # set foregin key to projects table
@@ -56,7 +58,8 @@ class Data(ProjectDB.Base):
     """Table schema for `projects` table in `admin.db`."""
     __tablename__ = "data"
     project_id = Column(Integer, index=True, primary_key=True)
-    project_name = Column(String(AdminDB.MAX_PROJECT_NAME_CHAR), nullable=False)
-    owner_name = Column(String(AdminDB.MAX_USER_NAME_CHAR), nullable=False)
-    owner_password = Column(String(AdminDB.MAX_PASSWORD_CHAR), nullable=False)
+    project_name = Column(String(ProjectDB.MAX_PROJECT_NAME_CHAR),
+                          nullable=False)
+    admin_name = Column(String(ProjectDB.MAX_USER_NAME_CHAR), nullable=False)
+    admin_password = Column(String(ProjectDB.MAX_PASSWORD_CHAR), nullable=False)
     date_created = Column(Date(), nullable=False)
