@@ -1,5 +1,8 @@
 import click
 
+import os
+
+import quesadiya
 import quesadiya.commands.create
 import quesadiya.commands.run
 import quesadiya.commands.inspect
@@ -11,8 +14,16 @@ import quesadiya.commands.modify
 @click.group()
 @click.version_option()
 def cli():
-    """delicious mexican pizza."""
+    """Delicious mexican pizza."""
     pass
+
+
+@cli.command()
+def path():
+    """print path to this package."""
+    click.echo("quesadiya resides in {}".format(
+        quesadiya.get_base_path()
+    ))
 
 
 @cli.command()
@@ -20,9 +31,18 @@ def cli():
     "project_name",
     metavar="PROJECT"
 )
-def create(project_name):
+@click.argument("admin_name")
+@click.argument(
+    "admin_password",
+    metavar="PASSWORD"
+)
+def create(project_name, admin_name, admin_password):
     """create annotation project."""
-    quesadiya.commands.create.operator(project_name=project_name)
+    quesadiya.commands.create.operator(
+        project_name=project_name,
+        admin_name=admin_name,
+        admin_password=admin_password
+    )
 
 
 @cli.command()
