@@ -2,6 +2,7 @@ import pytest
 
 import os
 import subprocess
+import sqlite3
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
@@ -13,6 +14,8 @@ from sqlalchemy import (
     Date,
     PrimaryKeyConstraint
 )
+from sqlalchemy.ext.declarative.api import DeclarativeMeta
+
 
 class TestFileOps:
     """Test file operations in `setup.py`"""
@@ -110,6 +113,27 @@ class TestSQLQuery:
         os.remove(os.path.join(self.root_dir, "test.db"))
 
 
+class TestImport:
+
+    # ../quesadiya
+    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    def test_import(self):
+        """Test loading module from file path."""
+        import importlib.util
+        schema_path = os.path.join(self.root_dir, "quesadiya", "db", "schema.py")
+        spec = importlib.util.spec_from_file_location('queso', schema_path)
+        queso = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(queso)
+        # make sure module path is correct
+        assert queso.__file__ == schema_path
+        # make sure datatypes are correct
+        assert isinstance(queso.Base, DeclarativeMeta)
+        assert isinstance(queso.Projects, DeclarativeMeta)
+        assert isinstance(queso.Collaborators, DeclarativeMeta)
+
+
+
 class TestInstall:
     """Test setup.py by calling it from subprocess.
 
@@ -132,9 +156,12 @@ class TestInstall:
             os.path.join(quesadiya.get_base_path(), 'projects')
         )
         # check existince of `admin.db`
-        assert os.path.exists(
-            os.path.join(quesadiya.get_base_path(), 'projects', 'admin.db')
-        )
+        db_path = os.path.join(quesadiya.get_base_path(), 'projects', 'admin.db')
+        assert os.path.exists(db_path)
+        # make sure db file contains correct tables
+        expected = set(['projects', 'collaborators'])
+        engine = create_engine('sqlite:///' + db_path, echo=True, encoding="utf-8")
+        assert set(engine.table_names()) == expected
         # make sure setup.py installs django apis (non python modules)
         non_python_dirs = \
             ['apps', 'root', 'Sample data', 'static', 'templates', 'tool']
