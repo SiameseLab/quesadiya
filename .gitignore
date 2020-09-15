@@ -5,8 +5,12 @@ __pycache__/
 # packaging
 build/
 dist/
-*.egg-info
+*.egg-info/
 
 
 # pytest
 .pytest_cache/
+
+
+# db file
+quesadiya/projects/

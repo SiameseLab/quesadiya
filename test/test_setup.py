@@ -128,9 +128,9 @@ class TestImport:
         # make sure module path is correct
         assert queso.__file__ == schema_path
         # make sure datatypes are correct
-        assert isinstance(queso.Base, DeclarativeMeta)
-        assert isinstance(queso.Projects, DeclarativeMeta)
-        assert isinstance(queso.Collaborators, DeclarativeMeta)
+        assert isinstance(queso.AdminDB.Base, DeclarativeMeta)
+        assert isinstance(queso.Project, DeclarativeMeta)
+        assert isinstance(queso.Collaborator, DeclarativeMeta)
 
 
 
