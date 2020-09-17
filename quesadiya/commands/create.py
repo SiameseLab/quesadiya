@@ -27,7 +27,7 @@ def operator(
     if admin_interface.check_project_exists(project_name):
         raise AssertionError(
             "project ({}) already exists. if you'd like to add new data, "
-            "use `quesadiya modify --add-data`.".format(project_name)
+            "run `quesadiya modify --add-data`.".format(project_name)
         )
     try:
         os.mkdir(project_dir)
@@ -37,11 +37,6 @@ def operator(
             "make sure you have the right permission to create folder under "
             "the directory.".format(quesadiya.get_projects_path())
         )
-    # assing message if str is None
-    if project_description is None:
-        project_description = "No description"
-    if admin_contact is None:
-        admin_contact = "No contact"
     # create project.db
     factory.init_projectdb(project_dir)
     # get interface

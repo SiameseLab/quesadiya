@@ -47,13 +47,15 @@ def path():
     "-d",
     "--project-description",
     type=click.STRING,
-    help="description of a project to create"
+    default="No description",
+    help="description of a project to create; can be empty"
 )
 @click.option(
     "-c",
     "--contact",
     type=click.STRING,
-    help="contact to admin user"
+    default="No contact",
+    help="contact to admin user; can be empty"
 )
 def create(
     project_name,
