@@ -106,7 +106,7 @@ class TestSQLQuery:
         self.Base.metadata.create_all(engine)
         # get all tables in test.db and make sure names are correct
         engine = create_engine(db_uri, echo=True, encoding="utf-8")
-        print(engine.table_names())
+        # print(engine.table_names())
         count = 0
         expected = set(['projects', 'collaborators'])
         assert set(engine.table_names()) == expected
