@@ -55,7 +55,7 @@ queso = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(queso)
 # create admin database file and define schema
 db_uri = 'sqlite:///' + os.path.join(projects_dir, "admin.db")
-engine = create_engine(db_uri, echo=True, encoding="utf-8")
+engine = create_engine(db_uri, echo=False, encoding="utf-8")
 # queso.Base creates tables inside
 queso.AdminDB.Base.metadata.create_all(engine)
 
@@ -77,7 +77,10 @@ setup(
     install_requires=[
         "click>=7.1",
         "django>=3.1",
-        "sqlalchemy>=1.3.12"
+        "sqlalchemy>=1.3.12",
+        "prettytable>=0.7",
+        "jsonlines>=1.2",
+        "tqdm>=4.48"
     ],
     tests_require=["pytest>=5.4"],
     entry_points="""

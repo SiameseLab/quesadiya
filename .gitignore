@@ -14,3 +14,7 @@ dist/
 
 # db file
 quesadiya/projects/
+
+
+# sensitive files
+*_sensitive.py
