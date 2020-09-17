@@ -21,7 +21,7 @@ def cli():
 @cli.command()
 def path():
     """print path to this package."""
-    click.echo("quesadiya resides in {}".format(
+    click.echo("quesadiya resides @ {}".format(
         quesadiya.get_base_path()
     ))
 
@@ -31,17 +31,38 @@ def path():
     "project_name",
     metavar="PROJECT"
 )
-@click.argument("admin_name")
+@click.argument(
+    "admin_name",
+    metavar="ADMIN"
+)
 @click.argument(
     "admin_password",
     metavar="PASSWORD"
 )
-def create(project_name, admin_name, admin_password):
+@click.argument(
+    "input_data_path",
+    metavar="DATAPATH"
+)
+@click.option(
+    "-d",
+    "--project-description",
+    type=click.STRING,
+    help="description of a project to create"
+)
+def create(
+    project_name,
+    admin_name,
+    admin_password,
+    input_data_path,
+    project_description
+):
     """create annotation project."""
     quesadiya.commands.create.operator(
         project_name=project_name,
+        project_description=project_description,
+        input_data_path=input_data_path,
         admin_name=admin_name,
-        admin_password=admin_password
+        admin_password=admin_password,
     )
 
 
