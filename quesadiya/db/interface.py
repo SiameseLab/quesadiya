@@ -39,7 +39,8 @@ class SQLAlchemyInterface:
         project_name,
         project_description,
         admin_name,
-        admin_password
+        admin_password,
+        admin_contact
     ):
         with self.session_context_manager() as session:
             project = Project(
@@ -47,6 +48,7 @@ class SQLAlchemyInterface:
                 project_description=project_description,
                 admin_name=admin_name,
                 admin_password=admin_password,
+                admin_contact=admin_contact,
                 date_created=date.today()
             )
             session.add(project)

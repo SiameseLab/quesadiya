@@ -11,14 +11,16 @@ def operator(project_name):
     admin_interface = factory.get_admindb_interface()
     result = PrettyTable(field_names=["project name",
                                       "admin name",
-                                      "project description"])
+                                      "admin contact",
+                                      "project description",])
     if project_name == "all":
         projects = admin_interface.get_all_projects()
         for p in projects:
             result.add_row([
                 p.project_name,
                 p.admin_name,
-                p.project_description
+                p.project_description,
+                p.admin_contact
             ])
     else:
         if not admin_interface.check_project_exists(project_name):
@@ -31,6 +33,7 @@ def operator(project_name):
         result.add_row([
             p.project_name,
             p.admin_name,
-            p.project_description
+            p.project_description,
+            p.admin_contact
         ])
     click.echo(result)

@@ -49,12 +49,19 @@ def path():
     type=click.STRING,
     help="description of a project to create"
 )
+@click.option(
+    "-c",
+    "--contact",
+    type=click.STRING,
+    help="contact to admin user"
+)
 def create(
     project_name,
     admin_name,
     admin_password,
     input_data_path,
-    project_description
+    project_description,
+    contact
 ):
     """create annotation project."""
     quesadiya.commands.create.operator(
@@ -63,6 +70,7 @@ def create(
         input_data_path=input_data_path,
         admin_name=admin_name,
         admin_password=admin_password,
+        admin_contact=contact
     )
 
 

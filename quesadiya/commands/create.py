@@ -12,7 +12,8 @@ def operator(
     project_description,
     admin_name,
     admin_password,
-    input_data_path
+    input_data_path,
+    admin_contact
 ):
     if input_data_path[-6:] != ".jsonl":
         raise ValueError(
@@ -36,6 +37,11 @@ def operator(
             "make sure you have the right permission to create folder under "
             "the directory.".format(quesadiya.get_projects_path())
         )
+    # assing message if str is None
+    if project_description is None:
+        project_description = "No description"
+    if admin_contact is None:
+        admin_contact = "No contact"
     # create project.db
     factory.init_projectdb(project_dir)
     # get interface
@@ -53,7 +59,8 @@ def operator(
         project_name,
         project_description,
         admin_name,
-        admin_password
+        admin_password,
+        admin_contact
     )
     # insert bulk data into database
     click.echo('Finish creating {}'.format(project_name))
