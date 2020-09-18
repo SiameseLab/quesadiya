@@ -87,7 +87,7 @@ def _load_format_input(input_data_path):
             # insert id-metadata pair into lookup table
             sample_text_lookup[row["anchor_sample_id"]] = \
                 {
-                    "text": PARAGRAPH_DELIM.join(row["anchor_sample_text"]),
+                    "text": utils.concat_paragraphs(row["anchor_sample_text"]),
                     "title": row["anchor_sample_title"]
                 }
             # create row for articles and add id-text pairs
