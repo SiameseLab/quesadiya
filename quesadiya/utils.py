@@ -69,8 +69,8 @@ def format_input(input_data_path):
 
 
 def ask_admin_info():
-    admin_name = click.prompt("Type admin name")
-    admin_password = click.prompt("Type password", hide_input=True)
+    admin_name = click.prompt("Admin name")
+    admin_password = click.prompt("Password", hide_input=True)
     return admin_name, admin_password
 
 
