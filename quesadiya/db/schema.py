@@ -28,6 +28,12 @@ class AdminDB:
     MAX_CONTACT_CHAR = 100
 
 
+# defin enum for project status column
+class ProjectStatusEnum(enum.Enum):
+    running = 0
+    not_running = 1
+
+
 # project table schema in admin.db
 class Project(AdminDB.Base):
     """Table schema for `projects` table in `admin.db`."""
@@ -43,6 +49,7 @@ class Project(AdminDB.Base):
     admin_password = Column(String(AdminDB.MAX_PASSWORD_CHAR), nullable=False)
     admin_contact = Column(String(AdminDB.MAX_CONTACT_CHAR), nullable=True)
     date_created = Column(Date, nullable=False)
+    status = Column(Enum(ProjectStatusEnum), nullable=False)
 
 
 # collaborator table schema in admin.db

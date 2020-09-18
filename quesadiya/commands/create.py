@@ -1,12 +1,16 @@
 import click
 
+from quesadiya.db.schema import ProjectStatusEnum
 from quesadiya.db import factory
+
 from quesadiya import utils
 import quesadiya
 
 import os
 
 
+# TODO: replace AssertionError with custom exception class
+# TODO: add function to print common error message
 def operator(
     project_name,
     project_description,
@@ -17,7 +21,7 @@ def operator(
 ):
     if input_data_path[-6:] != ".jsonl":
         raise ValueError(
-            "`DATAPATH` arugment must be path to a jsonl file, "
+            "The extension of `DATAPATH` must be jsonl (jsonlines file), "
             "instead received {}".format(input_data_path)
         )
     admin_interface = factory.get_admindb_interface()
@@ -26,15 +30,15 @@ def operator(
     # TODO: create a custom exception
     if admin_interface.check_project_exists(project_name):
         raise AssertionError(
-            "project ({}) already exists. if you'd like to add new data, "
+            "Project ({}) already exists. If you'd like to add new data, "
             "run `quesadiya modify --add-data`.".format(project_name)
         )
     try:
         os.mkdir(project_dir)
     except PermissionError:
         raise PermissionError(
-            "permission is denied to create a project folder under {}. "
-            "make sure you have the right permission to create folder under "
+            "Permission is denied to create a project folder under {}. "
+            "Make sure you have the right permission to create folder under "
             "the directory.".format(quesadiya.get_projects_path())
         )
     # create project.db
@@ -51,11 +55,12 @@ def operator(
     projectdb_interface.sample_text_bulk_insert(sample_text)
     # insert project into admin.db
     admin_interface.insert_project(
-        project_name,
-        project_description,
-        admin_name,
-        admin_password,
-        admin_contact
+        project_name=project_name,
+        project_description=project_description,
+        admin_name=admin_name,
+        admin_password=admin_password,
+        admin_contact=admin_contact,
+        status=ProjectStatusEnum.not_running
     )
     # insert bulk data into database
     click.echo('Finish creating {}'.format(project_name))
