@@ -30,9 +30,16 @@ class SQLAlchemyInterface:
         self.session_context_manager = SessionContextManager(session_maker)
 
     def get_all_projects(self):
-        with self.session_context_manager() as session:
-            resp = session.execute("SELECT * FROM projects;")
-            return tuple([x for x in resp.fetchall()])
+        return self._get_all(Project)
+
+    def get_triplets(self):
+        return self._get_all(TripletDataset)
+
+    def _get_all(self, table):
+        with self.session_context_manager(expire_on_commit=True) as session:
+            resp = session.query(table).all()
+            for x in resp:
+                yield x
 
     def insert_project(
         self,
@@ -40,23 +47,20 @@ class SQLAlchemyInterface:
         project_description,
         admin_name,
         admin_password,
-        admin_contact
+        admin_contact,
+        status
     ):
-        with self.session_context_manager() as session:
+        with self.session_context_manager(expire_on_commit=True) as session:
             project = Project(
                 project_name=project_name,
                 project_description=project_description,
                 admin_name=admin_name,
                 admin_password=admin_password,
                 admin_contact=admin_contact,
-                date_created=date.today()
+                date_created=date.today(),
+                status=status
             )
             session.add(project)
-
-    def get_triplets(self):
-        with self.session_context_manager() as session:
-            resp = session.execute("SELECT * FROM triplet_dataset;")
-            return tuple([x for x in resp.fetchall()])
 
     def check_project_exists(self, project_name):
         result = self._check_existence(
@@ -66,14 +70,14 @@ class SQLAlchemyInterface:
         return result
 
     def _check_existence(self, table_field, value):
-        with self.session_context_manager() as session:
+        with self.session_context_manager(expire_on_commit=True) as session:
             result = session.query(
                 exists().where(table_field == value)
             ).scalar()
         return result
 
     def admin_authentication(self, project_name, admin_name, admin_password):
-        with self.session_context_manager() as session:
+        with self.session_context_manager(expire_on_commit=True) as session:
             result = session.query(
                 exists().
                     where(Project.project_name == project_name).
@@ -83,13 +87,20 @@ class SQLAlchemyInterface:
         return result
 
     def delete_project(self, project_name):
-        with self.session_context_manager() as session:
-            session.query(Project).filter(Project.project_name==project_name).delete()
+        with self.session_context_manager(expire_on_commit=True) as session:
+            session.query(Project).filter(Project.project_name == project_name).delete()
 
     def get_project(self, project_name):
-        with self.session_context_manager() as session:
-            result = session.query(Project).filter_by(project_name=project_name)
-        return list(result)[0]
+        with self.session_context_manager(expire_on_commit=False) as session:
+            result = session.query(Project).filter(project_name == project_name).first()
+            return result
+
+    def get_collaborators(self, project_name):
+        with self.session_context_manager(expire_on_commit=True) as session:
+            project_id = session.query(Project.project_id).filter(Project.project_name == project_name).scalar()
+            resp = session.query(Collaborator).join(Project).filter(Collaborator.project_id == project_id).all()
+            for x in resp:
+                yield x
 
     def triplets_bulk_insert(self, triplets):
         self.engine.execute(
