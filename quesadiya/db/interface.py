@@ -8,8 +8,10 @@ from .session import SessionContextManager
 from .schema import AdminDB, ProjectDB
 from .schema import (
     Project,
+    ProjectStatusEnum,
     Collaborator,
     TripletDataset,
+    TripletStatusEnum,
     SampleText,
     CandidateGroup
 )
@@ -34,6 +36,33 @@ class SQLAlchemyInterface:
 
     def get_triplets(self):
         return self._get_all(TripletDataset)
+
+    def get_annotated_triplets(self):
+        with self.session_context_manager(expire_on_commit=True) as session:
+            resp = session.query(TripletDataset).filter(TripletDataset.status == TripletStatusEnum.finished).all()
+            for x in resp:
+                yield x
+
+    def get_annotated_triplets_with_text(self):
+        with self.session_context_manager(expire_on_commit=True) as session:
+            resp = session.execute(
+                """SELECT sa.sample_body AS anchor_sample_text,
+                          sp.sample_body AS positive_sample_text,
+                          sn.sample_body AS negative_sample_text,
+                          t.anchor_sample_id,
+                          t.positive_sample_id,
+                          t.negative_sample_id
+                   FROM triplet_dataset AS t
+                   LEFT JOIN sample_text AS sa
+                     ON t.anchor_sample_id = sa.sample_id
+                   LEFT JOIN sample_text AS sp
+                     ON t.positive_sample_id = sp.sample_id
+                   LEFT JOIN sample_text AS sn
+                     ON t.negative_sample_id = sn.sample_id
+                   WHERE t.status = '{}';""".format(TripletStatusEnum.finished.name)
+            )
+            for x in resp:
+                yield x
 
     def _get_all(self, table):
         with self.session_context_manager(expire_on_commit=True) as session:
@@ -69,6 +98,14 @@ class SQLAlchemyInterface:
         )
         return result
 
+    def is_project_running(self, project_name):
+        with self.session_context_manager(expire_on_commit=True) as session:
+            result = session.query(Project.status).filter(Project.project_name == project_name).scalar()
+            if result.value == ProjectStatusEnum.running.value:
+                return True
+            else:
+                return False
+
     def _check_existence(self, table_field, value):
         with self.session_context_manager(expire_on_commit=True) as session:
             result = session.query(
@@ -92,7 +129,7 @@ class SQLAlchemyInterface:
 
     def get_project(self, project_name):
         with self.session_context_manager(expire_on_commit=False) as session:
-            result = session.query(Project).filter(project_name == project_name).first()
+            result = session.query(Project).filter(Project.project_name == project_name).first()
             return result
 
     def get_collaborators(self, project_name):
