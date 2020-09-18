@@ -20,7 +20,7 @@ def cli():
 
 @cli.command()
 def path():
-    """print path to this package."""
+    """Print path to this package."""
     click.echo("quesadiya resides @ {}".format(
         quesadiya.get_base_path()
     ))
@@ -48,14 +48,14 @@ def path():
     "--project-description",
     type=click.STRING,
     default="No description",
-    help="description of a project to create; can be empty"
+    help="Description of a project to create."
 )
 @click.option(
     "-c",
     "--contact",
     type=click.STRING,
     default="No contact",
-    help="contact to admin user; can be empty"
+    help="Contact to admin user."
 )
 def create(
     project_name,
@@ -65,7 +65,7 @@ def create(
     project_description,
     contact
 ):
-    """create annotation project."""
+    """Create a data annotation project."""
     quesadiya.commands.create.operator(
         project_name=project_name,
         project_description=project_description,
@@ -82,7 +82,7 @@ def create(
     metavar="PROJECT"
 )
 def run(project_name):
-    """run annotation project indicated by project name."""
+    """Run annotation project indicated by project name."""
     quesadiya.commands.run.operator(project_name=project_name)
 
 
@@ -91,9 +91,20 @@ def run(project_name):
     "project_name",
     metavar="PROJECT"
 )
-def inspect(project_name):
-    """show project information indicated by project name."""
-    quesadiya.commands.inspect.operator(project_name=project_name)
+@click.option(
+    "-s",
+    "--show-collaborators",
+    is_flag=True,
+    default=False,
+    help="Show all collaborators associated with a project. "
+         "This operation requires admin authentication."
+)
+def inspect(project_name, show_collaborators):
+    """Show project information indicated by project name."""
+    quesadiya.commands.inspect.operator(
+        project_name=project_name,
+        show_collaborators=show_collaborators
+    )
 
 
 @cli.command()
@@ -102,7 +113,7 @@ def inspect(project_name):
     metavar="PROJECT"
 )
 def modify(project_name):
-    """modify project indicated by project name."""
+    """Modify project indicated by project name."""
     quesadiya.commands.modify.operator(project_name=project_name)
 
 
@@ -112,7 +123,8 @@ def modify(project_name):
     metavar="PROJECT"
 )
 def delete(project_name):
-    """delete project indicated by project name."""
+    """Delete project indicated by project name. Note that this operation
+    will delete all data associated with a project."""
     quesadiya.commands.delete.operator(project_name=project_name)
 
 
@@ -121,6 +133,18 @@ def delete(project_name):
     "project_name",
     metavar="PROJECT"
 )
-def export(project_name):
-    """export data associated with project indicated by project name."""
-    quesadiya.commands.export.operator(project_name=project_name)
+@click.argument("output_path")
+@click.option(
+    "-i",
+    "--include-text",
+    is_flag=True,
+    default=False,
+    help="Include text field assocaited with sample ids in output file."
+)
+def export(project_name, output_path, include_text):
+    """Export data associated with a project indicated by project name."""
+    quesadiya.commands.export.operator(
+        project_name=project_name,
+        output_path=output_path,
+        include_text=include_text
+    )
