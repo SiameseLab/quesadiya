@@ -14,9 +14,6 @@ from sqlalchemy import (
 import enum
 
 
-PARAGRAPH_DELIM = ' <end_of_paragraph> '
-
-
 # base for admin.db
 class AdminDB:
     """Table schema for admin.db."""
@@ -84,7 +81,7 @@ class ProjectDB:
 
 
 # defin enum for sample status column
-class DataStatusEnum(enum.Enum):
+class TripletStatusEnum(enum.Enum):
     unfinished = 0
     finished = 1
     discarded = 2
@@ -128,9 +125,17 @@ class TripletDataset(ProjectDB.Base):
         ForeignKey("candidate_groups.candidate_group_id"),
         nullable=False
     )
-    positive_sample_id = Column(String(ProjectDB.MAX_ID_LEN), nullable=True)
-    negative_sample_id = Column(String(ProjectDB.MAX_ID_LEN), nullable=True)
-    status = Column(Enum(DataStatusEnum), nullable=False)
+    positive_sample_id = Column(
+        String(ProjectDB.MAX_ID_LEN),
+        ForeignKey("sample_text.sample_id"),
+        nullable=True
+    )
+    negative_sample_id = Column(
+        String(ProjectDB.MAX_ID_LEN),
+        ForeignKey("sample_text.sample_id"),
+        nullable=True
+    )
+    status = Column(Enum(TripletStatusEnum), nullable=False)
     time_changed = Column(DateTime, nullable=False)
     # set anchor_id and candidate_id composite primary key
     __table_args__ = (
