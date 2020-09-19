@@ -13,27 +13,27 @@ import os
 
 
 def get_admindb_interface():
-    engine = get_admindb_engine(db_path=ADMIN_PATH)
+    engine = _get_admindb_engine(db_path=ADMIN_PATH)
     interface = SQLAlchemyInterface(engine=engine)
     return interface
 
 
 def get_projectdb_interface(db_dir_path):
-    engine = get_projectdb_engine(db_dir_path=db_dir_path)
+    engine = _get_projectdb_engine(db_dir_path=db_dir_path)
     interface = SQLAlchemyInterface(engine=engine)
     return interface
 
 
 def init_projectdb(db_dir_path):
-    engine = get_projectdb_engine(db_dir_path=db_dir_path)
+    engine = _get_projectdb_engine(db_dir_path=db_dir_path)
     ProjectDB.Base.metadata.create_all(engine)
-    
 
-def get_admindb_engine(db_path):
+
+def _get_admindb_engine(db_path):
     return _get_engine(db_path, CONFIG_ADMINDB)
 
 
-def get_projectdb_engine(db_dir_path):
+def _get_projectdb_engine(db_dir_path):
     db_path = os.path.join(db_dir_path, PROJECTDB_NAME)
     return _get_engine(db_path, CONFIG_PROJECTDB)
 

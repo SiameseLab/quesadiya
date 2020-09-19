@@ -48,11 +48,11 @@ def _format_collaborators(collaborators):
                                      "Password",
                                      "Contact"])
     for coll in collaborators:
-        table.add_row(
+        table.add_row([
             coll.collaborator_name,
             coll.collaborator_password,
             coll.collaborator_contact
-        )
+        ])
     return table
 
 

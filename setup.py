@@ -25,10 +25,10 @@ with open(os.path.join(os.path.dirname(__file__), "README.md"), "r") as f:
 
 
 # check sqlite version
-if sqlite3.sqlite_version_info < (3, 3):
+if sqlite3.sqlite_version_info < (3, 6):
     sys.exit(
-        "sqlite >= 3.3 is required for quesadiya (but got sqlite={}), "
-        "please upgrade sqlite and "
+        "`sqlite >= 3.6` is required for quesadiya (but got sqlite={}). "
+        "Please upgrade sqlite and "
         "try installing again.".format(sqlite3.sqlite_version)
     )
 # base path for initializing folder and database file
@@ -44,8 +44,8 @@ if not os.path.exists(projects_dir):
         os.mkdir(projects_dir)
     except PermissionError:
         raise PermissionError(
-            "permission is denied to create a project folder under {}. "
-            "make sure you have the right permission to create folder, or "
+            "Permission is denied to create a project folder under {}. "
+            "Make sure you have the right permission to create folder, or "
             "try `pip install . --user`".format(base_dir)
         )
 # import schema from file
@@ -97,6 +97,6 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     package_data={"quesadiya": ["projects/admin.db"] + api_files},
-    packages=find_packages(exclude=["test"]),
+    packages=find_packages(),
     zip_safe=False,
 )
