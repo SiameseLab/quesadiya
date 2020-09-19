@@ -57,13 +57,23 @@ def path():
     default="No contact",
     help="Contact to admin user."
 )
+@click.option(
+    "-a",
+    "--add-collaborators",
+    type=click.STRING,
+    help="Add collaboratos from a jsonl file. Each row in the file must "
+         "follow the following format: "
+         "{'name': str, 'password': str, 'contact': str}. "
+         "Note that `contact` field can be empty."
+)
 def create(
     project_name,
     admin_name,
     admin_password,
     input_data_path,
     project_description,
-    contact
+    contact,
+    add_collaborators
 ):
     """Create a data annotation project."""
     quesadiya.commands.create.operator(
@@ -72,7 +82,8 @@ def create(
         input_data_path=input_data_path,
         admin_name=admin_name,
         admin_password=admin_password,
-        admin_contact=contact
+        admin_contact=contact,
+        collaborator_input_path=add_collaborators
     )
 
 
@@ -112,9 +123,43 @@ def inspect(project_name, show_collaborators):
     "project_name",
     metavar="PROJECT"
 )
-def modify(project_name):
-    """Modify project indicated by project name."""
-    quesadiya.commands.modify.operator(project_name=project_name)
+@click.option(
+    "-e",
+    "--edit",
+    type=click.Choice(["contact", "description"], case_sensitive=True),
+    help="Edit `admin contact` or `project description` of a project."
+)
+@click.option(
+    "-t",
+    "--transfer-ownership",
+    is_flag=True,
+    default=False,
+    help="Change `admin name` and `admin password` of a project."
+)
+@click.option(
+    "-a",
+    "--add-collaborators",
+    type=click.STRING,
+    help="Add collaboratos from a jsonl file. Each row in the file must "
+         "follow the following format: "
+         "{'name': str, 'password': str, 'contact': str}. "
+         "Note that `contact` field can be empty."
+)
+def modify(
+    project_name,
+    edit,
+    transfer_ownership,
+    add_collaborators
+):
+    """Modify a project indicated by project name. Note that it exectues one
+    operation per run.
+    """
+    quesadiya.commands.modify.operator(
+        project_name=project_name,
+        edit=edit,
+        transfer_ownership=transfer_ownership,
+        collaborator_input_path=add_collaborators
+    )
 
 
 @cli.command()
@@ -139,7 +184,7 @@ def delete(project_name):
     "--include-text",
     is_flag=True,
     default=False,
-    help="Include text field assocaited with sample ids in output file."
+    help="Include text field assocaited with sample ids into output file."
 )
 def export(project_name, output_path, include_text):
     """Export data associated with a project indicated by project name."""
