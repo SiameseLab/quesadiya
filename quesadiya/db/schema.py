@@ -99,15 +99,17 @@ class SampleText(ProjectDB.Base):
 class CandidateGroup(ProjectDB.Base):
     """Table schema for `candidate_groups` table in `project.db`."""
     __tablename__ = "candidate_groups"
-    # one sample doesn't belong to multiple groups
-    # e.g. `Section A` in `Article X` doesn't belong to any other articles
     candidate_sample_id = Column(
         String(ProjectDB.MAX_ID_LEN),
         ForeignKey("sample_text.sample_id"),
-        primary_key=True,
         nullable=False
     )
     candidate_group_id = Column(String(ProjectDB.MAX_ID_LEN), nullable=False)
+    # set anchor_id and candidate_id composite primary key
+    __table_args__ = (
+        PrimaryKeyConstraint('candidate_sample_id', 'candidate_group_id'),
+        {}
+    )
 
 
 class TripletDataset(ProjectDB.Base):
