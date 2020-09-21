@@ -1,2 +1,20 @@
 # cache
 __pycache__/
+
+
+# packaging
+build/
+dist/
+*.egg-info/
+
+
+# pytest
+.pytest_cache/
+
+
+# db file
+quesadiya/projects/
+
+
+# sensitive files
+*_sensitive.py
