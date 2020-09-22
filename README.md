@@ -1,5 +1,7 @@
 # Data Annotation Project Management Tool
 
+[![TravisCI](https://travis-ci.com/SiameseLab/quesadiya.svg?token=xQyvpopJU4sATWYRiD3N&branch=master)](https://travis-ci.com/SiameseLab/quesadiya)
+
 Quesdadiya is a data annotation platform where users can easily manage
 data annotation projects to create data sets for developing Siamese models.
 It provides a web UI to ease the burden of annotation. It also provides tools
