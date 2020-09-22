@@ -6,6 +6,8 @@ import glob
 import sqlite3
 import importlib.util
 
+from sqlalchemy import create_engine
+
 from setuptools import setup, find_packages
 
 
@@ -51,6 +53,11 @@ schema_path = os.path.join(base_dir, "db", "schema.py")
 spec = importlib.util.spec_from_file_location('queso', schema_path)
 queso = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(queso)
+# create admin database file and define schema
+db_uri = 'sqlite:///' + os.path.join(projects_dir, "admin.db")
+engine = create_engine(db_uri, echo=False, encoding="utf-8")
+# queso.Base creates tables inside
+queso.AdminDB.Base.metadata.create_all(engine)
 
 
 setup(
@@ -93,11 +100,3 @@ setup(
     packages=find_packages(),
     zip_safe=False,
 )
-
-
-from sqlalchemy import create_engine
-# create admin database file and define schema
-db_uri = 'sqlite:///' + os.path.join(projects_dir, "admin.db")
-engine = create_engine(db_uri, echo=False, encoding="utf-8")
-# queso.Base creates tables inside
-queso.AdminDB.Base.metadata.create_all(engine)

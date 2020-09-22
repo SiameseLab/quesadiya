@@ -7,6 +7,7 @@ that allows the data annotation project organizer to manage multiple annotators.
 
 # How to install
 
+1. Quesadiya requires `sqlalchemy>=1.3.12"`. Install the package by `pip install sqlalchemy>=1.3.12`.
 1. `git clone` this repo
 1. `cd quesadiya`
 1. open your python environment
