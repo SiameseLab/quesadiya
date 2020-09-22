@@ -1,0 +1,5 @@
+include data/*
+include test/*
+include LICENSE
+include README.md
+include quesadiya/*

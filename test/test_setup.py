@@ -25,13 +25,10 @@ class TestFileOps:
 
     def test_version_check(self):
         """Check the version of sqlite3."""
-        # convert sqlite3 version info to tuples
-        sqlite_version = tuple([int(x) for x in sqlite3.sqlite_version.split(".")])
-        # make sure version info is correct
         # sqlite3 v-4. is not released yet (9/13/2020)
-        assert sqlite_version > (2, 40)
-        assert sqlite_version > (3, 3)
-        assert sqlite_version < (4, 1)
+        assert sqlite3.sqlite_version_info > (2, 40)
+        assert sqlite3.sqlite_version_info > (3, 3)
+        assert sqlite3.sqlite_version_info < (4, 1)
 
     def test_mkdir(self):
         """Test mkdir to create `projects` folder under the root directory of
@@ -131,42 +128,3 @@ class TestImport:
         assert isinstance(queso.AdminDB.Base, DeclarativeMeta)
         assert isinstance(queso.Project, DeclarativeMeta)
         assert isinstance(queso.Collaborator, DeclarativeMeta)
-
-
-
-class TestInstall:
-    """Test setup.py by calling it from subprocess.
-
-    CAUTION: this class uninstalls quesadiya package when it runs.
-    """
-
-    # ../quesadiya
-    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    def test_install(self):
-        """Run `python setup.py install` to make sure it initializes files
-        in the correct locations.
-        """
-        # run setup.py
-        subprocess.call("pip install {} --no-cache-dir".format(
-            self.root_dir), shell=True)
-        # check existence of `projects` folder
-        import quesadiya
-        assert os.path.exists(
-            os.path.join(quesadiya.get_base_path(), 'projects')
-        )
-        # check existince of `admin.db`
-        db_path = os.path.join(quesadiya.get_base_path(), 'projects', 'admin.db')
-        assert os.path.exists(db_path)
-        # make sure db file contains correct tables
-        expected = set(['projects', 'collaborators'])
-        engine = create_engine('sqlite:///' + db_path, echo=True, encoding="utf-8")
-        assert set(engine.table_names()) == expected
-        # make sure setup.py installs django apis (non python modules)
-        non_python_dirs = \
-            ['apps', 'root', 'Sample data', 'static', 'templates', 'tool']
-        queso_dirs = \
-            os.listdir(os.path.join(quesadiya.get_base_path(), 'django_tool'))
-        for x in non_python_dirs:
-            assert x in queso_dirs
-        subprocess.call("pip uninstall quesadiya", shell=True)
