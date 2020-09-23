@@ -9,6 +9,7 @@ from quesadiya.errors import NotJSONLFileError
 from quesadiya.errors import ProjectExistsError
 from quesadiya.errors import QuesadiyaCommandError
 
+from quesadiya.db import factory
 import quesadiya as q
 import os
 
@@ -18,7 +19,7 @@ class TestCreate:
     runner = CliRunner()
 
     def test_default_action(self):
-        """Test the command create a project."""
+        """Test the command creates a project."""
         r = self.runner.invoke(create, ["test1", "me", "1234",
                                         "data/sample_triplets.jsonl"])
         assert r.exception is None
@@ -26,12 +27,15 @@ class TestCreate:
         assert os.path.exists(os.path.join(q.get_projects_path(), "test1"))
         # check the existence of db file
         assert os.path.exists(os.path.join(q.get_projects_path(), "test1", "project.db"))
+        # make sure project info is in admin.db
+        admin_interface = factory.get_admindb_interface()
+        assert admin_interface.check_project_exists("test1")
         # clean dummy project
         r = self.runner.invoke(delete, ["test1"], input="me\n1234\ny\n")
         assert r.exception is None
 
     def test_bad_input(self):
-        """create command only accepts jsonl file."""
+        """Test exception handling for bad inputs."""
         # the following should raise an error
         r = self.runner.invoke(create, ["test1", "me",
                                         "1234", "data/sample_triplets.j"])
@@ -74,4 +78,4 @@ class TestCreate:
         r = self.runner.invoke(delete, ["test1"], input="me\n1234\ny\n")
         assert r.exception is None
 
-    # TODO: add code to test data in admin.db and project.db
+    # TODO: add code to test data (collaborator, project metadata) in admin.db, project.db and django.db

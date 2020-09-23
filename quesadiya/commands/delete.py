@@ -24,7 +24,7 @@ def operator(project_name):
     conf = click.confirm("Are you sure you want to continue?")
     if conf:
         admin_interface.delete_project(project_name)
-        click.echo("Successfully deleted {}".format(project_name))
+        click.echo("Successfully deleted project '{}'".format(project_name))
         shutil.rmtree(
             os.path.join(quesadiya.get_projects_path(), project_name)
         )

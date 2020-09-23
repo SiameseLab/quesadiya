@@ -63,6 +63,6 @@ def operator(project_name, output_path, include_text):
             for t in triplets:
                 jsonl.write(t)
     click.echo(
-        "{} data with {} samples is exported "
-        "to {}".format(project_name, len(triplets), output_path)
+        "{} samples in project '{}' is exported "
+        "to '{}'".format(len(triplets), project_name, output_path)
     )
