@@ -127,4 +127,3 @@ class TestImport:
         # make sure datatypes are correct
         assert isinstance(queso.AdminDB.Base, DeclarativeMeta)
         assert isinstance(queso.Project, DeclarativeMeta)
-        assert isinstance(queso.Collaborator, DeclarativeMeta)

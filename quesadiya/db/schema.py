@@ -20,8 +20,6 @@ class AdminDB:
     # sqlalchemy base for table
     Base = declarative_base()
     MAX_PROJECT_NAME_CHAR = 30
-    MAX_USER_NAME_CHAR = 30
-    MAX_PASSWORD_CHAR = 30
     MAX_CONTACT_CHAR = 100
 
 
@@ -42,35 +40,9 @@ class Project(AdminDB.Base):
         nullable=False
     )
     project_description = Column(Text, nullable=True)
-    admin_name = Column(String(AdminDB.MAX_USER_NAME_CHAR), nullable=False)
-    admin_password = Column(String(AdminDB.MAX_PASSWORD_CHAR), nullable=False)
     admin_contact = Column(String(AdminDB.MAX_CONTACT_CHAR), nullable=True)
     date_created = Column(Date, nullable=False)
     status = Column(Enum(ProjectStatusEnum), nullable=False)
-
-
-# collaborator table schema in admin.db
-class Collaborator(AdminDB.Base):
-    """Table schema for `collaborators` table in `admin.db`."""
-    __tablename__ = "collaborators"
-    # set foregin key to projects table
-    project_id =  Column(
-        Integer, ForeignKey("projects.project_id"), nullable=False
-    )
-    collaborator_name = Column(
-        String(AdminDB.MAX_USER_NAME_CHAR), nullable=False
-    )
-    collaborator_password = Column(
-        String(AdminDB.MAX_PASSWORD_CHAR), nullable=False
-    )
-    collaborator_contact = Column(
-        String(AdminDB.MAX_CONTACT_CHAR), nullable=True
-    )
-    # set project_id and collaborator_name composite primary key
-    __table_args__ = (
-        PrimaryKeyConstraint('project_id', 'collaborator_name'),
-        {}
-    )
 
 
 # base for project.db

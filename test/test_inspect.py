@@ -21,8 +21,9 @@ class TestInspect:
     def test_default_action(self):
         """Test the command shows project info."""
         # create a dummy project
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # get default info
         r = self.runner.invoke(inspect, ["test1"])
@@ -40,10 +41,12 @@ class TestInspect:
         r = self.runner.invoke(delete, ["test1"], input="me\n1234\ny\n")
         assert r.exception is None
         # test project description and admin contact
-        r = self.runner.invoke(create, ["test2", "me", "1234",
-                                        "data/sample_triplets.jsonl",
-                                        "-d", "this is a test",
-                                        "-c", "awesome@legendary.com"])
+        r = self.runner.invoke(create,
+                                ["test2", "me",
+                                 "data/sample_triplets.jsonl",
+                                 "-d", "this is a test",
+                                 "-c", "awesome@legendary.com"],
+                                 input="1234\n1234\n")
         assert r.exception is None
         expected = PrettyTable(field_names=["Project Name", "Admin Contact",
                                             "Description", "Date Created",
@@ -62,9 +65,11 @@ class TestInspect:
     def test_collaborators_info(self):
         """Test output of collaboratos."""
         # create dummy project with dummy collaborators
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl",
-                                        "-a", "data/sample_collaborators1.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me",
+                                 "data/sample_triplets.jsonl",
+                                 "-a", "data/sample_collaborators1.jsonl"],
+                                 input="1234\n1234\n")
         assert r.exception is None
         # this command should show collaborator info
         r = self.runner.invoke(inspect, ["test1", "-s"], input="me\n1234\ny\n")
@@ -92,8 +97,9 @@ class TestInspect:
     def test_bad_input(self):
         """Test exception handling for bad inputs."""
         # create a dummy project
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # --show-collaborators is not supported for `all`
         r = self.runner.invoke(inspect, ["all", "-s"])

@@ -1,11 +1,14 @@
 import click
 
 from quesadiya.db.schema import TripletStatusEnum
+from quesadiya.db import factory
+import quesadiya
 
 from datetime import datetime
 from tqdm import tqdm
 from collections import defaultdict
 
+import os
 import jsonlines
 
 
@@ -21,6 +24,11 @@ def print_time(start_time, operation):
     click.echo("{} took {}m {}s".format(
         operation, delta.seconds//60, delta.seconds%60
     ))
+
+
+def check_file_path(path):
+    if not os.path.exists(path):
+        raise FileNotFoundError("No such file or directory: {}".format(path))
 
 
 def concat_paragraphs(paragraps):
@@ -58,29 +66,28 @@ def split_text_into_paragraphs(text):
 
 
 def ask_admin_info():
-    admin_name = click.prompt("Admin name")
-    admin_password = click.prompt("Password", hide_input=True)
+    admin_name = click.prompt("Admin name", type=click.STRING)
+    admin_password = click.prompt("Password", hide_input=True, type=click.STRING)
     return admin_name, admin_password
 
 
-def admin_auth(db_interface, project_name):
+def admin_auth(project_name):
+    project_dir = os.path.join(quesadiya.get_projects_path(), project_name)
+    db_interface = factory.get_projectdb_interface(project_dir)
     admin_name, admin_password = ask_admin_info()
     auth = db_interface.admin_authentication(
-        project_name=project_name,
         admin_name=admin_name,
         admin_password=admin_password
     )
     return auth
 
 
-def load_format_collaborators(project_id, input_path):
+def load_format_collaborators(input_path):
     """Load collabortors from input file and format them to be added to
     `collabortos` table in `admin.db`.
 
     Parameters
     ----------
-    project_id : str
-        The id of a project which collabortos are affilicated with.
     input_path : str
         Input path to jsonl file that contains collabortos. Each row must follow
         the following format:
@@ -99,10 +106,9 @@ def load_format_collaborators(project_id, input_path):
     with jsonlines.open(input_path, mode="r") as jsonl:
         for row in jsonl:
             collaborator = {
-                "collaborator_name": row["name"],
-                "collaborator_password": row["password"],
-                "collaborator_contact": row["contact"],
-                "project_id": project_id
+                "name": row["name"],
+                "password": row["password"],
+                "contact": row["contact"]
             }
             collaborators.append(collaborator)
     return collaborators
