@@ -7,6 +7,7 @@ from quesadiya.errors import NotJSONLFileError
 
 from quesadiya.db import factory
 from quesadiya.django_tool.database import insert_collaborator
+from quesadiya.db.hasher import PH
 
 from quesadiya import utils
 import quesadiya
@@ -71,8 +72,10 @@ def _transfer_ownership(project_name):
     if user_input != expected:
         click.echo("Input doesn't match {}. Stop this operation.".format(expected))
     else:
-        projectdb_interface.change_admin_name(new_admin=new_admin)
-        projectdb_interface.change_admin_password(new_password=new_password)
+        projectdb_interface.change_admin_name(new_admin)
+        # NOTE: Must encrypt password before update
+        encoded_password = PH.hash(new_password)
+        projectdb_interface.change_admin_password(encoded_password)
         click.echo("The ownership of '{}' is transferred to user: {}".format(
             project_name, new_admin
         ))

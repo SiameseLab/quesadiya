@@ -6,10 +6,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import exists
 from sqlalchemy.sql import text
 
-from django.contrib.auth.hashers import check_password
+from argon2.exceptions import VerifyMismatchError
 
 from .session import SessionContextManager
-
 from .schema import AdminDB, ProjectDB
 from .schema import (
     Project,
@@ -19,6 +18,8 @@ from .schema import (
     SampleText,
     CandidateGroup
 )
+
+from .hasher import PH
 
 
 class SQLAlchemyInterface:
@@ -126,11 +127,14 @@ class SQLAlchemyInterface:
 
     def admin_authentication(self, admin_name, admin_password):
         admin = self.get_admin_info()
-        # is_pass_valid = check_password(admin_password, admin["password"])
-        # if (admin["username"] == admin_name) and is_pass_valid:
-        if (admin["username"] == admin_name) and (admin["password"] == admin_password):
-            return True
-        else:
+        # argon2 raises VerifyMismatchError if password doesn't match
+        try:
+            is_pass_valid = PH.verify(admin["password"], admin_password)
+            if (admin["username"] == admin_name) and is_pass_valid:
+                return True
+            else:
+                return False
+        except VerifyMismatchError:
             return False
 
     def delete_project(self, project_name):

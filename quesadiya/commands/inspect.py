@@ -45,13 +45,10 @@ class _DefaultTable:
 
 
 def _format_collaborators(collaborators):
-    table = PrettyTable(field_names=["Collaborator Name",
-                                     "Password",
-                                     "Contact"])
+    table = PrettyTable(field_names=["Collaborator Name", "Contact"])
     for coll in collaborators:
         table.add_row([
             coll["collaborator_name"],
-            coll["collaborator_password"],
             coll["collaborator_contact"]
         ])
     return table

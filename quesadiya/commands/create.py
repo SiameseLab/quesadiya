@@ -16,8 +16,6 @@ from quesadiya.django_tool.database import (
 from quesadiya import utils
 import quesadiya
 
-from django.contrib.auth.hashers import make_password
-
 from datetime import datetime
 from tqdm import tqdm
 from collections import defaultdict
@@ -87,10 +85,8 @@ def operator(
         with projectdb_interface.engine.connect() as con:
             create_django_tables(con)
             # encode password
-            # encoded_password = make_password(admin_password)
             insert_admin(
                 con=con,
-                # password=encoded_password,
                 password=admin_password,
                 admin_name=admin_name,
                 date_time=datetime.now()
@@ -102,7 +98,7 @@ def operator(
                 input_path=collaborator_input_path
             )
     # insert bulk data into database
-    click.echo("Finish creating {}".format(project_name))
+    click.echo("Finish creating a new project '{}'".format(project_name))
 
 
 def add_collaborators(engine, project_name, input_path):

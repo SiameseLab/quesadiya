@@ -51,7 +51,7 @@ def dictfetchall(cursor):
 def getUnfinish():
     with connection.cursor() as cursor:
         cursor.execute(
-            "select * from Triplet_Dataset WHERE status='unfinished'  LIMIT 1")
+            "select * from triplet_dataset WHERE status='unfinished'  LIMIT 1")
         data = dictfetchall(cursor)
     return data
 

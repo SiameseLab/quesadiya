@@ -1,4 +1,6 @@
 from sqlalchemy.sql import text
+from quesadiya.db.hasher import PH
+
 
 
 # NOTE: sqlalchemy's connection doesn't seem to require con.commit()
@@ -36,8 +38,9 @@ def create_django_tables(con):  # argu : database path
 
 
 def insert_admin(con, password, admin_name, date_time):
+    encoded_password = PH.hash(password)
     row = {
-        "password": password,
+        "password": encoded_password,
         "is_superuser": True,
         "username": admin_name,
         "last_name": " ",
@@ -51,8 +54,9 @@ def insert_admin(con, password, admin_name, date_time):
 
 
 def insert_collaborator(con, password, collaborator_name, date_time, contact):
+    encoded_password = PH.hash(password)
     row = {
-        "password": password,
+        "password": encoded_password,
         "is_superuser": False,
         "username": collaborator_name,
         "last_name": " ",

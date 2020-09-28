@@ -106,11 +106,10 @@ class TestModify:
             date.today(), "not_running"
         ])
         # collaborator info
-        expected2 = PrettyTable(field_names=["Collaborator Name",
-                                             "Password", "Contact"])
-        expected2.add_row(["a", "1", "a@1"])
-        expected2.add_row(["b", "2", "b@2"])
-        expected2.add_row(["c", "3", "c@3"])
+        expected2 = PrettyTable(field_names=["Collaborator Name", "Contact"])
+        expected2.add_row(["a", "a@1"])
+        expected2.add_row(["b", "b@2"])
+        expected2.add_row(["c", "c@3"])
         expected = str(expected1) + '\n' + str(expected2) + '\n'
         r = self.runner.invoke(inspect, ["test1", "-s"], input="me\n1234\n")
         assert r.exception is None
@@ -124,8 +123,8 @@ class TestModify:
             )
         assert r.exception is None
         # test input with inspect command
-        expected2.add_row(["d", "4", "d@4"])
-        expected2.add_row(["e", "5", "e@5"])
+        expected2.add_row(["d", "d@4"])
+        expected2.add_row(["e", "e@5"])
         new_expected = str(expected1) + '\n' + str(expected2) + '\n'
         r = self.runner.invoke(inspect, ["test1", "-s"], input="me\n1234\n")
         assert r.exception is None
