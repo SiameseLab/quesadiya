@@ -26,4 +26,5 @@ urlpatterns = [
     # path('', include("tool.urls")),
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('', tool_view.ProjectInfo, name='home'),
+    path('getAnchor/', tool_view.getAnchor)
 ]

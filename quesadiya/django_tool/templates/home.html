@@ -8,7 +8,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
+{% if not user.is_authenticated %}
   {% comment %} Hi {{ user.username }}!
   <p>You are not logged in</p>
 
@@ -104,28 +104,24 @@
                   <h5 class="card-title">{{ anchor_data.0.sample_id }}</h5>
                   {% comment %} <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> {% endcomment %}
                   <p class="card-text">{{ anchor_data.0.sample_body }}</p>
-                  <a href="#" class="card-link">Finished</a>
-                  <a href="#" class="card-link">Next</a>
+                  <button id="anchor_submit" class="card-link btn btn-success disabled" name="finish_btn">Submit</button>
+                  <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Next</button>
                 </div>
               </div>
             </div>
-            <div class="col-8">
+            <div class="col-8"  id="sample_cards">
               {% for candidate in candidate_groups %}
               <div class="card mb-2">
                 <h5 class="card-header">{{ candidate.candidate_sample_id }}</h5>
                 <div class="card-body">
                   <h5 class="card-title">{{ candidate.sample_title }}</h5>
                   <p class="card-text">{{ candidate.sample_body }}</p>
-                  <a href="#" class="btn btn-primary">Select</a>
+                  <button id="sample_btn" class="btn btn-primary">Select</button>
                 </div>
               </div>
               {% endfor %}
-              
-              
-             
             </div>
           </div>
-          
         </main>
       </div>
     </div>
@@ -138,5 +134,33 @@
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 <script>
   feather.replace()
+  function call_counter(url, pk) {
+                window.open(url);
+                $.get('YOUR_VIEW_HERE/'+pk+'/', function (data) {
+                    alert("counter updated!");
+                });
+            }
+  var header = document.getElementById("sample_cards");
+  var btns = header.getElementsByClassName("btn btn-primary");
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].addEventListener("click", function() {
+    var current = header.getElementsByClassName("btn-success");
+    if(current[0] != undefined){
+      current[0].className = current[0].className.replace(" btn-success", " btn-primary");
+    }
+    this.className = this.className.replace("btn btn-primary", "btn btn-success");
+    var element = document.getElementById("anchor_submit");
+    element.classList.remove("disabled");
+    });
+  }
+  $('#anchor_submit').click(function() {    
+      $.ajax({
+          url: 'getAnchor',
+          method: 'GET',
+          success: function (data) {        
+              console.log(data)
+          }
+      });
+  });
 </script>
 {% endblock %}

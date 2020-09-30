@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import quesadiya as q
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,11 +75,11 @@ WSGI_APPLICATION = 'apps.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-database_root = os.path.normpath(os.path.abspath(__file__) + os.sep + os.pardir +
-                                 os.sep + os.pardir + os.sep + os.pardir + os.sep + "/projects" + os.sep + "admin.db")
+# database_root = os.path.normpath(os.path.abspath(__file__) + os.sep + os.pardir +
+#                                  os.sep + os.pardir + os.sep + os.pardir + os.sep + "/projects" + os.sep + "admin.db")
 database_sample = os.path.normpath(os.path.abspath(__file__) + os.sep + os.pardir + os.sep +
                                    os.pardir + os.sep + os.pardir + os.sep + "/projects" + os.sep + "t" + os.sep + "project.db")
-
+database_root = os.path.join(q.get_projects_path(), "admin.db")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -87,7 +88,6 @@ DATABASES = {
     },
     'admin': {
         'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
         'NAME': database_root
     }
 
