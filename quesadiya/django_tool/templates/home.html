@@ -66,19 +66,19 @@
               <li class="nav-item">
                 <div class="nav-link" >
                   <span data-feather="hash"></span>
-                  Finished<span> : {{ infos.0.finish }}</span>
+                  Finished<span> : {{ infos.0.finished }}</span>
                 </div>
               </li>
               <li class="nav-item">
                 <div class="nav-link" >
                   <span data-feather="hash"></span>
-                  Unlabled<span> : {{ infos.0.unLabled }}</span>
+                  unfinish<span> : {{ infos.0.unfinished }}</span>
                 </div>
               </li>
               <li class="nav-item">
                 <div class="nav-link" >
                   <span data-feather="hash"></span>
-                  Abolished<span> : {{ infos.0.abolished }}</span>
+                  Discarded<span> : {{ infos.0.discarded }}</span>
                 </div>
               </li>
             </ul>
@@ -168,7 +168,19 @@
           url: 'updateAnchor/',
           method: 'POST',
           success: function (data) {        
-              
+              location.reload(true)
+          }
+      });
+  });
+  $('#anchor_next').click(function() {   
+      var anchor_id = document.getElementsByClassName("card-title anchor-id")[0].innerText;
+      var data = {anchor_id: anchor_id};
+      $.ajax({
+          data: data,
+          url: 'nextAnchor/',
+          method: 'POST',
+          success: function (data) {        
+              location.reload(true)
           }
       });
   });

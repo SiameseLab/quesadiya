@@ -64,9 +64,9 @@ def swapDB(projectName):
 def getUnfinish():
     with connection.cursor() as cursor:
         cursor.execute(
-            "select * from Triplet_Dataset WHERE status='unfinished' LIMIT 1")
-        datas = dictfetchall(cursor)
-    return datas
+            "select * from Triplet_Dataset WHERE status='unfinished' or status='discarded' ORDER by time_changed LIMIT 1")
+        data = dictfetchall(cursor)
+    return data
     # with connection.cursor() as cursor:
     #     cursor.execute(
     #         "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+candidate_group_id+"')")
@@ -86,16 +86,20 @@ def getCandidateGroup(candidate_group_id):
     with connection.cursor() as cursor:
         cursor.execute(
             "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+candidate_group_id+"')")
-        datas = dictfetchall(cursor)
-    return datas
+        data = dictfetchall(cursor)
+    return data
 
 
 def getInfo(p_name):
     with connections['admin'].cursor() as cursor:
         cursor.execute(
             "select project_name, project_description from projects where project_name='"+p_name+"'")
-        datas = dictfetchall(cursor)
-    return datas
+        data = dictfetchall(cursor)
+    data[0]['finished'] = 0
+    data[0]['unfinished'] = 0
+    data[0]['discarded'] = 0
+    data[0]['total'] = 0
+    return data
     # return models.Projects.objects.using(
     #     'admin').filter(project_name=p_name)
     # .only("project_name", "project_description")
@@ -112,9 +116,33 @@ def updatePositiveAnchor(anchor_sample_id, positive_sample_id):
             "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished' WHERE anchor_sample_id='"+anchor_sample_id+"'")
 
 
-@csrf_exempt
-def updateAnchor(request):
+def getStatus(p_name):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "select status, count(*) from Triplet_dataset GROUP by status")
+        data = cursor.fetchall()
+    print(type(data))
+    # data = json.dumps(data)
+    total = 0
+    for value in data:
+        total += value[1]
+    data.append(tuple(('total', total)))
+    dict(data)
+    return data
 
+
+@ csrf_exempt
+def nextAnchor(request):
+    if request.method == 'POST':
+        anchor_sample_id = request.POST.get('anchor_id')
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded' WHERE anchor_sample_id='"+anchor_sample_id+"'")
+        return ProjectInfo(request)
+
+
+@ csrf_exempt
+def updateAnchor(request):
     if request.method == 'POST':
         anchor_id = request.POST.get('anchor_id')
         positive_anchor_id = request.POST.get('positive_anchor_id')
@@ -142,11 +170,13 @@ def ProjectInfo(request):
     projectName = request.session['projectName']
     print("project Name : ", projectName)
     if(conf.settings.DATABASES['default']['NAME'] != conf.settings.DATABASES['admin']['NAME']):
+        status = getStatus(projectName)
         infos = getInfo(projectName)
+        infos[0].update(status)
+        print(infos)
         unfinish_anchor = getUnfinish()
         anchor_data = getSampleData(
             unfinish_anchor[0].get("anchor_sample_id"))
-        print(type(anchor_data))
         candidate_groups = getCandidateGroup(
             unfinish_anchor[0].get("candidate_group_id"))
     context_dict = {'infos': infos, 'anchor_data': anchor_data,
