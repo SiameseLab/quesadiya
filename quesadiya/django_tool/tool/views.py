@@ -16,6 +16,7 @@ import quesadiya as q
 # from quesadiya.django_tool.manage import projectName
 from django.http import JsonResponse
 import datetime
+from django.views.decorators.csrf import csrf_exempt
 
 
 def login(request):
@@ -60,11 +61,17 @@ def swapDB(projectName):
     print("new db :", conf.settings.DATABASES['default']['NAME'])
 
 
-def getUnfinish(row):
+def getUnfinish():
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM(SELECT ROW_NUMBER () OVER (ORDER BY anchor_sample_id ) RowNum, anchor_sample_id, candidate_group_id FROM Triplet_Dataset WHERE status='unfinished') t WHERE RowNum ='"+row+"'")
-        data = dictfetchall(cursor)
-    return data
+        cursor.execute(
+            "select * from Triplet_Dataset WHERE status='unfinished' LIMIT 1")
+        datas = dictfetchall(cursor)
+    return datas
+    # with connection.cursor() as cursor:
+    #     cursor.execute(
+    #         "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+candidate_group_id+"')")
+    #     datas = dictfetchall(cursor)
+    # return datas
 
 
 def getSampleData(sample_id):
@@ -99,18 +106,29 @@ def datetimeDefault(dt):
         return dt.isoformat()
 
 
-def getAnchor(request):
-    if request.method == 'GET':
-        infos = getInfo("t")
-        unfinish_anchor = getUnfinish(1)
-        anchor_data = getSampleData(
-            unfinish_anchor[0].get("anchor_sample_id"))
-        candidate_groups = getCandidateGroup(
-            unfinish_anchor[0].get("candidate_group_id"))
-        context_dict = {'infos': infos, 'anchor_data': anchor_data,
-                        'candidate_groups': candidate_groups}
-        return JsonResponse(context_dict, safe=False)
-    else:
+def updatePositiveAnchor(anchor_sample_id, positive_sample_id):
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished' WHERE anchor_sample_id='"+anchor_sample_id+"'")
+
+
+@csrf_exempt
+def updateAnchor(request):
+
+    if request.method == 'POST':
+        anchor_id = request.POST.get('anchor_id')
+        positive_anchor_id = request.POST.get('positive_anchor_id')
+        print(anchor_id, "+ :", positive_anchor_id)
+        updatePositiveAnchor(anchor_id, positive_anchor_id)
+        # infos = getInfo("t")
+        # unfinish_anchor = getUnfinish()
+        # anchor_data = getSampleData(
+        #     unfinish_anchor[0].get("anchor_sample_id"))
+        # candidate_groups = getCandidateGroup(
+        #     unfinish_anchor[0].get("candidate_group_id"))
+        # context_dict = {'infos': infos, 'anchor_data': anchor_data,
+        #                 'candidate_groups': candidate_groups}
+        # return JsonResponse(context_dict, safe=False)
         return ProjectInfo(request)
 
 
@@ -120,17 +138,12 @@ def ProjectInfo(request):
     # print("db :", conf.settings.DATABASES['default']['NAME'])
     # datas = models.TripletDataset.objects.all()
     # print(datas)
-    user = authenticate(username="test", password="test")
-    print(user)
-    infos = {}
-    anchor_data = {}
-    candidate_groups = {}
-    # projectName = "test2"
+    # user = authenticate(username="test", password="test")
     projectName = request.session['projectName']
     print("project Name : ", projectName)
     if(conf.settings.DATABASES['default']['NAME'] != conf.settings.DATABASES['admin']['NAME']):
         infos = getInfo(projectName)
-        unfinish_anchor = getUnfinish(1)
+        unfinish_anchor = getUnfinish()
         anchor_data = getSampleData(
             unfinish_anchor[0].get("anchor_sample_id"))
         print(type(anchor_data))
@@ -139,6 +152,7 @@ def ProjectInfo(request):
     context_dict = {'infos': infos, 'anchor_data': anchor_data,
                     'candidate_groups': candidate_groups}
     # print(context_dict)
+    # return JsonResponse(context_dict)
     return render(request, "home.html", context_dict)
 
     # infos = models.Projects.objects.using(

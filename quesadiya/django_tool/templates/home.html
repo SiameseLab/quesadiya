@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block link %}
@@ -8,6 +9,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+{% load update_var_tag %}
 {% if not user.is_authenticated %}
   {% comment %} Hi {{ user.username }}!
   <p>You are not logged in</p>
@@ -101,7 +103,7 @@
             <div class="col-4 w-auto border-right">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">{{ anchor_data.0.sample_id }}</h5>
+                  <h5 class="card-title anchor-id">{{ anchor_data.0.sample_id }}</h5>
                   {% comment %} <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> {% endcomment %}
                   <p class="card-text">{{ anchor_data.0.sample_body }}</p>
                   <button id="anchor_submit" class="card-link btn btn-success disabled" name="finish_btn">Submit</button>
@@ -120,6 +122,7 @@
                 </div>
               </div>
               {% endfor %}
+              {% csrf_token %}
             </div>
           </div>
         </main>
@@ -134,33 +137,55 @@
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 <script>
   feather.replace()
-  function call_counter(url, pk) {
-                window.open(url);
-                $.get('YOUR_VIEW_HERE/'+pk+'/', function (data) {
-                    alert("counter updated!");
-                });
-            }
   var header = document.getElementById("sample_cards");
   var btns = header.getElementsByClassName("btn btn-primary");
   for (var i = 0; i < btns.length; i++) {
     btns[i].addEventListener("click", function() {
     var current = header.getElementsByClassName("btn-success");
+    var current_header = header.getElementsByClassName("card-header");
     if(current[0] != undefined){
       current[0].className = current[0].className.replace(" btn-success", " btn-primary");
+      current_header[0].className = current_header[0].className.replace("card-header positive-anchor-id", "card-header");
     }
+
+    var parent = $(this).parent().parent();
+    
+    var current_header = parent.children(".card-header");
+    console.log(current_header)
+    current_header[0].className = current_header[0].className.replace("card-header", "card-header positive-anchor-id");
+    
     this.className = this.className.replace("btn btn-primary", "btn btn-success");
     var element = document.getElementById("anchor_submit");
     element.classList.remove("disabled");
     });
   }
-  $('#anchor_submit').click(function() {    
+  $('#anchor_submit').click(function() {   
+      var positive_anchor_id = document.getElementsByClassName("card-header positive-anchor-id")[0].innerText;
+      var anchor_id = document.getElementsByClassName("card-title anchor-id")[0].innerText;
+      var data = {anchor_id: anchor_id,positive_anchor_id:positive_anchor_id};
       $.ajax({
-          url: 'getAnchor',
-          method: 'GET',
+          data: data,
+          url: 'updateAnchor/',
+          method: 'POST',
           success: function (data) {        
-              console.log(data)
+              
           }
       });
   });
 </script>
 {% endblock %}
+
+  {% comment %} $('#anchor_submit').click(function() {    
+      var data = {anchor_id: 'Lee pal kwar',};
+      $.ajax({
+          data: data,
+          url: 'getAnchor/',
+          method: 'POST',
+          success: function (data) {        
+              console.log(data);
+              d = {"project_name": "t", "project_description": "testproject"}
+              {{infos | update_var}}
+              context_dict = {"infos": [{"project_name": "t", "project_description": "testproject"}], "anchor_data": [{"sample_id": "5ed953a2d98c5b4207f187fa", "sample_body": "A number of public health issues, particularly noncommunicable diseases, significantly contribute to morbidity, mortality, and economic losses in the UAE. In view of the population demographics of the UAE, future national population-based public health initiatives should consider the sociocultural, religious, ethnic, and educational diversity of the UAE in the design, development, and implementation of campaigns, interventions, and strategies. The major public health challenges posed by certain personal, lifestyle, occupational, and environmental factors associated with the development of chronic diseases are not isolated to the UAE; rather, they form part of a global health problem, which requires international collaboration and action.", "sample_title": "Conclusion"}], "candidate_groups": [{"candidate_sample_id": "5ed93d5fd98c5b4207f0b64c", "sample_body": "We identified genetic variability of MERS-CoV S genes among infected persons in South Korea. Samples from 7 patients identified as positive for MERS-CoV were sequenced. These patients were identified by using sequences upstream of the envelope protein gene and open reading frame (ORF) 1a in real-time reverse transcription PCRs (5) ( Table 1) .", "sample_title": "The Study"}]}
+          }
+      });
+  }); {% endcomment %}
