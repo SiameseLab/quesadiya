@@ -175,7 +175,10 @@
   $('#anchor_next').click(function() {   
       var anchor_id = document.getElementsByClassName("card-title anchor-id")[0].innerText;
       var data = {anchor_id: anchor_id};
-      $.ajax({
+      var txt;
+      var r = confirm("Are you sure to go next anchor and discarded this?");
+      if (r == true) {
+        $.ajax({
           data: data,
           url: 'nextAnchor/',
           method: 'POST',
@@ -183,6 +186,9 @@
               location.reload(true)
           }
       });
+      } else {
+      } 
+      
   });
 </script>
 {% endblock %}
