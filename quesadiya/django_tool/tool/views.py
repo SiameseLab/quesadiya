@@ -29,6 +29,7 @@ def login(request):
         userName = request.POST.get('username')
         password = request.POST.get('password')
         request.session['projectName'] = projectName
+        request.session['projectId'] = projectId
         swapDB(projectName)
         print(projectName, " : ", userName, " : ", password, " : ",
               projectId, " : ", checkProjectUser(userName, projectId))
@@ -77,6 +78,8 @@ def getUnfinish():
         cursor.execute(
             "select * from Triplet_Dataset WHERE status='unfinished' or status='discarded' ORDER by time_changed LIMIT 1")
         data = dictfetchall(cursor)
+        cursor.execute("UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded' WHERE anchor_sample_id='" +
+                       data[0].get("anchor_sample_id")+"'")
     return data
     # with connection.cursor() as cursor:
     #     cursor.execute(
@@ -98,6 +101,14 @@ def getCandidateGroup(candidate_group_id):
         cursor.execute(
             "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+candidate_group_id+"')")
         data = dictfetchall(cursor)
+    return data
+
+
+def getProjectUser(p_name):
+    with connections['admin'].cursor() as cursor:
+        cursor.execute(
+            "SELECT username from project_user where projectId='"+p_name+"'")
+        data = [item[0] for item in cursor.fetchall()]
     return data
 
 
@@ -181,9 +192,13 @@ def ProjectInfo(request):
 
     if(conf.settings.DATABASES['default']['NAME'] != conf.settings.DATABASES['project']['NAME'] and request.user.is_authenticated):
         projectName = request.session['projectName']
+        projectId = request.session['projectId']
         status = getStatus(projectName)
+        projectUser = {"participants": getProjectUser(projectId)}
+        print(projectUser)
         infos = getInfo(projectName)
         infos[0].update(status)
+        infos[0].update(projectUser)
         if(infos[0]["finished"] == infos[0]["total"]):
             return render(request, "home.html", {"infos": infos})
         unfinish_anchor = getUnfinish()
