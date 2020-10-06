@@ -3,6 +3,8 @@ from sqlalchemy.sql import text
 
 
 def djangoDB(con):  # argu : database path
+    con.execute(text('DROP TABLE IF EXISTS project_user'))
+    con.execute(text(''' CREATE TABLE "project_user"("username" varchar(150) NOT NULL,"projectId" INTEGER NOT NULL, PRIMARY KEY("username","projectId"))'''))
     con.execute(text('DROP TABLE IF EXISTS auth_user'))
     con.execute(text('''CREATE TABLE "auth_user" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "password" varchar(128) NOT NULL, "last_login" datetime NULL, "is_superuser" bool NOT NULL, "username" varchar(150) NOT NULL UNIQUE, "last_name" varchar(150) NOT NULL, "email" varchar(254) NOT NULL, "is_staff" bool NOT NULL, "is_active" bool NOT NULL, "date_joined" datetime NOT NULL, "first_name" varchar(150) NOT NULL)'''))
     con.execute(text('DROP TABLE IF EXISTS django_content_type'))
