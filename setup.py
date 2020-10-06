@@ -74,7 +74,7 @@ setup(
 
 # import sqlalchemy
 from sqlalchemy import create_engine
-# TODO: add a block to check sqlalchemy's version
+import argon2
 # check sqlite version
 if sqlite3.sqlite_version_info < (3, 6):
     sys.exit(
