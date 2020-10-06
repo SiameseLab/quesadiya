@@ -19,25 +19,17 @@
 {% comment %} {% load database_switch_tag %} {% endcomment %}
 {% load get_projects_tag %}
 <div class="body text-center">
-  <form class="form-signin" method="post">
+  <form class="form-signin" action = "{% url "login" %}" method="post">
     {% csrf_token %}
     {% getProjects as projects %}
     {% comment %} {% for project in projects %}
     {{ project.project_name }}
     {% endfor %} {% endcomment %}
-
-
-
-    <!-- {% if p.value != "" %}
-    {% SelectDB "testP" %}
-    {% endif %} -->
-
-
     <h1 class="h3 mb-3 font-weight-normal">Quesadiya</h1>
     <select class="form-control" name="selected_project" required>
       <option value="">---- Select Project -----</option>
       {% for project in projects %}
-      <option value="{{ project.project_name }}">{{ project.project_name }}</option>
+      <option value="{{ project }}">{{ project.project_name }}</option>
       {% endfor %}
     </select>
     <label for="username" class="sr-only">User Name</label>

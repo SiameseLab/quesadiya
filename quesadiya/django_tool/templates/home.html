@@ -10,7 +10,7 @@
 
 {% block content %}
 {% load update_var_tag %}
-{% if not user.is_authenticated %}
+{% if  user.is_authenticated %}
   {% comment %} Hi {{ user.username }}!
   <p>You are not logged in</p>
 
@@ -100,6 +100,7 @@
             </div>
           </div>
           <div class="row">
+          {% if anchor_data %}
             <div class="col-4 w-auto border-right">
               <div class="card">
                 <div class="card-body">
@@ -124,6 +125,9 @@
               {% endfor %}
               {% csrf_token %}
             </div>
+            {% else %}
+              <h1>All finished!</h1>
+            {% endif %}
           </div>
         </main>
       </div>

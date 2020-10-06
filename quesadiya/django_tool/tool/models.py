@@ -1,14 +1,14 @@
 from django.db import models
 
 
-# class Projects(models.Model):
-#     # project_id = models.IntegerField()
-#     project_name = models.CharField(max_length=30)
-#     project_description = models.TextField()
+class Projects(models.Model):
+    project_id = models.IntegerField()
+    project_name = models.CharField(max_length=30)
+    project_description = models.TextField()
 
-#     class Meta:
-#         managed = False
-#         db_table = 'projects'
+    class Meta:
+        managed = False
+        db_table = 'projects'
 
 # class Collaborators(models.Model):
 #     project = models.ForeignKey('Projects', models.DO_NOTHING)

@@ -21,25 +21,28 @@ from django.views.decorators.csrf import csrf_exempt
 
 def login(request):
     # print("project Name", os.environ.get("projectName"))
-    # if request.method == "POST":
-    #     projectName = request.POST.get('selected_project')
-    #     userName = request.POST.get('username')
-    #     password = request.POST.get('password')
-    #     request.session['projectName'] = projectName
-    #     # database = os.path.normpath(os.path.abspath(__file__) + os.sep + os.pardir + os.sep + os.pardir + os.sep +
-    #     #                             os.pardir + os.sep + "/projects" + os.sep + projectName + os.sep + "project.db")
-    #     swapDB(projectName)
-    #     print(projectName, " : ", userName, " : ", password)
-    #     user = authenticate(username=userName, password=password)
-    #     print(user)
-    #     if user is not None:
-    #         org_login(request, user)
-    #         return redirect("home")
-    # logout(request)
-    # swapDB("admin")
-    # return render(request, "registration/login.html")
-    request.session['projectName'] = "t"
-    return redirect("home")
+    if request.method == "POST":
+        project = json.loads(request.POST.get(
+            'selected_project').replace("\'", "\""))
+        projectName = project.get("project_name")
+        projectId = str(project["project_id"])
+        userName = request.POST.get('username')
+        password = request.POST.get('password')
+        request.session['projectName'] = projectName
+        swapDB(projectName)
+        print(projectName, " : ", userName, " : ", password, " : ",
+              projectId, " : ", checkProjectUser(userName, projectId))
+        user = authenticate(username=userName, password=password)
+        print(user)
+        if user is not None and checkProjectUser(userName, projectId):
+            org_login(request, user)
+            return redirect("home")
+    logout(request)
+    swapDB("admin")
+    return render(request, "registration/login.html")
+    # swapDB("t")
+    # request.session['projectName'] = "t"
+    # return redirect("home")
 
 
 def dictfetchall(cursor):
@@ -51,18 +54,26 @@ def dictfetchall(cursor):
     ]
 
 
+def checkProjectUser(username, projectId):
+    with connections['admin'].cursor() as cursor:
+        cursor.execute(
+            "SELECT * from project_user where username='"+username+"' and projectId='"+projectId+"'")
+        data = cursor.fetchall()
+    return False if not data else True
+
+
 def swapDB(projectName):
-    if("admin"):
+    if(projectName == "admin"):
         path = conf.settings.DATABASES['admin']['NAME']
     else:
         path = os.path.join(q.get_projects_path(), projectName, "project.db")
-    print("old db :", conf.settings.DATABASES['default']['NAME'])
-    conf.settings.DATABASES['default']['NAME'] = path
-    print("new db :", conf.settings.DATABASES['default']['NAME'])
+    print("old db :", conf.settings.DATABASES['project']['NAME'])
+    conf.settings.DATABASES['project']['NAME'] = path
+    print("new db :", conf.settings.DATABASES['project']['NAME'])
 
 
 def getUnfinish():
-    with connection.cursor() as cursor:
+    with connections['project'].cursor() as cursor:
         cursor.execute(
             "select * from Triplet_Dataset WHERE status='unfinished' or status='discarded' ORDER by time_changed LIMIT 1")
         data = dictfetchall(cursor)
@@ -75,7 +86,7 @@ def getUnfinish():
 
 
 def getSampleData(sample_id):
-    with connection.cursor() as cursor:
+    with connections['project'].cursor() as cursor:
         cursor.execute(
             "select * from sample_text where sample_id='"+sample_id+"'")
         data = dictfetchall(cursor)
@@ -83,7 +94,7 @@ def getSampleData(sample_id):
 
 
 def getCandidateGroup(candidate_group_id):
-    with connection.cursor() as cursor:
+    with connections['project'].cursor() as cursor:
         cursor.execute(
             "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+candidate_group_id+"')")
         data = dictfetchall(cursor)
@@ -111,13 +122,13 @@ def datetimeDefault(dt):
 
 
 def updatePositiveAnchor(anchor_sample_id, positive_sample_id):
-    with connection.cursor() as cursor:
+    with connections['project'].cursor() as cursor:
         cursor.execute(
             "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished' WHERE anchor_sample_id='"+anchor_sample_id+"'")
 
 
 def getStatus(p_name):
-    with connection.cursor() as cursor:
+    with connections['project'].cursor() as cursor:
         cursor.execute(
             "select status, count(*) from Triplet_dataset GROUP by status")
         data = cursor.fetchall()
@@ -135,7 +146,7 @@ def getStatus(p_name):
 def nextAnchor(request):
     if request.method == 'POST':
         anchor_sample_id = request.POST.get('anchor_id')
-        with connection.cursor() as cursor:
+        with connections['project'].cursor() as cursor:
             cursor.execute(
                 "UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded' WHERE anchor_sample_id='"+anchor_sample_id+"'")
         return ProjectInfo(request)
@@ -167,24 +178,26 @@ def ProjectInfo(request):
     # datas = models.TripletDataset.objects.all()
     # print(datas)
     # user = authenticate(username="test", password="test")
-    projectName = request.session['projectName']
-    print("project Name : ", projectName)
-    if(conf.settings.DATABASES['default']['NAME'] != conf.settings.DATABASES['admin']['NAME']):
+
+    if(conf.settings.DATABASES['default']['NAME'] != conf.settings.DATABASES['project']['NAME'] and request.user.is_authenticated):
+        projectName = request.session['projectName']
         status = getStatus(projectName)
         infos = getInfo(projectName)
         infos[0].update(status)
-        print(infos)
+        if(infos[0]["finished"] == infos[0]["total"]):
+            return render(request, "home.html", {"infos": infos})
         unfinish_anchor = getUnfinish()
         anchor_data = getSampleData(
             unfinish_anchor[0].get("anchor_sample_id"))
         candidate_groups = getCandidateGroup(
             unfinish_anchor[0].get("candidate_group_id"))
-    context_dict = {'infos': infos, 'anchor_data': anchor_data,
-                    'candidate_groups': candidate_groups}
+        context_dict = {'infos': infos, 'anchor_data': anchor_data,
+                        'candidate_groups': candidate_groups}
     # print(context_dict)
     # return JsonResponse(context_dict)
-    return render(request, "home.html", context_dict)
-
+        return render(request, "home.html", context_dict)
+    logout(request)
+    return render(request, "registration/login.html")
     # infos = models.Projects.objects.using(
     #     'admin').filter(project_name=projectName).values("project_name", "project_description")
 
