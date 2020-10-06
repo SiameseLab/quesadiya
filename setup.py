@@ -97,7 +97,8 @@ setup(
         "sqlalchemy>=1.3.12",
         "prettytable>=0.7",
         "jsonlines>=1.2",
-        "tqdm>=4.48"
+        "tqdm>=4.48",
+        "argon2-cffi>=20.1"
     ],
     tests_require=["pytest>=5.4"],
     entry_points="""
