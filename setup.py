@@ -22,6 +22,13 @@ with open(os.path.join(os.path.dirname(__file__), "README.md"), "r") as f:
     long_description = f.read()
 
 
+# base path for initializing folder and database file
+# ../quesadiya/quesadiya
+base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quesadiya')
+# get all non python files to include
+api_files = get_include_files(os.path.join('quesadiya', 'django_tool'))
+
+
 setup(
     name="quesadiya",
     version=__version__,
@@ -66,14 +73,7 @@ setup(
 
 
 # import sqlalchemy
-try:
-    from sqlalchemy import create_engine
-except ModuleNotFoundError:
-    raise ModuleNotFoundError(
-        "`sqlalchemy` is required to install quesadiya. Please install the "
-        "package in your environment and try again. For example, you can "
-        "install the package by `pip install sqlalchemy`."
-    )
+from sqlalchemy import create_engine
 # TODO: add a block to check sqlalchemy's version
 # check sqlite version
 if sqlite3.sqlite_version_info < (3, 6):
@@ -82,11 +82,6 @@ if sqlite3.sqlite_version_info < (3, 6):
         "Please upgrade sqlite and "
         "try installing again.".format(sqlite3.sqlite_version)
     )
-# base path for initializing folder and database file
-# ../quesadiya/quesadiya
-base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quesadiya')
-# get all non python files to include
-api_files = get_include_files(os.path.join('quesadiya', 'django_tool'))
 # ../quesadiya/quesadiya/projects
 projects_dir = os.path.join(base_dir, "projects")
 # create `projects` folder
