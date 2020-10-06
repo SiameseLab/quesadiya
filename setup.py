@@ -22,6 +22,49 @@ with open(os.path.join(os.path.dirname(__file__), "README.md"), "r") as f:
     long_description = f.read()
 
 
+setup(
+    name="quesadiya",
+    version=__version__,
+    author="SiameseLab",
+    author_email="underkey256@gmail.com",
+    description="data annotation platform for siamese models",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/SiameseLab/quesadiya",
+    keywords=[
+        "natural language processing",
+        "siamese deep neural network",
+        "data annotation"
+    ],
+    install_requires=[
+        "click>=7.1",
+        "click-spinner>=0.1.10"
+        "django>=3.1",
+        "sqlalchemy>=1.3.12",
+        "prettytable>=0.7",
+        "jsonlines>=1.2",
+        "tqdm>=4.48",
+        "argon2-cffi>=20.1"
+    ],
+    tests_require=["pytest>=5.4"],
+    entry_points="""
+        [console_scripts]
+        quesadiya=quesadiya.cli:cli
+    """,
+    license="Apache License 2.0",
+    python_requires=">=3.6",
+    classifiers=[
+        "Programming Language :: Python :: 3 :: Only",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    ],
+    package_data={"quesadiya": ["projects/admin.db"] + api_files},
+    packages=find_packages(),
+    zip_safe=False,
+)
+
+
 # import sqlalchemy
 try:
     from sqlalchemy import create_engine
@@ -74,46 +117,3 @@ spec.loader.exec_module(djangodb)
 # create django tables in admin.db
 with engine.connect() as con:
     djangodb.create_django_tables(con)
-
-
-setup(
-    name="quesadiya",
-    version=__version__,
-    author="SiameseLab",
-    author_email="underkey256@gmail.com",
-    description="data annotation platform for siamese models",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/SiameseLab/quesadiya",
-    keywords=[
-        "natural language processing",
-        "siamese deep neural network",
-        "data annotation"
-    ],
-    install_requires=[
-        "click>=7.1",
-        "click-spinner>=0.1.10"
-        "django>=3.1",
-        "sqlalchemy>=1.3.12",
-        "prettytable>=0.7",
-        "jsonlines>=1.2",
-        "tqdm>=4.48",
-        "argon2-cffi>=20.1"
-    ],
-    tests_require=["pytest>=5.4"],
-    entry_points="""
-        [console_scripts]
-        quesadiya=quesadiya.cli:cli
-    """,
-    license="Apache License 2.0",
-    python_requires=">=3.6",
-    classifiers=[
-        "Programming Language :: Python :: 3 :: Only",
-        "License :: OSI Approved :: Apache Software License",
-        "Operating System :: OS Independent",
-        "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    ],
-    package_data={"quesadiya": ["projects/admin.db"] + api_files},
-    packages=find_packages(),
-    zip_safe=False,
-)
