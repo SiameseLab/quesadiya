@@ -33,11 +33,7 @@ def path():
 )
 @click.argument(
     "admin_name",
-    metavar="ADMIN"
-)
-@click.argument(
-    "admin_password",
-    metavar="PASSWORD"
+    metavar="ADMIN",
 )
 @click.argument(
     "input_data_path",
@@ -69,7 +65,6 @@ def path():
 def create(
     project_name,
     admin_name,
-    admin_password,
     input_data_path,
     project_description,
     contact,
@@ -81,7 +76,6 @@ def create(
         project_description=project_description,
         input_data_path=input_data_path,
         admin_name=admin_name,
-        admin_password=admin_password,
         admin_contact=contact,
         collaborator_input_path=add_collaborators
     )

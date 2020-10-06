@@ -89,12 +89,12 @@ DATABASES = {
     'project': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': database_root
+
     },
     'admin': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': database_root
     }
-
 }
 
 
@@ -114,6 +114,13 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+
+# set password hasher
+# https://docs.djangoproject.com/en/3.1/topics/auth/passwords/
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.Argon2PasswordHasher'
 ]
 
 

@@ -22,13 +22,12 @@ def operator(project_name, output_path, include_text):
         raise ProjectNotExistError(project_name)
     if admin_interface.is_project_running(project_name):
         raise ProjectRunningError(project_name, "`quesadiya export`")
-    if not utils.admin_auth(admin_interface, project_name):
+    if not utils.admin_auth(project_name):
         raise AuthenticationError(project_name)
     # fetch triplets whose status is finished in a project
     click.echo("Exporting data...")
     with click_spinner.spinner():
-        project_dir = os.path.join(quesadiya.get_projects_path(), project_name)
-        projectdb_interface = factory.get_projectdb_interface(project_dir)
+        projectdb_interface = factory.get_projectdb_interface(project_name)
         triplets = []
         # if `include_text` is True, it includes text data in json object
         if include_text:

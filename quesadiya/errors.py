@@ -1,7 +1,7 @@
 class QuesadiyaCommandError(Exception):
     def __init__(self, msg):
         super().__init__(msg)
-        
+
 
 class AuthenticationError(Exception):
     def __init__(self, project_name):
@@ -25,8 +25,7 @@ class ProjectRunningError(RuntimeError):
 
 class ProjectExistsError(RuntimeError):
     def __init__(self, project_name):
-        msg = ("Project '{}' already exists. If you'd like to add new data, "
-               "try `quesadiya modify --add-data`.".format(project_name))
+        msg = ("Project '{}' already exists.".format(project_name))
         super().__init__(msg)
 
 

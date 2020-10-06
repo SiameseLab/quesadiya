@@ -19,14 +19,16 @@ def operator(project_name):
         raise ProjectNotExistError(project_name)
     if admin_interface.is_project_running(project_name):
         raise ProjectRunningError(project_name, "`quesadiya delete`")
-    if not utils.admin_auth(admin_interface, project_name):
+    if not utils.admin_auth(project_name):
         raise AuthenticationError(project_name)
     conf = click.confirm("Are you sure you want to continue?")
     if conf:
-        admin_interface.delete_project(project_name)
         click.echo("Successfully deleted project '{}'".format(project_name))
+        # delete directory first
         shutil.rmtree(
             os.path.join(quesadiya.get_projects_path(), project_name)
         )
+        # then, delete row in admin.db
+        admin_interface.delete_project(project_name)
     else:
         click.echo("Stop deleting {}".format(project_name))

@@ -23,6 +23,7 @@ from prettytable import PrettyTable
 from datetime import date
 
 
+# TODO: add test for invalid file path
 class TestModify:
 
     runner = CliRunner()
@@ -30,10 +31,12 @@ class TestModify:
     def test_edit(self):
         """Test edit command in modify command."""
         # create a dummy project
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl",
-                                        "-c", "awesome@legendary.com",
-                                        "-d", "this is a test"])
+        r = self.runner.invoke(create,
+                                ["test1", "me",
+                                "data/sample_triplets.jsonl",
+                                "-c", "awesome@legendary.com",
+                                "-d", "this is a test"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # edit description
         r = self.runner.invoke(
@@ -66,13 +69,14 @@ class TestModify:
 
     def test_transfer_ownership(self):
         """Test --transfer-ownership option."""
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # transfer ownership
         r = self.runner.invoke(
             modify, ["test1", "-t"],
-            input="me\n1234\nnew_admin\n5678\nme/test1\n"
+            input="me\n1234\nnew_admin\n5678\n5678\nme/test1\n"
         )
         assert r.exception is None
         # delete the dummy project with new admin auth
@@ -82,8 +86,9 @@ class TestModify:
     def test_add_collaborators(self):
         """Test --add-collaborators option."""
         # create dummy project with empty collaborators
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # add collaborators
         r = self.runner.invoke(
@@ -101,11 +106,10 @@ class TestModify:
             date.today(), "not_running"
         ])
         # collaborator info
-        expected2 = PrettyTable(field_names=["Collaborator Name",
-                                             "Password", "Contact"])
-        expected2.add_row(["a", "1", "a@1"])
-        expected2.add_row(["b", "2", "b@2"])
-        expected2.add_row(["c", "3", "c@3"])
+        expected2 = PrettyTable(field_names=["Collaborator Name", "Contact"])
+        expected2.add_row(["a", "a@1"])
+        expected2.add_row(["b", "b@2"])
+        expected2.add_row(["c", "c@3"])
         expected = str(expected1) + '\n' + str(expected2) + '\n'
         r = self.runner.invoke(inspect, ["test1", "-s"], input="me\n1234\n")
         assert r.exception is None
@@ -119,8 +123,8 @@ class TestModify:
             )
         assert r.exception is None
         # test input with inspect command
-        expected2.add_row(["d", "4", "d@4"])
-        expected2.add_row(["e", "5", "e@5"])
+        expected2.add_row(["d", "d@4"])
+        expected2.add_row(["e", "e@5"])
         new_expected = str(expected1) + '\n' + str(expected2) + '\n'
         r = self.runner.invoke(inspect, ["test1", "-s"], input="me\n1234\n")
         assert r.exception is None
@@ -132,8 +136,9 @@ class TestModify:
     def test_bad_input(self):
         """Test exception handling for bad inputs."""
         # create a dummy project
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # incorrect project name
         r = self.runner.invoke(modify, ["lol"])
@@ -171,6 +176,23 @@ class TestModify:
         r = self.runner.invoke(
             modify, ["test1", "-e", "contact"],
             input="me\n1234\nducky@tie.com\n"
+        )
+        assert r.exception is None
+        # collaborator path must be valid file name and jsonl file
+        r = self.runner.invoke(
+            modify, ["test1", "-a", "data/bluh.jsonl"],
+            input="me\n1234\n"
+        )
+        assert isinstance(r.exception, FileNotFoundError)
+        r = self.runner.invoke(
+            modify, ["test1", "-a", "data/sample_collaborators2.js"],
+            input="me\n1234\n"
+        )
+        assert isinstance(r.exception, NotJSONLFileError)
+        # this should go thorugh
+        r = self.runner.invoke(
+            modify, ["test1", "-a", "data/sample_collaborators2.jsonl"],
+            input="me\n1234\n"
         )
         assert r.exception is None
         # clean dummy project

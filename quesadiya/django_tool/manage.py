@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+# import quesadiya as queso
 # projectName = None
 
 
@@ -10,7 +11,8 @@ def main():
     os.environ["projectName"] = "xxx"
     # global projectName
     # projectName = "xxxxxxx"
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apps.settings')
+    # settings_path = os.path.join(queso.get_base_path(), 'django_tool', 'apps', 'settings.py')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', "apps.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
