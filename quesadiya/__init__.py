@@ -3,7 +3,7 @@ import os
 
 
 # version info of this package
-__version__ = pkg_resources.get_distribution("quesadiya").version
+# __version__ = pkg_resources.get_distribution("quesadiya").version
 # root path ../quesadiya
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # projects path ../quesadiya/projects
