@@ -108,6 +108,7 @@ class TripletDataset(ProjectDB.Base):
         nullable=True
     )
     status = Column(Enum(TripletStatusEnum), nullable=False)
+    username = Column(String(ProjectDB.MAX_ID_LEN), nullable=True)
     time_changed = Column(DateTime, nullable=False)
     # set anchor_id and candidate_id composite primary key
     __table_args__ = (
