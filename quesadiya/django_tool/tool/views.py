@@ -1,7 +1,7 @@
 import os.path
 
 import django.conf as conf
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import logout
 from django.contrib.auth import login as org_login
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import connection, connections
@@ -17,6 +17,67 @@ import quesadiya as q
 from django.http import JsonResponse
 import datetime
 from django.views.decorators.csrf import csrf_exempt
+from django.db.utils import DEFAULT_DB_ALIAS, load_backend
+from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
+# def create_connection(alias=DEFAULT_DB_ALIAS):
+#     database_root = os.path.join(q.get_projects_path(), "admin.db")
+#     # connections.ensure_defaults(database_root)
+#     # connections.prepare_test_settings(database_root)
+#     db = connections.databases[database_root]
+#     backend = load_backend(db['ENGINE'])
+#     return backend.DatabaseWrapper(db, database_root)
+from django.contrib.auth.backends import ModelBackend
+from quesadiya.db.hasher import PH
+
+
+class CustomAuthBackend(ModelBackend):
+    def authenticate(self, request, username=None, password=None):
+        projectName = request.session['projectName']
+        try:
+            user = User.objects.using(
+                projectName).get(username=username)
+        except User.DoesNotExist:
+            user = None
+            print('no user')
+            return user
+        print(user)
+        print('User.password :', user.password)
+        print('password :', password)
+        check_password = PH.verify(user.password, password)
+        print('check_password :', check_password)
+        # if True and self.user_can_authenticate(user):
+        # PH.hash(new_password)
+        if check_password:
+            return user
+        return None
+
+# from django.contrib.auth.backends import ModelBackend
+# class CustomAuthBackend(ModelBackend):
+#     def authenticate(self, request, username=None, password=None, **kwargs):
+#         user = User.objects.using(request.GET['CUSTOMER_TABLE']).filter(username=username)
+#         if user.check_password(password) and self.user_can_authenticate(user):
+#             return user
+# def authenticate(projectName, username=None, password=None):
+#     login_valid = ('test' == username)
+#     pwd_valid = ('test' == password)
+#     if login_valid and pwd_valid:
+#         try:
+#             user = User.objects.using(projectName).get(username=username)
+#         except User.DoesNotExist:
+#             # Create a new user. There's no need to set a password
+#             # because only the password from settings.py is checked.
+#             user = None
+#         return user
+#     return None
+
+
+def create_connection(project_name):
+    """Create new database connection."""
+    db = conf.settings.DATABASES["default"].copy()
+    db['NAME'] = os.path.join(q.get_projects_path(),
+                              project_name, "project.db")
+    conf.settings.DATABASES[project_name] = db
 
 
 def login(request):
@@ -30,16 +91,28 @@ def login(request):
         password = request.POST.get('password')
         request.session['projectName'] = projectName
         request.session['projectId'] = projectId
-        swapDB(projectName)
+        # swapDB(projectName)
+        create_connection(projectName)
         print(projectName, " : ", userName, " : ", password, " : ",
               projectId, " : ", checkProjectUser(userName, projectId))
-        user = authenticate(username=userName, password=password)
+        md = CustomAuthBackend()
+        user = md.authenticate(
+            request, username=userName, password=password)
+        # request.user = user
+        # md = ModelBackend()
+        # user = md.authenticate(
+        #     request, username=userName, password=password)
         print(user)
-        if user is not None and checkProjectUser(userName, projectId):
-            org_login(request, user)
+        if user is not None:
+            org_login(request, user, 'tool.views.CustomAuthBackend')
+            # print(request.user.is_authenticated)
+            # print(request.user)
+            user = {'username': user.username}
+            request.session['user'] = user
+            # return HttpResponseRedirect("/")
+            # return ProjectInfo(request)
             return redirect("home")
     logout(request)
-    swapDB("admin")
     return render(request, "registration/login.html")
     # swapDB("t")
     # request.session['projectName'] = "t"
@@ -73,8 +146,8 @@ def swapDB(projectName):
     print("new db :", conf.settings.DATABASES['project']['NAME'])
 
 
-def getUnfinish():
-    with connections['project'].cursor() as cursor:
+def getUnfinish(p_name):
+    with connections[p_name].cursor() as cursor:
         cursor.execute(
             "select * from Triplet_Dataset WHERE status='unfinished' or status='discarded' ORDER by time_changed LIMIT 1")
         data = dictfetchall(cursor)
@@ -88,16 +161,16 @@ def getUnfinish():
     # return datas
 
 
-def getSampleData(sample_id):
-    with connections['project'].cursor() as cursor:
+def getSampleData(p_name, sample_id):
+    with connections[p_name].cursor() as cursor:
         cursor.execute(
             "select * from sample_text where sample_id='"+sample_id+"'")
         data = dictfetchall(cursor)
     return data
 
 
-def getCandidateGroup(candidate_group_id):
-    with connections['project'].cursor() as cursor:
+def getCandidateGroup(p_name, candidate_group_id):
+    with connections[p_name].cursor() as cursor:
         cursor.execute(
             "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+candidate_group_id+"')")
         data = dictfetchall(cursor)
@@ -132,14 +205,14 @@ def datetimeDefault(dt):
         return dt.isoformat()
 
 
-def updatePositiveAnchor(anchor_sample_id, positive_sample_id):
-    with connections['project'].cursor() as cursor:
+def updatePositiveAnchor(p_name, anchor_sample_id, positive_sample_id):
+    with connections[p_name].cursor() as cursor:
         cursor.execute(
             "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished' WHERE anchor_sample_id='"+anchor_sample_id+"'")
 
 
 def getStatus(p_name):
-    with connections['project'].cursor() as cursor:
+    with connections[p_name].cursor() as cursor:
         cursor.execute(
             "select status, count(*) from Triplet_dataset GROUP by status")
         data = cursor.fetchall()
@@ -156,8 +229,9 @@ def getStatus(p_name):
 @ csrf_exempt
 def nextAnchor(request):
     if request.method == 'POST':
+        projectName = request.session['projectName']
         anchor_sample_id = request.POST.get('anchor_id')
-        with connections['project'].cursor() as cursor:
+        with connections[projectName].cursor() as cursor:
             cursor.execute(
                 "UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded' WHERE anchor_sample_id='"+anchor_sample_id+"'")
         return ProjectInfo(request)
@@ -166,87 +240,38 @@ def nextAnchor(request):
 @ csrf_exempt
 def updateAnchor(request):
     if request.method == 'POST':
+        projectName = request.session['projectName']
         anchor_id = request.POST.get('anchor_id')
         positive_anchor_id = request.POST.get('positive_anchor_id')
         print(anchor_id, "+ :", positive_anchor_id)
-        updatePositiveAnchor(anchor_id, positive_anchor_id)
-        # infos = getInfo("t")
-        # unfinish_anchor = getUnfinish()
-        # anchor_data = getSampleData(
-        #     unfinish_anchor[0].get("anchor_sample_id"))
-        # candidate_groups = getCandidateGroup(
-        #     unfinish_anchor[0].get("candidate_group_id"))
-        # context_dict = {'infos': infos, 'anchor_data': anchor_data,
-        #                 'candidate_groups': candidate_groups}
-        # return JsonResponse(context_dict, safe=False)
+        updatePositiveAnchor(projectName, anchor_id, positive_anchor_id)
         return ProjectInfo(request)
 
 
 def ProjectInfo(request):
-
-    # projectName = request.session['projectName']
-    # print("db :", conf.settings.DATABASES['default']['NAME'])
-    # datas = models.TripletDataset.objects.all()
-    # print(datas)
-    # user = authenticate(username="test", password="test")
-
-    if(conf.settings.DATABASES['default']['NAME'] != conf.settings.DATABASES['project']['NAME'] and request.user.is_authenticated):
+    # print(request.session['projectName'])
+    print(request.user.is_authenticated)
+    print(request.user)
+    if 'user' in request.session:
+        #     print("yess")
+        # if(request.user.is_authenticated):
+        user = request.session['user']
         projectName = request.session['projectName']
         projectId = request.session['projectId']
         status = getStatus(projectName)
         projectUser = {"participants": getProjectUser(projectId)}
-        print(projectUser)
         infos = getInfo(projectName)
         infos[0].update(status)
         infos[0].update(projectUser)
         if(infos[0]["finished"] == infos[0]["total"]):
             return render(request, "home.html", {"infos": infos})
-        unfinish_anchor = getUnfinish()
-        anchor_data = getSampleData(
-            unfinish_anchor[0].get("anchor_sample_id"))
-        candidate_groups = getCandidateGroup(
-            unfinish_anchor[0].get("candidate_group_id"))
-        context_dict = {'infos': infos, 'anchor_data': anchor_data,
+        unfinish_anchor = getUnfinish(projectName)
+        anchor_data = getSampleData(projectName,
+                                    unfinish_anchor[0].get("anchor_sample_id"))
+        candidate_groups = getCandidateGroup(projectName,
+                                             unfinish_anchor[0].get("candidate_group_id"))
+        context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
                         'candidate_groups': candidate_groups}
-    # print(context_dict)
-    # return JsonResponse(context_dict)
         return render(request, "home.html", context_dict)
     logout(request)
     return render(request, "registration/login.html")
-    # infos = models.Projects.objects.using(
-    #     'admin').filter(project_name=projectName).values("project_name", "project_description")
-
-    # if(conf.settings.DATABASES['default']['NAME'] != conf.settings.DATABASES['admin']['NAME']):
-    #     with connection.cursor() as cursor:
-    #         cursor.execute("select * from Triplet_Dataset")
-    #         datasets = dictfetchall(cursor)
-    #     print(datasets)
-    #     candidate_group = {}
-    #     for data in datasets:
-    #         with connection.cursor() as cursor:
-    #             cursor.execute(
-    #                 "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+data["candidate_group_id"]+"')")
-    #             group = dictfetchall(cursor)
-    #         candidate_group[data["candidate_group_id"]] = group
-    #     return HttpResponse(json.dumps(candidate_group))
-
-    # section = {"section_id": "323rasf22",
-    #            "section_body": "aaabbbccdadlkfjweiokln,mxcvnjnuwefkjnkanvkanunvwkn,nvkjnioufvwojflnwalfnwoiafnlkanflksnvlsjvoiwvonebebenbeoeoihro"}
-    # articles = [
-    #     {"articles_id": "2222", "articles_url": "www.google.com",
-    #         "articles_body": "saldkfjalksdfjklsjdfklajskldfjl"},
-    #     {"articles_id": "090080", "articles_url": "www.yahoo.com",
-    #         "articles_body": "5678908765467890-98765467890"},
-    #     {"articles_id": "2222", "articles_url": "www.google.com",
-    #         "articles_body": "saldkfjalksdfjklsjdfklajskldfjl"},
-    #     {"articles_id": "090080", "articles_url": "www.yahoo.com",
-    #         "articles_body": "5678908765467890-98765467890"},
-    #     {"articles_id": "2222", "articles_url": "www.google.com",
-    #         "articles_body": "saldkfjalksdfjklsjdfklajskldfjl"},
-    #     {"articles_id": "090080", "articles_url": "www.yahoo.com",
-    #         "articles_body": "5678908765467890-98765467890"},
-    #     {"articles_id": "2222", "articles_url": "www.google.com",
-    #         "articles_body": "saldkfjalksdfjklsjdfklajskldfjl"},
-    #     {"articles_id": "090080", "articles_url": "www.yahoo.com",
-    #         "articles_body": "5678908765467890-98765467890"}
-    # ]

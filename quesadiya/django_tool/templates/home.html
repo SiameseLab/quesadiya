@@ -10,7 +10,7 @@
 
 {% block content %}
 {% load update_var_tag %}
-{% if  user.is_authenticated %}
+{% if  user.username is not '' %}
   {% comment %} Hi {{ user.username }}!
   <p>You are not logged in</p>
 
