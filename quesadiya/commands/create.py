@@ -40,6 +40,8 @@ def operator(
         raise NotJSONLFileError("`--add-collabortos`", collaborator_input_path)
     if project_name == "all":
         raise QuesadiyaCommandError("`all` is reserved for use by Quesadiya.")
+    if project_name == "admin":
+        raise QuesadiyaCommandError("`admin` is reserved for use by Quesadiya.")
     utils.check_file_path(input_data_path)
     if collaborator_input_path is not None:
         utils.check_file_path(collaborator_input_path)
@@ -47,6 +49,10 @@ def operator(
     project_dir = os.path.join(quesadiya.get_projects_path(), project_name)
     if admin_interface.check_project_exists(project_name):
         raise ProjectExistsError(project_name)
+    # load data and format it to be inserted into project.db
+    # if data doesn't follow quesadiya format, it doesn't create a project folder
+    triplets, candidates, sample_text = \
+        utils.load_format_dataset(input_path=input_data_path)
     # create folder for project inside `projects` dir and insert project.db in it
     try:
         os.mkdir(project_dir)
@@ -64,9 +70,6 @@ def operator(
     factory.init_projectdb(project_dir)
     # get interface
     projectdb_interface = factory.get_projectdb_interface(project_name)
-    # load data and format it to be inserted into project.db
-    triplets, candidates, sample_text = \
-        utils.load_format_dataset(input_path=input_data_path)
     # start inserting rows into tables in project.db
     click.echo("Inserting data. This may take a while...".format(project_name))
     # showing spinner

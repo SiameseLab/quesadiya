@@ -53,6 +53,11 @@ class TestCreate:
                                "-a", "data/sample_collaborators1.j"],
                                input="1234\n1234\n")
         assert isinstance(r.exception, NotJSONLFileError)
+        # if a data file doesn't follow quesadiya format, it should give KeyError
+        r = self.runner.invoke(create,
+                              ["test2", "me", "data/sample_collaborators1.jsonl"],
+                               input="1234\n1234\n")
+        assert isinstance(r.exception, KeyError)
         # the following should pass
         r = self.runner.invoke(create,
                               ["test2", "me", "data/sample_triplets.jsonl",
@@ -69,6 +74,11 @@ class TestCreate:
         # `all` is reserved for internal use
         r = self.runner.invoke(create,
                                 ["all", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
+        assert isinstance(r.exception, QuesadiyaCommandError)
+        # `admin` is reserved for internal use
+        r = self.runner.invoke(create,
+                                ["admin", "me", "data/sample_triplets.jsonl"],
                                 input="1234\n1234\n")
         assert isinstance(r.exception, QuesadiyaCommandError)
         # clean dummy projects

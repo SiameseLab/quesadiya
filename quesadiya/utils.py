@@ -157,7 +157,8 @@ def load_format_dataset(input_path):
                 "status": TripletStatusEnum.unfinished,
                 "time_changed": get_now(),
                 "positive_sample_id": -1,
-                "negative_sample_id": -1
+                "negative_sample_id": -1,
+                "username": -1
             }
             triplets.append(triplet)
             # insert id-metadata pair into lookup table
