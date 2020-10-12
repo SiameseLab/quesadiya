@@ -27,6 +27,60 @@ with open(os.path.join(os.path.dirname(__file__), "README.md"), "r") as f:
 base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quesadiya')
 # get all non python files to include
 api_files = get_include_files(os.path.join('quesadiya', 'django_tool'))
+# import sqlalchemy
+try:
+    from sqlalchemy import create_engine
+except ModuleNotFoundError:
+    raise ModuleNotFoundError(
+        "`sqlalchemy` is required to install quesadiya. Please install the "
+        "package in your environment and try again. For example, you can "
+        "install the package by `pip install sqlalchemy`."
+    )
+try:
+    import argon2
+except ModuleNotFoundError:
+    raise ModuleNotFoundError(
+        "`argon2-cffi` is required to install quesadiya. Please install the "
+        "package in your environment and try again. For example, you can "
+        "install the package by `pip install argon2-cffi`."
+    )
+# check sqlite version
+if sqlite3.sqlite_version_info < (3, 6):
+    sys.exit(
+        "`sqlite >= 3.6` is required for quesadiya (but got sqlite={}). "
+        "Please upgrade sqlite and "
+        "try installing again.".format(sqlite3.sqlite_version)
+    )
+# ../quesadiya/quesadiya/projects
+projects_dir = os.path.join(base_dir, "projects")
+# create `projects` folder
+if not os.path.exists(projects_dir):
+    try:
+        os.mkdir(projects_dir)
+    except PermissionError:
+        raise PermissionError(
+            "Permission is denied to create a project folder under {}. "
+            "Make sure you have the right permission to create folder, or "
+            "try `pip install . --user`".format(base_dir)
+        )
+# import schema from file
+schema_path = os.path.join(base_dir, "db", "schema.py")
+spec = importlib.util.spec_from_file_location('queso', schema_path)
+queso = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(queso)
+# create admin database file and define schema
+db_uri = 'sqlite:///' + os.path.join(projects_dir, "admin.db")
+engine = create_engine(db_uri, echo=False, encoding="utf-8")
+# creates admin db tables inside
+queso.AdminDB.Base.metadata.create_all(engine)
+# import django table from file
+djangodb_path = os.path.join(base_dir, "django_tool", "database", "django_database.py")
+spec = importlib.util.spec_from_file_location('djangodb', djangodb_path)
+djangodb = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(djangodb)
+# create django tables in admin.db
+with engine.connect() as con:
+    djangodb.create_django_tables(con)
 
 
 setup(
@@ -70,45 +124,3 @@ setup(
     packages=find_packages(),
     zip_safe=False,
 )
-
-
-# import sqlalchemy
-from sqlalchemy import create_engine
-import argon2
-# check sqlite version
-if sqlite3.sqlite_version_info < (3, 6):
-    sys.exit(
-        "`sqlite >= 3.6` is required for quesadiya (but got sqlite={}). "
-        "Please upgrade sqlite and "
-        "try installing again.".format(sqlite3.sqlite_version)
-    )
-# ../quesadiya/quesadiya/projects
-projects_dir = os.path.join(base_dir, "projects")
-# create `projects` folder
-if not os.path.exists(projects_dir):
-    try:
-        os.mkdir(projects_dir)
-    except PermissionError:
-        raise PermissionError(
-            "Permission is denied to create a project folder under {}. "
-            "Make sure you have the right permission to create folder, or "
-            "try `pip install . --user`".format(base_dir)
-        )
-# import schema from file
-schema_path = os.path.join(base_dir, "db", "schema.py")
-spec = importlib.util.spec_from_file_location('queso', schema_path)
-queso = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(queso)
-# create admin database file and define schema
-db_uri = 'sqlite:///' + os.path.join(projects_dir, "admin.db")
-engine = create_engine(db_uri, echo=False, encoding="utf-8")
-# creates admin db tables inside
-queso.AdminDB.Base.metadata.create_all(engine)
-# import django table from file
-djangodb_path = os.path.join(base_dir, "django_tool", "database", "django_database.py")
-spec = importlib.util.spec_from_file_location('djangodb', djangodb_path)
-djangodb = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(djangodb)
-# create django tables in admin.db
-with engine.connect() as con:
-    djangodb.create_django_tables(con)
