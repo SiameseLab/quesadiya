@@ -192,10 +192,10 @@ def datetimeDefault(dt):
         return dt.isoformat()
 
 
-def updatePositiveAnchor(p_name, anchor_sample_id, positive_sample_id):
+def updatePositiveAnchor(p_name, anchor_sample_id, positive_sample_id, username):
     with connections[p_name].cursor() as cursor:
         cursor.execute(
-            "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished' WHERE anchor_sample_id='"+anchor_sample_id+"'")
+            "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished',username='"+username+"' WHERE anchor_sample_id='"+anchor_sample_id+"'")
 
 
 def getStatus(p_name):
@@ -230,8 +230,11 @@ def updateAnchor(request):
         projectName = request.session['projectName']
         anchor_id = request.POST.get('anchor_id')
         positive_anchor_id = request.POST.get('positive_anchor_id')
+        username = request.session['user']['username']
+        # username = user.username
         print(anchor_id, "+ :", positive_anchor_id)
-        updatePositiveAnchor(projectName, anchor_id, positive_anchor_id)
+        updatePositiveAnchor(projectName, anchor_id,
+                             positive_anchor_id, username)
         return ProjectInfo(request)
 
 
