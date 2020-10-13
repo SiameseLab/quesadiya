@@ -82,13 +82,9 @@ def create(
 
 
 @cli.command()
-@click.argument(
-    "project_name",
-    metavar="PROJECT"
-)
-def run(project_name):
+def run():
     """Run annotation project indicated by project name."""
-    quesadiya.commands.run.operator(project_name=project_name)
+    quesadiya.commands.run.operator()
 
 
 @cli.command()
