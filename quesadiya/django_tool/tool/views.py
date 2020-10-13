@@ -254,7 +254,7 @@ def ProjectInfo(request):
         projectName = request.session['projectName']
         projectId = request.session['projectId']
         status = getStatus(projectName)
-        projectUser = {"participants": getProjectUser(projectId)}
+        projectUser = {"participants": getProjectUser(projectName)}
         infos = getInfo(projectName)
         infos[0].update(status)
         infos[0].update(projectUser)
