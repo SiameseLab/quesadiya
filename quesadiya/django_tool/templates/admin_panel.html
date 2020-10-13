@@ -1,0 +1,76 @@
+
+{% extends 'base.html' %}
+
+{% block link %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href='/static/styles/css/dashboard.css'/>
+<link rel="stylesheet" href='/static/styles/css/table.css'/>
+{% comment %} <style>
+
+#exTab1 .tab-content {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+/* remove border radius for the tab */
+
+#exTab1 .nav-pills > li > a {
+  border-radius: 0;
+}
+
+</style> {% endcomment %}
+{% endblock %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+{% if  user.username is not '' %}
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Quesadiya</a>
+      {% comment %} <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> {% endcomment %}
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="{% url 'logout' %}">Sign out</a>
+        </li>
+      </ul>
+</nav>
+Go <a href="{% url 'login' %}">project page</a>.
+{% comment %} <div class="container">
+<div id="exTab1" class="container">	
+<ul  class="nav nav-pills">
+			<li class="active">
+        <a  href="#1a" data-toggle="tab">Overview</a>
+			</li>
+			<li><a href="#2a" data-toggle="tab">Using nav-pills</a>
+			</li>
+			<li><a href="#3a" data-toggle="tab">Applying clearfix</a>
+			</li>
+  		<li><a href="#4a" data-toggle="tab">Background color</a>
+			</li>
+		</ul>
+    
+
+			<div class="tab-content clearfix">
+			  <div class="tab-pane active" id="1a">
+          <h3>Content's background color is the same for the tab</h3>
+				</div>
+				<div class="tab-pane" id="2a">
+          <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+				</div>
+        <div class="tab-pane" id="3a">
+          <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+				</div>
+          <div class="tab-pane" id="4a">
+          <h3>We use css to change the background color of the content to be equal to the tab</h3>
+				</div>
+			</div>
+  </div>
+</div> {% endcomment %}
+{% else %}
+  Your Need To <a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}
+{% block script %}
+{% comment %} <script src="/static/styles/js/table.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> {% endcomment %}
+{% endblock %}
+

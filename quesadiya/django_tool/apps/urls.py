@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
 from tool import views as tool_view
-
+from django.shortcuts import redirect
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +28,12 @@ urlpatterns = [
     path('', tool_view.ProjectInfo, name='home'),
     path('updateAnchor/', tool_view.updateAnchor),
     path('nextAnchor/', tool_view.nextAnchor),
-
+    path('auth/login/', tool_view.login, name='login'),
+    path('AssignCooperator/', tool_view.AssignCooperator, name='AssignCooperator'),
+    path('updateCooperator/', tool_view.updateCooperator),
+    path('CooperatorStatus/', tool_view.CooperatorStatus, name='CooperatorStatus'),
+    path('EditCooperator/', tool_view.EditCooperator, name='EditCooperator'),
+    path('updateUser/', tool_view.updateUser),
 ]
+# handler404 = 'tool.views.error'
+# handler500 = 'tool.views.error'

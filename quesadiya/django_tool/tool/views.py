@@ -31,6 +31,11 @@ from django.contrib.auth.backends import ModelBackend
 from quesadiya.db.hasher import PH
 
 
+# def error(request, exception):
+#     logout(request)
+#     return render(request, "registration/login.html")
+
+
 class CustomAuthBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None):
         projectName = request.session['projectName']
@@ -41,35 +46,12 @@ class CustomAuthBackend(ModelBackend):
             user = None
             print('no user')
             return user
-        print(user)
-        print('User.password :', user.password)
-        print('password :', password)
         check_password = PH.verify(user.password, password)
-        print('check_password :', check_password)
         # if True and self.user_can_authenticate(user):
         # PH.hash(new_password)
         if check_password:
             return user
         return None
-
-# from django.contrib.auth.backends import ModelBackend
-# class CustomAuthBackend(ModelBackend):
-#     def authenticate(self, request, username=None, password=None, **kwargs):
-#         user = User.objects.using(request.GET['CUSTOMER_TABLE']).filter(username=username)
-#         if user.check_password(password) and self.user_can_authenticate(user):
-#             return user
-# def authenticate(projectName, username=None, password=None):
-#     login_valid = ('test' == username)
-#     pwd_valid = ('test' == password)
-#     if login_valid and pwd_valid:
-#         try:
-#             user = User.objects.using(projectName).get(username=username)
-#         except User.DoesNotExist:
-#             # Create a new user. There's no need to set a password
-#             # because only the password from settings.py is checked.
-#             user = None
-#         return user
-#     return None
 
 
 def create_connection(project_name):
@@ -107,11 +89,16 @@ def login(request):
             org_login(request, user, 'tool.views.CustomAuthBackend')
             # print(request.user.is_authenticated)
             # print(request.user)
-            user = {'username': user.username}
+            user = {'username': user.username,
+                    'is_superuser': user.is_superuser}
             request.session['user'] = user
             # return HttpResponseRedirect("/")
             # return ProjectInfo(request)
-            return redirect("home")
+            if user['is_superuser'] == 1:
+                print("ap")
+                return redirect("AssignCooperator")
+            else:
+                return redirect("home")
     logout(request)
     return render(request, "registration/login.html")
     # swapDB("t")
@@ -252,7 +239,7 @@ def ProjectInfo(request):
     # print(request.session['projectName'])
     print(request.user.is_authenticated)
     print(request.user)
-    if 'user' in request.session:
+    if 'user' in request.session and request.session['user']['is_superuser'] == 0:
         #     print("yess")
         # if(request.user.is_authenticated):
         user = request.session['user']
@@ -275,3 +262,115 @@ def ProjectInfo(request):
         return render(request, "home.html", context_dict)
     logout(request)
     return render(request, "registration/login.html")
+
+
+# def AdminPanel(request):
+#     print("welcome from admin panel")
+#     if 'user' in request.session:
+#         user = request.session['user']
+#         print(user)
+#         projectName = request.session['projectName']
+#         projectId = request.session['projectId']
+#         with connections[projectName].cursor() as cursor:
+#             cursor.execute(
+#                 "SELECT anchor_sample_id, status, username from triplet_dataset")
+#             anchors = dictfetchall(cursor)
+#         # context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
+#         #                 'candidate_groups': candidate_groups}
+#         context_dict = {'anchors': anchors}
+#         return render(request, "admin_panel.html", context_dict)
+#     logout(request)
+#     return render(request, "registration/login.html")
+
+
+def AssignCooperator(request):
+    print("welcome from project panel")
+    if 'user' in request.session and request.session['user']['is_superuser'] == 1:
+        user = request.session['user']
+        print(user)
+        projectName = request.session['projectName']
+        projectId = request.session['projectId']
+        with connections[projectName].cursor() as cursor:
+            cursor.execute(
+                "SELECT anchor_sample_id, status, username from triplet_dataset")
+            anchors = dictfetchall(cursor)
+        # context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
+        #                 'candidate_groups': candidate_groups}
+        context_dict = {'anchors': anchors}
+        return render(request, "assign_cooperator.html", context_dict)
+    logout(request)
+    return render(request, "registration/login.html")
+
+
+@ csrf_exempt
+def updateCooperator(request):
+    if request.method == 'POST':
+        projectName = request.session['projectName']
+        anchor_id = request.POST.get('anchor_id')
+        username = request.POST.get('cooperator')
+        print(anchor_id, "+ :", username)
+        with connections[projectName].cursor() as cursor:
+            cursor.execute("UPDATE triplet_dataset SET username='" +
+                           username+"' WHERE anchor_sample_id='"+anchor_id + "'")
+        return AssignCooperator(request)
+
+
+def CooperatorStatus(request):
+    print("welcome from CooperatorStatus")
+    if 'user' in request.session and request.session['user']['is_superuser'] == 1:
+        user = request.session['user']
+        print(user)
+        projectName = request.session['projectName']
+        # projectId = request.session['projectId']
+        with connections[projectName].cursor() as cursor:
+            cursor.execute(
+                "SELECT au.username,(SELECT count(status) from triplet_dataset where username=au.username and status='discarded') as discarded,(SELECT count(status) from triplet_dataset where username=au.username and status='finished') as finished,count(td.anchor_sample_id) as assigned from auth_user as au left outer join triplet_dataset as td on au.username = td.username where au.is_superuser = 0 GROUP by au.username,discarded,finished")
+            statuses = dictfetchall(cursor)
+        # context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
+        #                 'candidate_groups': candidate_groups}
+        context_dict = {'statuses': statuses}
+        return render(request, "cooperator_status.html", context_dict)
+    logout(request)
+    return render(request, "registration/login.html")
+
+
+def EditCooperator(request):
+    if 'user' in request.session and request.session['user']['is_superuser'] == 1:
+        user = request.session['user']
+        print(user)
+        projectName = request.session['projectName']
+        # projectId = request.session['projectId']
+        with connections[projectName].cursor() as cursor:
+            cursor.execute(
+                "select id,username,is_superuser as status,last_login from auth_user")
+            users = dictfetchall(cursor)
+        # context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
+        #                 'candidate_groups': candidate_groups}
+        context_dict = {'users': users}
+        return render(request, "edit_cooperator.html", context_dict)
+    logout(request)
+    return render(request, "registration/login.html")
+
+
+@ csrf_exempt
+def updateUser(request):
+    if request.method == 'POST':
+        projectName = request.session['projectName']
+        id = request.POST.get('id')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        status = request.POST.get('status')
+        act = request.POST.get('act')
+        # print(id, " ", username, " ", password, " ", status)
+        password = PH.hash(password)
+        print(password)
+        status = 0 if status.lower() == 'cooperator' else 1
+        if act == "0":
+            with connections[projectName].cursor() as cursor:
+                cursor.execute("UPDATE auth_user SET username='"+username+"',password='" +
+                               str(password)+"',is_superuser='"+str(status)+"' WHERE id='"+id+"'")
+        elif act == "1":
+            with connections[projectName].cursor() as cursor:
+                cursor.execute("INSERT INTO auth_user (id, password, is_superuser, username, last_name, email, is_staff, is_active,date_joined, first_name) VALUES ('" +
+                               str(id)+"', '"+password+"', '"+str(status)+"', '"+username+"', ' ', ' ', '1', '0', strftime('%Y-%m-%d %H:%M:%S.%f','now'), ' ')")
+        return EditCooperator(request)
