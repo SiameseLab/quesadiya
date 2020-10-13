@@ -115,12 +115,12 @@ def dictfetchall(cursor):
     ]
 
 
-def checkProjectUser(username, projectId):
-    with connections['admin'].cursor() as cursor:
-        cursor.execute(
-            "SELECT * from project_user where username='"+username+"' and projectId='"+projectId+"'")
-        data = cursor.fetchall()
-    return False if not data else True
+# def checkProjectUser(username, projectId):
+#     with connections['admin'].cursor() as cursor:
+#         cursor.execute(
+#             "SELECT * from project_user where username='"+username+"' and projectId='"+projectId+"'")
+#         data = cursor.fetchall()
+#     return False if not data else True
 
 
 def swapDB(projectName):
@@ -169,9 +169,9 @@ def getCandidateGroup(p_name, candidate_group_id):
 
 
 def getProjectUser(p_name):
-    with connections['admin'].cursor() as cursor:
+    with connections[p_name].cursor() as cursor:
         cursor.execute(
-            "SELECT username from project_user where projectId='"+p_name+"'")
+            "SELECT username from auth_user")
         data = [item[0] for item in cursor.fetchall()]
     return data
 
