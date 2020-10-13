@@ -75,8 +75,8 @@ def login(request):
         request.session['projectId'] = projectId
         # swapDB(projectName)
         create_connection(projectName)
-        print(projectName, " : ", userName, " : ", password, " : ",
-              projectId, " : ", checkProjectUser(userName, projectId))
+        # print(projectName, " : ", userName, " : ", password, " : ",
+        #       projectId, " : ", checkProjectUser(userName, projectId))
         md = CustomAuthBackend()
         user = md.authenticate(
             request, username=userName, password=password)
