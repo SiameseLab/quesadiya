@@ -156,6 +156,7 @@ def load_format_dataset(input_path):
                 "candidate_group_id": row["candidate_group_id"],
                 "status": TripletStatusEnum.unfinished,
                 "time_changed": get_now(),
+                "is_active": False,
                 "positive_sample_id": -1,
                 "negative_sample_id": -1,
                 "username": -1

@@ -4,6 +4,7 @@ from sqlalchemy import (
     ForeignKey,
     Integer,
     String,
+    Boolean,
     Text,
     Date,
     Enum,
@@ -107,6 +108,7 @@ class TripletDataset(ProjectDB.Base):
         ForeignKey("sample_text.sample_id"),
         nullable=True
     )
+    is_active = Column(Boolean, nullable=False)
     status = Column(Enum(TripletStatusEnum), nullable=False)
     username = Column(String(ProjectDB.MAX_ID_LEN), nullable=True)
     time_changed = Column(DateTime, nullable=False)
