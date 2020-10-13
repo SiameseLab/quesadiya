@@ -133,13 +133,16 @@ def swapDB(projectName):
     print("new db :", conf.settings.DATABASES['project']['NAME'])
 
 
-def getUnfinish(p_name):
+def getUnfinish(p_name, username):
     with connections[p_name].cursor() as cursor:
         cursor.execute(
             "select * from Triplet_Dataset WHERE status='unfinished' or status='discarded' ORDER by time_changed LIMIT 1")
         data = dictfetchall(cursor)
-        cursor.execute("UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded' WHERE anchor_sample_id='" +
+        cursor.execute("UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded' WHERE is_active='0' and anchor_sample_id='" +
                        data[0].get("anchor_sample_id")+"'")
+        cursor.execute(
+            "UPDATE triplet_dataset SET is_active='1',username='"+username+"' WHERE anchor_sample_id='"+data[0].get("anchor_sample_id")+"'")
+
     return data
     # with connection.cursor() as cursor:
     #     cursor.execute(
@@ -153,6 +156,7 @@ def getSampleData(p_name, sample_id):
         cursor.execute(
             "select * from sample_text where sample_id='"+sample_id+"'")
         data = dictfetchall(cursor)
+
     return data
 
 
@@ -195,7 +199,7 @@ def datetimeDefault(dt):
 def updatePositiveAnchor(p_name, anchor_sample_id, positive_sample_id, username):
     with connections[p_name].cursor() as cursor:
         cursor.execute(
-            "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished',username='"+username+"' WHERE anchor_sample_id='"+anchor_sample_id+"'")
+            "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished',username='"+username+"',is_active='0' WHERE anchor_sample_id='"+anchor_sample_id+"'")
 
 
 def getStatus(p_name):
@@ -220,7 +224,7 @@ def nextAnchor(request):
         anchor_sample_id = request.POST.get('anchor_id')
         with connections[projectName].cursor() as cursor:
             cursor.execute(
-                "UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded' WHERE anchor_sample_id='"+anchor_sample_id+"'")
+                "UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded',is_active='0' WHERE anchor_sample_id='"+anchor_sample_id+"'")
         return ProjectInfo(request)
 
 
@@ -246,6 +250,7 @@ def ProjectInfo(request):
         #     print("yess")
         # if(request.user.is_authenticated):
         user = request.session['user']
+        username = request.session['user']['username']
         projectName = request.session['projectName']
         projectId = request.session['projectId']
         status = getStatus(projectName)
@@ -255,7 +260,7 @@ def ProjectInfo(request):
         infos[0].update(projectUser)
         if(infos[0]["finished"] == infos[0]["total"]):
             return render(request, "home.html", {"infos": infos})
-        unfinish_anchor = getUnfinish(projectName)
+        unfinish_anchor = getUnfinish(projectName, username)
         anchor_data = getSampleData(projectName,
                                     unfinish_anchor[0].get("anchor_sample_id"))
         candidate_groups = getCandidateGroup(projectName,
