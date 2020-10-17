@@ -1,7 +1,9 @@
 
 $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
-    var actions = $("table td:last-child").html();
+    var actions = $("table tr:last td:last-child").html();
+    console.log(actions)
+    // var actions = '<a class="add" title="Add" data-toggle="tooltip"><i class="material - icons">&#xE03B;</i></a>' + '< a class="edit" title = "Edit" data - toggle="tooltip" > <i class="material-icons">&#xE254;</i></a > '
     var act = 0
     // Append table with add row form on add new button click
     $(".add-new").click(function () {
@@ -13,7 +15,7 @@ $(document).ready(function () {
             '<td>' + id + '</td>' +
             '<td><input type="text" class="form-control" name="username" id="username"></td>' +
             '<td><input type="text" class="form-control" name="password" id="password"></td>' +
-            '<td><input type="text" class="form-control" name="status" id="status"></td>' +
+            '<td>Collaborator</td>' +
             '<td></td>' +
             '<td>' + actions + '</td>' +
             '</tr>';
@@ -30,7 +32,7 @@ $(document).ready(function () {
         var id = $(this).parents("tr").find("td:eq(0)").text()
         var username = input[0].value
         var password = input[1].value
-        var status = input[2].value
+        var status = '0'
         input.each(function () {
             if (!$(this).val() || $(this).val() == "**********") {
                 $(this).addClass("error");
@@ -70,10 +72,14 @@ $(document).ready(function () {
     // Edit row on edit button click
     $(document).on("click", ".edit", function () {
         // console.log($(this).parents("tr").find("td:eq(1),td:eq(2),td:eq(3)"))
-        $(this).parents("tr").find("td:eq(1),td:eq(2),td:eq(3)").each(function () {
-            // $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
-            $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
-        });
+        // $(this).parents("tr").find("td:eq(1),td:eq(2)").each(function () {
+        //     // $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
+        //     $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
+        // });
+
+        var username = $(this).parents("tr").find("td:eq(1)");
+        username.html('<input type="text" class="form-control" value="' + username.text() + '">');
+        $(this).parents("tr").find("td:eq(2)").html('<input type="text" class="form-control" value="">');
         // $(this).parents("tr").find("td:eq(1),td:eq(2),td:eq(3)")
         $(this).parents("tr").find(".add, .edit").toggle();
         $(".add-new").attr("disabled", "disabled");

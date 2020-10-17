@@ -29,11 +29,12 @@ from django.forms.models import model_to_dict
 #     return backend.DatabaseWrapper(db, database_root)
 from django.contrib.auth.backends import ModelBackend
 from quesadiya.db.hasher import PH
+from argon2.exceptions import VerifyMismatchError
 
 
-# def error(request, exception):
-#     logout(request)
-#     return render(request, "registration/login.html")
+def error(request, *args, **argv):
+    logout(request)
+    return render(request, "registration/login.html")
 
 
 class CustomAuthBackend(ModelBackend):
@@ -46,9 +47,12 @@ class CustomAuthBackend(ModelBackend):
             user = None
             print('no user')
             return user
-        check_password = PH.verify(user.password, password)
-        # if True and self.user_can_authenticate(user):
-        # PH.hash(new_password)
+        try:
+            check_password = PH.verify(user.password, password)
+        except VerifyMismatchError:
+            check_password = False
+            # if True and self.user_can_authenticate(user):
+            # PH.hash(new_password)
         if check_password:
             return user
         return None
@@ -96,11 +100,11 @@ def login(request):
             # return ProjectInfo(request)
             if user['is_superuser'] == 1:
                 print("ap")
-                return redirect("AssignCooperator")
+                return redirect("ReviewDiscarded")
             else:
                 return redirect("home")
     logout(request)
-    return render(request, "registration/login.html")
+    return render(request, "registration/login.html ")
     # swapDB("t")
     # request.session['projectName'] = "t"
     # return redirect("home")
@@ -136,12 +140,18 @@ def swapDB(projectName):
 def getUnfinish(p_name, username):
     with connections[p_name].cursor() as cursor:
         cursor.execute(
-            "select * from Triplet_Dataset WHERE status='unfinished' or status='discarded' ORDER by time_changed LIMIT 1")
+            "select * from Triplet_Dataset WHERE status='unfinished' and is_active=1 and username='"+username+"' ORDER by time_changed LIMIT 1")
         data = dictfetchall(cursor)
-        cursor.execute("UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded' WHERE is_active='0' and anchor_sample_id='" +
-                       data[0].get("anchor_sample_id")+"'")
-        cursor.execute(
-            "UPDATE triplet_dataset SET is_active='1',username='"+username+"' WHERE anchor_sample_id='"+data[0].get("anchor_sample_id")+"'")
+        print(data)
+        if(data == []):
+            cursor.execute(
+                "select * from Triplet_Dataset WHERE status='unfinished' and is_active=0 ORDER by time_changed LIMIT 1")
+            data = dictfetchall(cursor)
+        if(data != []):
+            cursor.execute("UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), is_active=1,username='"+username+"' WHERE anchor_sample_id='" +
+                           data[0].get("anchor_sample_id")+"'")
+        # cursor.execute(
+        #     "UPDATE triplet_dataset SET is_active='1',username='"+username+"' WHERE anchor_sample_id='"+data[0].get("anchor_sample_id")+"'")
 
     return data
     # with connection.cursor() as cursor:
@@ -199,7 +209,7 @@ def datetimeDefault(dt):
 def updatePositiveAnchor(p_name, anchor_sample_id, positive_sample_id, username):
     with connections[p_name].cursor() as cursor:
         cursor.execute(
-            "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished',username='"+username+"',is_active='0' WHERE anchor_sample_id='"+anchor_sample_id+"'")
+            "UPDATE triplet_dataset SET positive_sample_id='"+positive_sample_id+"', status = 'finished',username='"+username+"',is_active=0 WHERE anchor_sample_id='"+anchor_sample_id+"'")
 
 
 def getStatus(p_name):
@@ -224,7 +234,7 @@ def nextAnchor(request):
         anchor_sample_id = request.POST.get('anchor_id')
         with connections[projectName].cursor() as cursor:
             cursor.execute(
-                "UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded',is_active='0' WHERE anchor_sample_id='"+anchor_sample_id+"'")
+                "UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now'), status = 'discarded',is_active=0 WHERE anchor_sample_id='"+anchor_sample_id+"'")
         return ProjectInfo(request)
 
 
@@ -258,9 +268,11 @@ def ProjectInfo(request):
         infos = getInfo(projectName)
         infos[0].update(status)
         infos[0].update(projectUser)
-        if(infos[0]["finished"] == infos[0]["total"]):
+        if(infos[0]["unfinished"] <= 0):
             return render(request, "home.html", {"infos": infos})
         unfinish_anchor = getUnfinish(projectName, username)
+        if(unfinish_anchor == []):
+            return render(request, "home.html", {"infos": infos})
         anchor_data = getSampleData(projectName,
                                     unfinish_anchor[0].get("anchor_sample_id"))
         candidate_groups = getCandidateGroup(projectName,
@@ -291,36 +303,29 @@ def ProjectInfo(request):
 #     return render(request, "registration/login.html")
 
 
-def AssignCooperator(request):
-    print("welcome from project panel")
+def ReviewDiscarded(request):
     if 'user' in request.session and request.session['user']['is_superuser'] == 1:
         user = request.session['user']
-        print(user)
         projectName = request.session['projectName']
-        projectId = request.session['projectId']
         with connections[projectName].cursor() as cursor:
             cursor.execute(
-                "SELECT anchor_sample_id, status, username from triplet_dataset")
+                "SELECT anchor_sample_id, status, username from triplet_dataset where status='discarded'")
             anchors = dictfetchall(cursor)
-        # context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
-        #                 'candidate_groups': candidate_groups}
         context_dict = {'anchors': anchors}
-        return render(request, "assign_cooperator.html", context_dict)
+        return render(request, "review_discarded.html", context_dict)
     logout(request)
     return render(request, "registration/login.html")
 
 
 @ csrf_exempt
-def updateCooperator(request):
+def reviewDiscarded(request):
     if request.method == 'POST':
         projectName = request.session['projectName']
         anchor_id = request.POST.get('anchor_id')
-        username = request.POST.get('cooperator')
-        print(anchor_id, "+ :", username)
         with connections[projectName].cursor() as cursor:
-            cursor.execute("UPDATE triplet_dataset SET username='" +
-                           username+"' WHERE anchor_sample_id='"+anchor_id + "'")
-        return AssignCooperator(request)
+            cursor.execute(
+                "UPDATE triplet_dataset SET status='unfinished', username='-1', is_active=0 WHERE anchor_sample_id='"+anchor_id + "'")
+        return ReviewDiscarded(request)
 
 
 def CooperatorStatus(request):
@@ -372,7 +377,8 @@ def updateUser(request):
         # print(id, " ", username, " ", password, " ", status)
         password = PH.hash(password)
         print(password)
-        status = 0 if status.lower() == 'cooperator' else 1
+        # status = 0 if status.lower() == 'cooperator' else 1
+        status = 0
         if act == "0":
             with connections[projectName].cursor() as cursor:
                 cursor.execute("UPDATE auth_user SET username='"+username+"',password='" +

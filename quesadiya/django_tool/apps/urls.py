@@ -29,11 +29,12 @@ urlpatterns = [
     path('updateAnchor/', tool_view.updateAnchor),
     path('nextAnchor/', tool_view.nextAnchor),
     path('auth/login/', tool_view.login, name='login'),
-    path('AssignCooperator/', tool_view.AssignCooperator, name='AssignCooperator'),
-    path('updateCooperator/', tool_view.updateCooperator),
+    path('ReviewDiscarded/', tool_view.ReviewDiscarded, name='ReviewDiscarded'),
+    path('reviewDiscarded/', tool_view.reviewDiscarded),
     path('CooperatorStatus/', tool_view.CooperatorStatus, name='CooperatorStatus'),
     path('EditCooperator/', tool_view.EditCooperator, name='EditCooperator'),
     path('updateUser/', tool_view.updateUser),
 ]
-# handler404 = 'tool.views.error'
-# handler500 = 'tool.views.error'
+handler404 = 'tool.views.error'
+handler500 = 'tool.views.error'
+handler400 = 'tool.views.error'

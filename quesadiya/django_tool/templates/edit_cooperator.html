@@ -19,7 +19,7 @@
 </nav>
 <ul class="nav nav-tabs">
   <li class="nav-item">
-    <a class="nav-link " href="{% url 'AssignCooperator' %}">Assign Cooperator</a>
+    <a class="nav-link " href="{% url 'ReviewDiscarded' %}">Discarded</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{% url 'CooperatorStatus' %}">View Status</a>
@@ -57,11 +57,13 @@
                         <td>{{user.id}}</td>
                         <td>{{user.username}}</td>
                         <td>**********</td>
-                        <td>{% if user.status == 0 %}Cooperator{% elif user.status == 1 %}Admin{% endif %}</td>
+                        <td>{% if user.status == 0 %}Collaborator{% elif user.status == 1 %}Admin{% endif %}</td>
                         <td>{{user.last_login}}</td>
                         <td>
+                          {% if user.status == 0 %}
                             <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
                             <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                          {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

@@ -10,6 +10,7 @@
 
 {% block content %}
 {% load update_var_tag %}
+{% load text_split_tag %}
 {% if  user.username is not '' %}
   {% comment %} Hi {{ user.username }}!
   <p>You are not logged in</p>
@@ -111,9 +112,9 @@
                 <div class="card-body">
                   <h5 class="card-title anchor-id">{{ anchor_data.0.sample_id }}</h5>
                   {% comment %} <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> {% endcomment %}
-                  <p class="card-text">{{ anchor_data.0.sample_body }}</p>
+                  <p class="card-text">{% textSplit anchor_data.0.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</p>
                   <button id="anchor_submit" class="card-link btn btn-success disabled" name="finish_btn">Submit</button>
-                  <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Next</button>
+                  <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Discard</button>
                 </div>
               </div>
             </div>
@@ -123,7 +124,7 @@
                 <h5 class="card-header">{{ candidate.candidate_sample_id }}</h5>
                 <div class="card-body">
                   <h5 class="card-title">{{ candidate.sample_title }}</h5>
-                  <p class="card-text">{{ candidate.sample_body }}</p>
+                    <p class="card-text">{% textSplit candidate.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</p>
                   <button id="sample_btn" class="btn btn-primary">Select</button>
                 </div>
               </div>
@@ -207,7 +208,7 @@
     var lesstext = "less";
     $('.card-text').each(function () {
         var content = $(this).html();
-
+        console.log($(this).children())
         if (content.length > showChar) {
 
             var c = content.substr(0, showChar);
