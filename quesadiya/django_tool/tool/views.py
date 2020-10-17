@@ -33,8 +33,8 @@ from argon2.exceptions import VerifyMismatchError
 
 
 def error(request, *args, **argv):
-    # logout(request)
-    return redirect("home")
+    logout(request)
+    return render(request, "registration/login.html")
 
 
 class CustomAuthBackend(ModelBackend):
