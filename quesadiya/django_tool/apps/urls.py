@@ -35,6 +35,6 @@ urlpatterns = [
     path('EditCooperator/', tool_view.EditCooperator, name='EditCooperator'),
     path('updateUser/', tool_view.updateUser),
 ]
-handler404 = 'tool.views.error'
+# handler404 = 'tool.views.error'
 handler500 = 'tool.views.error'
 handler400 = 'tool.views.error'
