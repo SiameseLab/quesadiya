@@ -2,6 +2,7 @@
 {% extends 'base.html' %}
 
 {% block link %}
+{% load static %}
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href='/static/styles/css/table.css'/>
 {% endblock %}
@@ -22,7 +23,7 @@
     <a class="nav-link " href="{% url 'ReviewDiscarded' %}">Discarded</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'CooperatorStatus' %}">View Status</a>
+    <a class="nav-link" href="{% url 'ViewStatus' %}">View Status</a>
   </li>
   <li class="nav-item">
     <a class="nav-link active" href="{% url 'EditCooperator' %}">Edit User</a>
@@ -77,6 +78,7 @@
 {% endif %}
 {% endblock %}
 {% block script %}
-<script src="/static/styles/js/edit_cooperator_table.js"></script>
+{% comment %} <script src="/static/styles/js/edit_collaborator_table.js"></script> {% endcomment %}
+<script src="{% static '/styles/js/edit_collaborator_table.js' %}"></script>
 {% endblock %}
 

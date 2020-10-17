@@ -22,7 +22,7 @@
     <a class="nav-link " href="{% url 'ReviewDiscarded' %}">Discarded</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link active" href="{% url 'CooperatorStatus' %}">View Status</a>
+    <a class="nav-link active" href="{% url 'ViewStatus' %}">View Status</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="{% url 'EditCooperator' %}">Edit User</a>
@@ -62,6 +62,5 @@
 {% endif %}
 {% endblock %}
 {% block script %}
-<script src="/static/styles/js/table.js"></script>
 {% endblock %}
 

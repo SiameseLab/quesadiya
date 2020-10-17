@@ -33,8 +33,8 @@ from argon2.exceptions import VerifyMismatchError
 
 
 def error(request, *args, **argv):
-    logout(request)
-    return render(request, "registration/login.html")
+    # logout(request)
+    return redirect("home")
 
 
 class CustomAuthBackend(ModelBackend):
@@ -328,7 +328,7 @@ def reviewDiscarded(request):
         return ReviewDiscarded(request)
 
 
-def CooperatorStatus(request):
+def ViewStatus(request):
     print("welcome from CooperatorStatus")
     if 'user' in request.session and request.session['user']['is_superuser'] == 1:
         user = request.session['user']
@@ -342,7 +342,7 @@ def CooperatorStatus(request):
         # context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
         #                 'candidate_groups': candidate_groups}
         context_dict = {'statuses': statuses}
-        return render(request, "cooperator_status.html", context_dict)
+        return render(request, "view_status.html", context_dict)
     logout(request)
     return render(request, "registration/login.html")
 

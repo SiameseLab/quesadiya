@@ -18,8 +18,10 @@ from django.urls import path, include
 from django.views.generic.base import TemplateView
 from tool import views as tool_view
 from django.shortcuts import redirect
-
+# from django.views.generic.base import RedirectView
+# favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 urlpatterns = [
+    # path(r'^favicon\.ico$', favicon_view),
     path('admin/', admin.site.urls),
     path('auth/login/', tool_view.login, name='login'),
     path('auth/', include('django.contrib.auth.urls')),
@@ -31,10 +33,10 @@ urlpatterns = [
     path('auth/login/', tool_view.login, name='login'),
     path('ReviewDiscarded/', tool_view.ReviewDiscarded, name='ReviewDiscarded'),
     path('reviewDiscarded/', tool_view.reviewDiscarded),
-    path('CooperatorStatus/', tool_view.CooperatorStatus, name='CooperatorStatus'),
+    path('ViewStatus/', tool_view.ViewStatus, name='ViewStatus'),
     path('EditCooperator/', tool_view.EditCooperator, name='EditCooperator'),
     path('updateUser/', tool_view.updateUser),
 ]
-# handler404 = 'tool.views.error'
+handler404 = 'tool.views.error'
 handler500 = 'tool.views.error'
 handler400 = 'tool.views.error'
