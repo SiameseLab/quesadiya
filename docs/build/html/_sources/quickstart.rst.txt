@@ -3,14 +3,18 @@
 Quesadiya
 =========
 
-.. image:: https://travis-ci.com/SiameseLab/quesadiya.svg?token=xQyvpopJU4sATWYRiD3N&branch=master
-    :target https://travis-ci.com/SiameseLab/quesadiya
+.. image:: https://travis-ci.com/SiameseLab/quesadiya.svg?branch=master
+    :target: https://travis-ci.com/SiameseLab/quesadiya
     :alt: Build Status
+
 .. image:: https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-success
-    :target https://github.com/SiameseLab/quesadiya
+    :target: https://github.com/SiameseLab/quesadiya
     :alt: Supported Python Version
-.. TODO: add docs card
-.. TODO: add pypi package card
+
+.. image:: https://img.shields.io/badge/docs-available-informational
+    :target: https://siameselab.github.io/quesadiya/
+    :alt: Docs
+
 
 Quesdadiya is a data annotation project management platform where you can manage a
 project through `Command Line Interface (CLI) <https://github.com/SiameseLab>`__ and annotate data on
