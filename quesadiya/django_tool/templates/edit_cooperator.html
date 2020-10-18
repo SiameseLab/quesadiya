@@ -1,0 +1,84 @@
+
+{% extends 'base.html' %}
+
+{% block link %}
+{% load static %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href='/static/styles/css/table.css'/>
+{% endblock %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+{% if  user.username is not '' %}
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Quesadiya</a>
+      {% comment %} <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> {% endcomment %}
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="{% url 'logout' %}">Sign out</a>
+        </li>
+      </ul>
+</nav>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'ReviewDiscarded' %}">Discarded</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'ViewStatus' %}">View Status</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="{% url 'EditCooperator' %}">Edit User</a>
+  </li> 
+</ul>
+  <br>
+<div class="container-lg">
+    <div class="table-responsive">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8"><h2>Edit <b>Users</b></h2></div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Status</th>
+                        <th>Last login</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{user.id}}</td>
+                        <td>{{user.username}}</td>
+                        <td>**********</td>
+                        <td>{% if user.status == 0 %}Collaborator{% elif user.status == 1 %}Admin{% endif %}</td>
+                        <td>{{user.last_login}}</td>
+                        <td>
+                          {% if user.status == 0 %}
+                            <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
+                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                          {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+  Your Need To <a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}
+{% block script %}
+{% comment %} <script src="/static/styles/js/edit_collaborator_table.js"></script> {% endcomment %}
+<script src="{% static '/styles/js/edit_collaborator_table.js' %}"></script>
+{% endblock %}
+

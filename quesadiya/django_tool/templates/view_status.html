@@ -1,0 +1,66 @@
+
+{% extends 'base.html' %}
+
+{% block link %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href='/static/styles/css/card.css'/>
+{% endblock %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+{% if  user.username is not '' %}
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Quesadiya</a>
+      {% comment %} <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> {% endcomment %}
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="{% url 'logout' %}">Sign out</a>
+        </li>
+      </ul>
+</nav>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link " href="{% url 'ReviewDiscarded' %}">Discarded</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="{% url 'ViewStatus' %}">View Status</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'EditCooperator' %}">Edit User</a>
+  </li> 
+</ul>
+  <br>
+   
+    <div class="row">
+    {% for status in statuses %}
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{status.username}}</h5>
+              <p class="card-text">
+                <ul class="list-group">
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Discarded
+                    <span class="badge badge-primary badge-pill">{{status.discarded}}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Finished
+                    <span class="badge badge-primary badge-pill">{{status.finished}}</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Assigned
+                    <span class="badge badge-primary badge-pill">{{status.assigned}}</span>
+                  </li>
+                </ul>
+              </p>
+            </div>
+          </div>
+      </div>
+  {% endfor %}
+  </div>
+{% else %}
+  Your Need To <a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}
+{% block script %}
+{% endblock %}
+

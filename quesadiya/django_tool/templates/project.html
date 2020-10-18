@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block link %}
+
+<link rel="stylesheet" href='/static/styles/css/signin.css' />{% endblock %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+{% comment %} <form method="post">
+  <!-- CSRF Attack -->
+  {% csrf_token %}
+  <!--  -->
+  {{ form.as_p }}
+  <button type="submit">Login To me</button>
+</form>
+{% load bootstrap4 %} {% endcomment %}
+
+{# Display a form #}
+{% load database_switch_tag %}
+{% load get_projects_tag %}
+<div class="body text-center">
+  <form class="form-signin" method="post">
+    {% csrf_token %}
+    {% getProjects as projects %}
+    {% comment %} {% for project in projects %}
+    {{ project.project_name }}
+    {% endfor %} {% endcomment %}
+
+    <select class="form-control" name="p" id="project">
+      <option value="">---- Select Project -----</option>
+      {% for project in projects %}
+      <option value="{{ project.project_name }}">{{ project.project_name }}</option>
+      {% endfor %}
+    </select>
+
+
+
+</div>
+{% endblock %}

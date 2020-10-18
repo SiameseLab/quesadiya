@@ -30,8 +30,9 @@ class TestExport:
     def test_default_action(self):
         """Test command exports output file w/ or w/o text."""
         # create a dummy project
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # insert dummy samples and set status finished for testing export
         project_dir = os.path.join(q.get_projects_path(), "test1")
@@ -78,8 +79,9 @@ class TestExport:
     def test_bad_input(self):
         """Test exception handling for bad inputs."""
         # create a dummy project
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # output_path must be jsonl
         r = self.runner.invoke(export, ["test1", "output.j"])

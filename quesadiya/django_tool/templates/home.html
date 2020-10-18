@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block link %}
@@ -8,7 +9,9 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
+{% load update_var_tag %}
+{% load text_split_tag %}
+{% if  user.username is not '' %}
   {% comment %} Hi {{ user.username }}!
   <p>You are not logged in</p>
 
@@ -31,7 +34,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <div class="nav-link active" >
+                <div class="nav-link" >
                   <span data-feather="book-open"></span>
                     {{ infos.0.project_name }}
                   <span class="sr-only">(current)</span>
@@ -40,13 +43,18 @@
               <li class="nav-item">
                 <div class="nav-link" >
                   <span data-feather="user"></span>
-                  {{ infos.0.participants }}
+                  {% comment %} <ul class="list-group list-group-horizontal"> {% endcomment %}
+                  {% for participant in infos.0.participants %}
+                     {% comment %} <li class=list-group-item></li> {% endcomment %}
+                     {{ participant }} ,
+                  {% endfor %}
+                  {% comment %} </ul> {% endcomment %}
                 </div>
               </li>
               <li class="nav-item">
                 <div class="nav-link" >
                   <span data-feather="info"></span>
-                  {{ infos.0.description }}
+                  {{ infos.0.project_description }}
                 </div>
               </li>
               
@@ -64,19 +72,19 @@
               <li class="nav-item">
                 <div class="nav-link" >
                   <span data-feather="hash"></span>
-                  Finished<span> : {{ infos.0.finish }}</span>
+                  Finished<span> : {{ infos.0.finished }}</span>
                 </div>
               </li>
               <li class="nav-item">
                 <div class="nav-link" >
                   <span data-feather="hash"></span>
-                  Unlabled<span> : {{ infos.0.unLabled }}</span>
+                  unfinish<span> : {{ infos.0.unfinished }}</span>
                 </div>
               </li>
               <li class="nav-item">
                 <div class="nav-link" >
                   <span data-feather="hash"></span>
-                  Abolished<span> : {{ infos.0.abolished }}</span>
+                  Discarded<span> : {{ infos.0.discarded }}</span>
                 </div>
               </li>
             </ul>
@@ -98,62 +106,35 @@
             </div>
           </div>
           <div class="row">
+          {% if anchor_data %}
             <div class="col-4 w-auto border-right">
               <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title">{{ section.section_id }}</h5>
+                  <h5 class="card-title anchor-id">{{ anchor_data.0.sample_id }}</h5>
                   {% comment %} <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> {% endcomment %}
-                  <p class="card-text">{{ section.section_body }}</p>
-                  <a href="#" class="card-link">Finished</a>
-                  <a href="#" class="card-link">Next</a>
+                  <p class="card-text">{% textSplit anchor_data.0.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</p>
+                  <button id="anchor_submit" class="card-link btn btn-success disabled" name="finish_btn">Submit</button>
+                  <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Discard</button>
                 </div>
               </div>
             </div>
-            <div class="col-8">
-              {% for article in articles %}
+            <div class="col-8"  id="sample_cards">
+              {% for candidate in candidate_groups %}
               <div class="card mb-2">
-                <h5 class="card-header">{{ article.articles_id }}</h5>
+                <h5 class="card-header">{{ candidate.candidate_sample_id }}</h5>
                 <div class="card-body">
-                  <h5 class="card-title">{{ article.articles_url }}</h5>
-                  <p class="card-text">{{ article.articles_body }}</p>
-                  <a href="#" class="btn btn-primary">Select</a>
+                  <h5 class="card-title">{{ candidate.sample_title }}</h5>
+                    <p class="card-text">{% textSplit candidate.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</p>
+                  <button id="sample_btn" class="btn btn-primary">Select</button>
                 </div>
               </div>
               {% endfor %}
-              
-              
-             
+              {% csrf_token %}
             </div>
+            {% else %}
+              <h1>All finished!</h1>
+            {% endif %}
           </div>
-          {% comment %} <div class="table-responsive">
-            <table class="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-              </tbody>
-            </table>
-          </div> {% endcomment %}
         </main>
       </div>
     </div>
@@ -166,5 +147,107 @@
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 <script>
   feather.replace()
+  var header = document.getElementById("sample_cards");
+  var btns = header.getElementsByClassName("btn btn-primary");
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].addEventListener("click", function() {
+    var current = header.getElementsByClassName("btn-success");
+    var current_header = header.getElementsByClassName("card-header");
+    if(current[0] != undefined){
+      current[0].className = current[0].className.replace(" btn-success", " btn-primary");
+      current_header[0].className = current_header[0].className.replace("card-header positive-anchor-id", "card-header");
+    }
+
+    var parent = $(this).parent().parent();
+    
+    var current_header = parent.children(".card-header");
+    console.log(current_header)
+    current_header[0].className = current_header[0].className.replace("card-header", "card-header positive-anchor-id");
+    
+    this.className = this.className.replace("btn btn-primary", "btn btn-success");
+    var element = document.getElementById("anchor_submit");
+    element.classList.remove("disabled");
+    });
+  }
+  $('#anchor_submit').click(function() {   
+      var positive_anchor_id = document.getElementsByClassName("card-header positive-anchor-id")[0].innerText;
+      var anchor_id = document.getElementsByClassName("card-title anchor-id")[0].innerText;
+      var data = {anchor_id: anchor_id,positive_anchor_id:positive_anchor_id};
+      $.ajax({
+          data: data,
+          url: 'updateAnchor/',
+          method: 'POST',
+          success: function (data) {        
+              location.reload(true)
+          }
+      });
+  });
+  $('#anchor_next').click(function() {   
+      var anchor_id = document.getElementsByClassName("card-title anchor-id")[0].innerText;
+      var data = {anchor_id: anchor_id};
+      var txt;
+      var r = confirm("Are you sure to go next anchor and discarded this?");
+      if (r == true) {
+        $.ajax({
+          data: data,
+          url: 'nextAnchor/',
+          method: 'POST',
+          success: function (data) {        
+              location.reload(true)
+          }
+      });
+      } else {
+      } 
+      
+  });
+  coll()
+  function coll(){
+    var showChar = 250;
+    var ellipsestext = "...";
+    var moretext = "more";
+    var lesstext = "less";
+    $('.card-text').each(function () {
+        var content = $(this).html();
+        console.log($(this).children())
+        if (content.length > showChar) {
+
+            var c = content.substr(0, showChar);
+            var h = content.substr(showChar - 1, content.length - showChar);
+
+            var html = c + '<span class="moreelipses">' + ellipsestext + '</span>&nbsp;<span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
+            console.log(html)
+            $(this).html(html);
+        }
+
+    });
+
+    $(".morelink").click(function () {
+        if ($(this).hasClass("less")) {
+            $(this).removeClass("less");
+            $(this).html(moretext);
+        } else {
+            $(this).addClass("less");
+            $(this).html(lesstext);
+        }
+        $(this).parent().prev().toggle();
+        $(this).prev().toggle();
+        return false;
+    });
+  };
 </script>
 {% endblock %}
+
+  {% comment %} $('#anchor_submit').click(function() {    
+      var data = {anchor_id: 'Lee pal kwar',};
+      $.ajax({
+          data: data,
+          url: 'getAnchor/',
+          method: 'POST',
+          success: function (data) {        
+              console.log(data);
+              d = {"project_name": "t", "project_description": "testproject"}
+              {{infos | update_var}}
+              context_dict = {"infos": [{"project_name": "t", "project_description": "testproject"}], "anchor_data": [{"sample_id": "5ed953a2d98c5b4207f187fa", "sample_body": "A number of public health issues, particularly noncommunicable diseases, significantly contribute to morbidity, mortality, and economic losses in the UAE. In view of the population demographics of the UAE, future national population-based public health initiatives should consider the sociocultural, religious, ethnic, and educational diversity of the UAE in the design, development, and implementation of campaigns, interventions, and strategies. The major public health challenges posed by certain personal, lifestyle, occupational, and environmental factors associated with the development of chronic diseases are not isolated to the UAE; rather, they form part of a global health problem, which requires international collaboration and action.", "sample_title": "Conclusion"}], "candidate_groups": [{"candidate_sample_id": "5ed93d5fd98c5b4207f0b64c", "sample_body": "We identified genetic variability of MERS-CoV S genes among infected persons in South Korea. Samples from 7 patients identified as positive for MERS-CoV were sequenced. These patients were identified by using sequences upstream of the envelope protein gene and open reading frame (ORF) 1a in real-time reverse transcription PCRs (5) ( Table 1) .", "sample_title": "The Study"}]}
+          }
+      });
+  }); {% endcomment %}

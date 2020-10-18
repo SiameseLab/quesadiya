@@ -4,19 +4,22 @@ import warnings
 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import exists
+from sqlalchemy.sql import text
+
+from argon2.exceptions import VerifyMismatchError
 
 from .session import SessionContextManager
-
 from .schema import AdminDB, ProjectDB
 from .schema import (
     Project,
     ProjectStatusEnum,
-    Collaborator,
     TripletDataset,
     TripletStatusEnum,
     SampleText,
     CandidateGroup
 )
+
+from .hasher import PH
 
 
 class SQLAlchemyInterface:
@@ -85,8 +88,6 @@ class SQLAlchemyInterface:
         self,
         project_name,
         project_description,
-        admin_name,
-        admin_password,
         admin_contact,
         status
     ):
@@ -94,8 +95,6 @@ class SQLAlchemyInterface:
             project = Project(
                 project_name=project_name,
                 project_description=project_description,
-                admin_name=admin_name,
-                admin_password=admin_password,
                 admin_contact=admin_contact,
                 date_created=date.today(),
                 status=status
@@ -126,23 +125,20 @@ class SQLAlchemyInterface:
             ).scalar()
         return result
 
-    def admin_authentication(self, project_name, admin_name, admin_password):
-        with self.session_context_manager(expire_on_commit=True) as session:
-            result = session.query(
-                exists().
-                    where(Project.project_name == project_name).
-                    where(Project.admin_name == admin_name).
-                    where(Project.admin_password == admin_password)
-            ).scalar()
-        return result
+    def admin_authentication(self, admin_name, admin_password):
+        admin = self.get_admin_info()
+        # argon2 raises VerifyMismatchError if password doesn't match
+        try:
+            is_pass_valid = PH.verify(admin["password"], admin_password)
+            if (admin["username"] == admin_name) and is_pass_valid:
+                return True
+            else:
+                return False
+        except VerifyMismatchError:
+            return False
 
     def delete_project(self, project_name):
         with self.session_context_manager(expire_on_commit=True) as session:
-            # delete collabortos assocaited with project first
-            project_id = self.get_project_id(project_name)
-            session.query(Collaborator)\
-                .filter(Collaborator.project_id == project_id)\
-                .delete()
             # delete project
             session.query(Project)\
                 .filter(Project.project_name == project_name)\
@@ -155,6 +151,40 @@ class SQLAlchemyInterface:
                         .first()
             return result
 
+    def get_admin_info(self):
+        with self.engine.connect() as con:
+            query = text("""SELECT password,
+                                   last_login,
+                                   username,
+                                   is_active,
+                                   date_joined
+                            FROM auth_user
+                            WHERE is_superuser = 1;""")
+            try:
+                # there is only one admin user per project
+                admin = list(con.execute(query))[0]
+                return {
+                    "password": admin[0],
+                    "last_login": admin[1],
+                    "username": admin[2],
+                    "is_active": admin[3],
+                    "date_joined": admin[4]
+                }
+            except IndexError:
+                warnings.warn(
+                    "Failed to find `admin user` of this project. Please make "
+                    "sure the project is valid by "
+                    "`quesadiya inspect <project_name>`."
+                    , RuntimeWarning
+                )
+                return {
+                    "password": "",
+                    "last_login": "",
+                    "username": "",
+                    "is_active": "",
+                    "date_joined": ""
+                }
+
     def get_project_id(self, project_name):
         with self.session_context_manager(expire_on_commit=True) as session:
             project_id = session.query(Project.project_id)\
@@ -162,15 +192,18 @@ class SQLAlchemyInterface:
                             .scalar()
             return project_id
 
-    def get_collaborators(self, project_name):
-        with self.session_context_manager(expire_on_commit=True) as session:
-            project_id = self.get_project_id(project_name)
-            resp = session.query(Collaborator)\
-                        .join(Project)\
-                        .filter(Collaborator.project_id == project_id)\
-                        .all()
+    def get_collaborators(self):
+        with self.engine.connect() as con:
+            query = text("""SELECT username, password, email
+                            FROM auth_user
+                            WHERE is_superuser = 0;""")
+            resp = con.execute(query)
             for x in resp:
-                yield x
+                yield {
+                    "collaborator_name": x[0],
+                    "collaborator_password": x[1],
+                    "collaborator_contact": x[2]
+                }
 
     def _update_project(self, field, value, project_name):
         with self.session_context_manager(expire_on_commit=True) as session:
@@ -192,19 +225,21 @@ class SQLAlchemyInterface:
             project_name=project_name
         )
 
-    def change_admin_name(self, project_name, new_admin):
-        self._update_project(
-            field=Project.admin_name,
-            value=new_admin,
-            project_name=project_name
-        )
+    def change_admin_name(self, new_admin):
+        with self.engine.connect() as con:
+            query = text("""UPDATE auth_user
+                            SET username = :new_admin
+                            WHERE is_superuser = 1;""")
+            args = {"new_admin": new_admin}
+            con.execute(query, args)
 
-    def change_admin_password(self, project_name, new_password):
-        self._update_project(
-            field=Project.admin_password,
-            value=new_password,
-            project_name=project_name
-        )
+    def change_admin_password(self, new_password):
+        with self.engine.connect() as con:
+            query = text("""UPDATE auth_user
+                            SET password = :new_password
+                            WHERE is_superuser = 1;""")
+            args = {"new_password": new_password}
+            con.execute(query, args)
 
     def collaborators_bulk_update(self, collaborators, project_id):
         warned = False

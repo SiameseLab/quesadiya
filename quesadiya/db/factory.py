@@ -1,3 +1,5 @@
+import quesadiya
+
 from .interface import SQLAlchemyInterface
 
 from .config import ADMIN_PATH
@@ -18,8 +20,9 @@ def get_admindb_interface():
     return interface
 
 
-def get_projectdb_interface(db_dir_path):
-    engine = _get_projectdb_engine(db_dir_path=db_dir_path)
+def get_projectdb_interface(project_name):
+    project_dir = os.path.join(quesadiya.get_projects_path(), project_name)
+    engine = _get_projectdb_engine(db_dir_path=project_dir)
     interface = SQLAlchemyInterface(engine=engine)
     return interface
 
