@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="python" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Login &mdash; quesadiya 0.1 (beta) documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> quesadiya
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1 (beta)
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Login</a></li>
+<li><a class="reference internal" href="#project-status">Project Status</a></li>
+<li><a class="reference internal" href="#discarded-samples">Discarded Samples</a></li>
+<li><a class="reference internal" href="#manage-collaborators">Manage Collaborators</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">quesadiya</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Login</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/admin.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="login">
+<span id="admin"></span><h1>Login<a class="headerlink" href="#login" title="Permalink to this headline">¶</a></h1>
+<p>The admin user can login to a project by opening browser and typing <strong>&lt;ip_address&gt;:&lt;port&gt;</strong>.
+For example, <a class="reference external" href="http://localhost:1133/">http://localhost:1133/</a>.
+The admin user can run the quesadiya server by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya run
+</pre></div>
+</div>
+<p>The code above runs the server at port 1133. You can specify the port by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya run -p <span class="m">8000</span>
+</pre></div>
+</div>
+<p>Once you get to the login page, select your project and enter admin name and password.</p>
+<a class="reference internal image-reference" href="_images/login.png"><img alt="Login" class="align-center" src="_images/login.png" style="width: 400px;" /></a>
+</div>
+<div class="section" id="project-status">
+<h1>Project Status<a class="headerlink" href="#project-status" title="Permalink to this headline">¶</a></h1>
+<p>Admin can view the current progress of a project in <strong>View Status</strong> tab.
+This page shows the progress of each collaborator.</p>
+<a class="reference internal image-reference" href="_images/status.png"><img alt="Project Status" class="align-center" src="_images/status.png" style="width: 600px;" /></a>
+</div>
+<div class="section" id="discarded-samples">
+<h1>Discarded Samples<a class="headerlink" href="#discarded-samples" title="Permalink to this headline">¶</a></h1>
+<p>Admin can view all discarded samples. To view sample, you can simply click
+anchor sample id. If you'd like to push a sample back to the project, you can do so
+by clicking <strong>undo</strong> button. Once a sample is pushed back, quesadiya randomly assigns the sample to
+a collaborator.</p>
+<a class="reference internal image-reference" href="_images/discarded.png"><img alt="Discarded Samples" class="align-center" src="_images/discarded.png" style="width: 600px;" /></a>
+</div>
+<div class="section" id="manage-collaborators">
+<h1>Manage Collaborators<a class="headerlink" href="#manage-collaborators" title="Permalink to this headline">¶</a></h1>
+<p>Admin can also manage collaborators in <strong>Edit User</strong> tab. You can either add a new
+collaborator or remove an existing collaborator in your project.</p>
+<a class="reference internal image-reference" href="_images/edit_collaborator.png"><img alt="Edit Collaborator" class="align-center" src="_images/edit_collaborator.png" style="width: 600px;" /></a>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, SiameseLab
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

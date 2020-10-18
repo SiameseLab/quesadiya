@@ -14,7 +14,7 @@ import quesadiya.commands.modify
 @click.group()
 @click.version_option()
 def cli():
-    """Delicious mexican pizza."""
+    """A delicious mexican dish."""
     pass
 
 

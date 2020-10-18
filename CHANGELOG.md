@@ -1,4 +1,4 @@
-# [0.1] (xx-xx-xxxx)
+# 0.1 (xx-xx-xxxx)
 
 ### Notes
 

@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="python" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Command Line Interface &mdash; quesadiya 0.1 (beta) documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> quesadiya
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1 (beta)
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Command Line Interface</a><ul>
+<li><a class="reference internal" href="#quesadiya">quesadiya</a><ul>
+<li><a class="reference internal" href="#quesadiya-create">create</a></li>
+<li><a class="reference internal" href="#quesadiya-delete">delete</a></li>
+<li><a class="reference internal" href="#quesadiya-export">export</a></li>
+<li><a class="reference internal" href="#quesadiya-inspect">inspect</a></li>
+<li><a class="reference internal" href="#quesadiya-modify">modify</a></li>
+<li><a class="reference internal" href="#quesadiya-path">path</a></li>
+<li><a class="reference internal" href="#quesadiya-run">run</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">quesadiya</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Command Line Interface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/cli.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="command-line-interface">
+<span id="cli"></span><h1>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h1>
+<p>The Quesadiya command-line interface (CLI) is used to manage your projects.
+With the Quesadiya CIL, you can <strong>run</strong>, <strong>create</strong>, <strong>delete</strong>, <strong>inspect</strong>, <strong>modify</strong>
+your data annotation projects and <strong>export</strong> annotated data sets . To list
+available commands, either run <strong>quesadiya</strong> or <strong>quesadiya help</strong>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya --help
+Usage: quesadiya <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+
+  A delicious mexican dish.
+
+Options:
+  --version  Show the version and exit.
+  --help     Show this message and exit.
+
+Commands:
+  create   Create a data annotation project.
+  delete   Delete project indicated by project name.
+  <span class="nb">export</span>   Export data associated with a project indicated by project name.
+  inspect  Show project information indicated by project name.
+  modify   Modify a project indicated by project name.
+  path     Print path to this package.
+  run      Run annotation project indicated by project name.
+</pre></div>
+</div>
+<div class="section" id="quesadiya">
+<h2>quesadiya<a class="headerlink" href="#quesadiya" title="Permalink to this headline">¶</a></h2>
+<p>A delicious mexican dish.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>quesadiya <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-version">
+<code class="descname">--version</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the version and exit.</p>
+</dd></dl>
+
+<div class="section" id="quesadiya-create">
+<h3>create<a class="headerlink" href="#quesadiya-create" title="Permalink to this headline">¶</a></h3>
+<p>Create a data annotation project.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>quesadiya create <span class="o">[</span>OPTIONS<span class="o">]</span> PROJECT ADMIN DATAPATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-create-d">
+<code class="descname">-d</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--project-description</code><code class="descclassname"> &lt;project_description&gt;</code><a class="headerlink" href="#cmdoption-quesadiya-create-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description of a project to create.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-quesadiya-create-c">
+<code class="descname">-c</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--contact</code><code class="descclassname"> &lt;contact&gt;</code><a class="headerlink" href="#cmdoption-quesadiya-create-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contact to admin user.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-quesadiya-create-a">
+<code class="descname">-a</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--add-collaborators</code><code class="descclassname"> &lt;add_collaborators&gt;</code><a class="headerlink" href="#cmdoption-quesadiya-create-a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add collaboratos from a jsonl file. Each row in the file must follow the following format: {'name': str, 'password': str, 'contact': str}. Note that <cite>contact</cite> field can be empty.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-create-arg-project">
+<code class="descname">PROJECT</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-create-arg-project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-quesadiya-create-arg-admin">
+<code class="descname">ADMIN</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-create-arg-admin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-quesadiya-create-arg-datapath">
+<code class="descname">DATAPATH</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-create-arg-datapath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="quesadiya-delete">
+<h3>delete<a class="headerlink" href="#quesadiya-delete" title="Permalink to this headline">¶</a></h3>
+<p>Delete project indicated by project name. Note that this operation
+will delete all data associated with a project.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>quesadiya delete <span class="o">[</span>OPTIONS<span class="o">]</span> PROJECT
+</pre></div>
+</div>
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-delete-arg-project">
+<code class="descname">PROJECT</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-delete-arg-project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="quesadiya-export">
+<h3>export<a class="headerlink" href="#quesadiya-export" title="Permalink to this headline">¶</a></h3>
+<p>Export data associated with a project indicated by project name.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>quesadiya <span class="nb">export</span> <span class="o">[</span>OPTIONS<span class="o">]</span> PROJECT OUTPUT_PATH
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-export-i">
+<code class="descname">-i</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--include-text</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-export-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Include text field assocaited with sample ids into output file.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-export-arg-project">
+<code class="descname">PROJECT</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-export-arg-project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-quesadiya-export-arg-output-path">
+<code class="descname">OUTPUT_PATH</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-export-arg-output-path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="quesadiya-inspect">
+<h3>inspect<a class="headerlink" href="#quesadiya-inspect" title="Permalink to this headline">¶</a></h3>
+<p>Show project information indicated by project name.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>quesadiya inspect <span class="o">[</span>OPTIONS<span class="o">]</span> PROJECT
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-inspect-s">
+<code class="descname">-s</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--show-collaborators</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-inspect-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show all collaborators associated with a project. This operation requires admin authentication.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-inspect-arg-project">
+<code class="descname">PROJECT</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-inspect-arg-project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="quesadiya-modify">
+<h3>modify<a class="headerlink" href="#quesadiya-modify" title="Permalink to this headline">¶</a></h3>
+<p>Modify a project indicated by project name. Note that it exectues one
+operation per run.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>quesadiya modify <span class="o">[</span>OPTIONS<span class="o">]</span> PROJECT
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-modify-e">
+<code class="descname">-e</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--edit</code><code class="descclassname"> &lt;edit&gt;</code><a class="headerlink" href="#cmdoption-quesadiya-modify-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit <cite>admin contact</cite> or <cite>project description</cite> of a project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Options:</th><td class="field-body">contact|description</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-quesadiya-modify-t">
+<code class="descname">-t</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--transfer-ownership</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-modify-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change <cite>admin name</cite> and <cite>admin password</cite> of a project.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-quesadiya-modify-a">
+<code class="descname">-a</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--add-collaborators</code><code class="descclassname"> &lt;add_collaborators&gt;</code><a class="headerlink" href="#cmdoption-quesadiya-modify-a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add collaboratos from a jsonl file. Each row in the file must follow the following format: {'name': str, 'password': str, 'contact': str}. Note that <cite>contact</cite> field can be empty.</p>
+</dd></dl>
+
+<p class="rubric">Arguments</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-modify-arg-project">
+<code class="descname">PROJECT</code><code class="descclassname"></code><a class="headerlink" href="#cmdoption-quesadiya-modify-arg-project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Required argument</p>
+</dd></dl>
+
+</div>
+<div class="section" id="quesadiya-path">
+<h3>path<a class="headerlink" href="#quesadiya-path" title="Permalink to this headline">¶</a></h3>
+<p>Print path to this package.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>quesadiya path <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="quesadiya-run">
+<h3>run<a class="headerlink" href="#quesadiya-run" title="Permalink to this headline">¶</a></h3>
+<p>Run annotation project indicated by project name.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>quesadiya run <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="option">
+<dt id="cmdoption-quesadiya-run-p">
+<code class="descname">-p</code><code class="descclassname"></code><code class="descclassname">, </code><code class="descname">--port</code><code class="descclassname"> &lt;port&gt;</code><a class="headerlink" href="#cmdoption-quesadiya-run-p" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select a port number to run quesadiya. The default port for quesadiya is 1133.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, SiameseLab
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
