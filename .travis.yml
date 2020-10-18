@@ -22,7 +22,6 @@ matrix:
       after_success: python 3 -m codecov
     - name: "Python 3.7.5 on macOS 10.14"
       os: osx
-      sudo: true
       osx_image: xcode10.2  # Python 3.7.5 running on macOS 10.14.3
       language: shell       # 'language: python' is an error on Travis CI macOS
       before_install:
@@ -31,7 +30,7 @@ matrix:
         - pip3 install -U pytest
         - pip3 install -U sqlalchemy
         - pip3 install codecov
-      script: python3 -m pytest
+      script: sudo python3 -m pytest
       after_success: python 3 -m codecov
     - name: "Python 3.8.0 on macOS 10.14"
       os: osx
@@ -88,7 +87,7 @@ before_install:
   - pip install -U sqlalchemy
   - pip install codecov
 install:
-  - pip install .
+  - pip install ".[test]"
 script:
   - pytest
 after_success:
