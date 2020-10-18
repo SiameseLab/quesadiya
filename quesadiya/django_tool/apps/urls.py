@@ -16,13 +16,27 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
-from tool import views
-
-
+from tool import views as tool_view
+from django.shortcuts import redirect
+# from django.views.generic.base import RedirectView
+# favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 urlpatterns = [
+    # path(r'^favicon\.ico$', favicon_view),
     path('admin/', admin.site.urls),
+    path('auth/login/', tool_view.login, name='login'),
     path('auth/', include('django.contrib.auth.urls')),
-    # path('', include("tool.urls")), 
+    # path('', include("tool.urls")),
     # path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('', views.ProjectInfo, name='home'),
+    path('', tool_view.ProjectInfo, name='home'),
+    path('updateAnchor/', tool_view.updateAnchor),
+    path('nextAnchor/', tool_view.nextAnchor),
+    path('auth/login/', tool_view.login, name='login'),
+    path('ReviewDiscarded/', tool_view.ReviewDiscarded, name='ReviewDiscarded'),
+    path('reviewDiscarded/', tool_view.reviewDiscarded),
+    path('ViewStatus/', tool_view.ViewStatus, name='ViewStatus'),
+    path('EditCooperator/', tool_view.EditCooperator, name='EditCooperator'),
+    path('updateUser/', tool_view.updateUser),
 ]
+handler404 = 'tool.views.error'
+handler500 = 'tool.views.error'
+handler400 = 'tool.views.error'

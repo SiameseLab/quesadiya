@@ -91,3 +91,29 @@
   
   .border-top { border-top: 1px solid #e5e5e5; }
   .border-bottom { border-bottom: 1px solid #e5e5e5; }
+/* 
+
+/* collapsed  */
+
+
+  .card-text .morelink {
+	  text-decoration: none;
+	  outline: none;
+  }
+
+  .card-text .morecontent span {
+	  display: none;
+
+  }
+
+  /* with connection.cursor() as cursor:
+        cursor.execute(
+            "select * from Triplet_Dataset WHERE status='unfinished' LIMIT 1")
+        datas = dictfetchall(cursor)
+    return datas
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+candidate_group_id+"')")
+        datas = dictfetchall(cursor)
+    return datas */ */

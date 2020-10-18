@@ -1,0 +1,90 @@
+
+{% extends 'base.html' %}
+
+{% block link %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href='/static/styles/css/table.css'/>
+{% endblock %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+{% if  user.username is not '' %}
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Quesadiya</a>
+      {% comment %} <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> {% endcomment %}
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="{% url 'logout' %}">Sign out</a>
+        </li>
+      </ul>
+</nav>
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="{% url 'ReviewDiscarded' %}">Discarded</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'CooperatorStatus' %}">View Status</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'EditCooperator' %}">Edit User</a>
+  </li> 
+</ul>
+  <br>
+<div class="container-lg">
+    <div class="table-responsive">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-lg-8"><h2>Assign <b>Cooperator</b></h2></div>
+                </div>
+                
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Anchor Sample ID</th>
+                        <th>Status</th>
+                        <th>Cooperator</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for anchor in anchors %}
+                    <tr>
+                        <td>{{anchor.anchor_sample_id}}</td>
+                        <td>{{anchor.status}}</td>
+                        <td>
+                        {% if anchor.username != "-1" %}
+                          {{anchor.username}}
+                        {% else %}
+                          N/A
+                        {% endif %}
+                        </td>
+                        <td>
+                            <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
+                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% comment %} <tr>
+                        <td>Peter Parker</td>
+                        <td>Customer Service</td>
+                        <td>(313) 555-5735</td>
+                        <td>
+                            <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
+                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                        </td>
+                    </tr>     {% endcomment %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+  Your Need To <a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}
+{% block script %}
+<script src="/static/styles/js/assign_cooperator_table.js"></script>
+{% endblock %}
+

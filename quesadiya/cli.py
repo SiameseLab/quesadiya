@@ -33,11 +33,7 @@ def path():
 )
 @click.argument(
     "admin_name",
-    metavar="ADMIN"
-)
-@click.argument(
-    "admin_password",
-    metavar="PASSWORD"
+    metavar="ADMIN",
 )
 @click.argument(
     "input_data_path",
@@ -69,7 +65,6 @@ def path():
 def create(
     project_name,
     admin_name,
-    admin_password,
     input_data_path,
     project_description,
     contact,
@@ -81,20 +76,22 @@ def create(
         project_description=project_description,
         input_data_path=input_data_path,
         admin_name=admin_name,
-        admin_password=admin_password,
         admin_contact=contact,
         collaborator_input_path=add_collaborators
     )
 
 
 @cli.command()
-@click.argument(
-    "project_name",
-    metavar="PROJECT"
+@click.option(
+    "-p",
+    "--port",
+    default=1133,
+    help="Select a port number to run quesadiya. The default port for "
+         "quesadiya is 1133."
 )
-def run(project_name):
+def run(port):
     """Run annotation project indicated by project name."""
-    quesadiya.commands.run.operator(project_name=project_name)
+    quesadiya.commands.run.operator(port)
 
 
 @cli.command()

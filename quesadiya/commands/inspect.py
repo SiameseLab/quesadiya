@@ -8,6 +8,7 @@ from quesadiya.errors import QuesadiyaCommandError
 
 from quesadiya.db import factory
 from quesadiya import utils
+import quesadiya
 
 
 def operator(project_name, show_collaborators):
@@ -44,14 +45,11 @@ class _DefaultTable:
 
 
 def _format_collaborators(collaborators):
-    table = PrettyTable(field_names=["Collaborator Name",
-                                     "Password",
-                                     "Contact"])
+    table = PrettyTable(field_names=["Collaborator Name", "Contact"])
     for coll in collaborators:
         table.add_row([
-            coll.collaborator_name,
-            coll.collaborator_password,
-            coll.collaborator_contact
+            coll["collaborator_name"],
+            coll["collaborator_contact"]
         ])
     return table
 
@@ -73,10 +71,11 @@ def _show_project(project_name, show_collaborators):
     default_table = _DefaultTable()
     default_table.add_row(p)
     if show_collaborators:
-        if not utils.admin_auth(admin_interface, project_name):
+        if not utils.admin_auth(project_name):
             raise AuthenticationError(project_name)
+        projectdb_interface = factory.get_projectdb_interface(project_name)
+        collaborators = projectdb_interface.get_collaborators()
         click.echo(default_table.get_table())
-        collaborators = admin_interface.get_collaborators(project_name)
         click.echo(_format_collaborators(collaborators))
     else:
         click.echo(default_table.get_table())

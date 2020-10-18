@@ -6,8 +6,6 @@ import glob
 import sqlite3
 import importlib.util
 
-from sqlalchemy import create_engine
-
 from setuptools import setup, find_packages
 
 
@@ -24,6 +22,20 @@ with open(os.path.join(os.path.dirname(__file__), "README.md"), "r") as f:
     long_description = f.read()
 
 
+# base path for initializing folder and database file
+# ../quesadiya/quesadiya
+base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quesadiya')
+# get all non python files to include
+api_files = get_include_files(os.path.join('quesadiya', 'django_tool'))
+# import sqlalchemy
+try:
+    from sqlalchemy import create_engine
+except ModuleNotFoundError:
+    raise ModuleNotFoundError(
+        "`sqlalchemy` is required to install quesadiya. Please install the "
+        "package in your environment and try again. For example, you can "
+        "install the package by `pip install sqlalchemy`."
+    )
 # check sqlite version
 if sqlite3.sqlite_version_info < (3, 6):
     sys.exit(
@@ -31,11 +43,6 @@ if sqlite3.sqlite_version_info < (3, 6):
         "Please upgrade sqlite and "
         "try installing again.".format(sqlite3.sqlite_version)
     )
-# base path for initializing folder and database file
-# ../quesadiya/quesadiya
-base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'quesadiya')
-# get all non python files to include
-api_files = get_include_files(os.path.join('quesadiya', 'django_tool'))
 # ../quesadiya/quesadiya/projects
 projects_dir = os.path.join(base_dir, "projects")
 # create `projects` folder
@@ -56,8 +63,16 @@ spec.loader.exec_module(queso)
 # create admin database file and define schema
 db_uri = 'sqlite:///' + os.path.join(projects_dir, "admin.db")
 engine = create_engine(db_uri, echo=False, encoding="utf-8")
-# queso.Base creates tables inside
+# creates admin db tables inside
 queso.AdminDB.Base.metadata.create_all(engine)
+# import django table from file
+djangodb_path = os.path.join(base_dir, "django_tool", "database", "django_database.py")
+spec = importlib.util.spec_from_file_location('djangodb', djangodb_path)
+djangodb = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(djangodb)
+# create django tables in admin.db
+with engine.connect() as con:
+    djangodb.create_django_tables(con)
 
 
 setup(
@@ -81,7 +96,8 @@ setup(
         "sqlalchemy>=1.3.12",
         "prettytable>=0.7",
         "jsonlines>=1.2",
-        "tqdm>=4.48"
+        "tqdm>=4.48",
+        "argon2-cffi==20.1"
     ],
     tests_require=["pytest>=5.4"],
     entry_points="""

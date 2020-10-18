@@ -23,8 +23,9 @@ class TestDelete:
     def test_default_action(self):
         """Test the command deletes a project."""
         # create dummy project
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # check the existence of project folder
         assert os.path.exists(os.path.join(q.get_projects_path(), "test1"))
@@ -41,8 +42,9 @@ class TestDelete:
 
     def test_bad_input(self):
         """Test exception handling for bad inputs."""
-        r = self.runner.invoke(create, ["test1", "me", "1234",
-                                        "data/sample_triplets.jsonl"])
+        r = self.runner.invoke(create,
+                                ["test1", "me", "data/sample_triplets.jsonl"],
+                                input="1234\n1234\n")
         assert r.exception is None
         # incorrect project name
         r = self.runner.invoke(delete, ["lol"], input="me\n1234\ny\n")
