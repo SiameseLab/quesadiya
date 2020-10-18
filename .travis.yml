@@ -9,6 +9,7 @@ matrix:
     # Test on macOS
     - name: "Python 3.6.5 on macOS 10.13"
       os: osx
+      sudo: true
       osx_image: xcode9.4  # Python 3.6.5 running on macOS 10.13
       language: shell       # 'language: python' is an error on Travis CI macOS
       before_install:
@@ -21,6 +22,7 @@ matrix:
       after_success: python 3 -m codecov
     - name: "Python 3.7.5 on macOS 10.14"
       os: osx
+      sudo: true
       osx_image: xcode10.2  # Python 3.7.5 running on macOS 10.14.3
       language: shell       # 'language: python' is an error on Travis CI macOS
       before_install:
@@ -33,6 +35,7 @@ matrix:
       after_success: python 3 -m codecov
     - name: "Python 3.8.0 on macOS 10.14"
       os: osx
+      sudo: true
       osx_image: xcode11.3  # Python 3.8.0 running on macOS 10.14.6
       language: shell       # 'language: python' is an error on Travis CI macOS
       before_install:
