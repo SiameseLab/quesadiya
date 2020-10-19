@@ -71,7 +71,7 @@ def operator(
     # get interface
     projectdb_interface = factory.get_projectdb_interface(project_name)
     # start inserting rows into tables in project.db
-    click.echo("Inserting data. This may take a while...".format(project_name))
+    click.echo("Inserting data. This may take a while ... ".format(project_name))
     # showing spinner
     with click_spinner.spinner():
         projectdb_interface.triplets_bulk_insert(triplets)
@@ -100,6 +100,7 @@ def operator(
                 project_name=project_name,
                 input_path=collaborator_input_path
             )
+    click.echo("done")
     # insert bulk data into database
     click.echo("Finish creating a new project '{}'".format(project_name))
 
