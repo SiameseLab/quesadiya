@@ -4,7 +4,7 @@
 Login
 =====
 
-Collaborators can login to a project by opening browser and typing **<ip_address>:<port>**.
+Collaborators can login to a project by opening browser and typing ``<ip_address>:<port>``.
 For example, http://localhost:1133/. Note that the admin must run quesadiya server to access a project.
 
 Once you get to the login page, select your project and enter your name and password assigned by the admin.
@@ -27,7 +27,7 @@ The menu bar on the left side shows the current status of the project.
   :align: center
   :alt: Annotation
 
-Once all samples in a project are annotated, you will see the following. Good Job!
+Once all samples in a project are annotated, you will see the following. Congratulations!
 
 .. image:: ../images/finished.png
   :width: 400
