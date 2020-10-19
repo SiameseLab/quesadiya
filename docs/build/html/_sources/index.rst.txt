@@ -16,7 +16,8 @@ With Quesadiya, you can:
 Get started by following this :ref:`Quick Start<quickstart>`.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+
 
 Table of Contents
 =================

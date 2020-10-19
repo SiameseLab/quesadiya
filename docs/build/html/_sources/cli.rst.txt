@@ -6,7 +6,7 @@ Command Line Interface
 The Quesadiya command-line interface (CLI) is used to manage your projects.
 With the Quesadiya CIL, you can **run**, **create**, **delete**, **inspect**, **modify**
 your data annotation projects and **export** annotated data sets . To list
-available commands, either run **quesadiya** or **quesadiya help**.
+available commands, either run ``quesadiya`` or ``quesadiya --help``.
 
 .. code-block:: bash
 
