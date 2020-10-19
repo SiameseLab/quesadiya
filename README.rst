@@ -100,7 +100,9 @@ selects is recorded as a positive sample and ``quesadiya`` chooses a negative sa
 
 .. code-block:: bash
 
-  $ quesadiya create queso me data/triplets.jsonl -a data/collaborators.jsonl
+  $ quesadiya create queso me data/triplets.jsonl -a data/sample_collaborators1.jsonl
+
+You can view sample data `here <https://github.com/SiameseLab/quesadiya/tree/master/data>`__.
 
 Note that ``<collaborator_path>`` must be a jsonline file, where each row must follow the format below:
 
