@@ -23,13 +23,13 @@ Quickstart
 
 Installation
 ------------
-Quesadiya requires `sqlalchemy>=1.3.12`. Install the package by
+Quesadiya requires ``sqlalchemy>=1.3.12``. Install the package by
 
 .. code-block:: bash
 
   $ pip install sqlalchemy
 
-After installing `sqlalchemy`, run
+After installing ``sqlalchemy``, run
 
 .. code-block:: bash
 
@@ -43,11 +43,11 @@ Check installation by
 
 Installation from Source
 ------------------------
-#. Make sure your environment has `sqlalchemy>=1.3.12`.
-#. `git clone` this repo.
-#. `cd quesadiya`.
-#. run `pip install .`.
-#. check installation by running `quesadiya` on your terminal.
+#. Make sure your environment has ``sqlalchemy>=1.3.12``.
+#. ``git clone`` this repo.
+#. ``cd quesadiya``.
+#. run ``pip install .``.
+#. check installation by running ``quesadiya`` on your terminal.
 
 Project Management
 ==================
@@ -74,7 +74,7 @@ For example,
   Finish creating a new project 'queso'
 
 **Caution**:
-`<datapath>` must be a jsonline file, where each row must follow the format below:
+``<datapath>`` must be a jsonline file, where each row must follow the format below:
 
 .. code-block:: javascript
 
@@ -92,9 +92,9 @@ For example,
     ]
   }
 
-`anchor` is the sample you want to compare to the positive sample and the negative sample.
-`candidates` is a list of candidates for a positive and a negative sample. The sample collaborator
-selects is recorded as a positive sample and `quesadiya` chooses a negative sample from the rest.
+``anchor`` is the sample you want to compare to the positive sample and the negative sample.
+``candidates`` is a list of candidates for a positive and a negative sample. The sample collaborator
+selects is recorded as a positive sample and ``quesadiya`` chooses a negative sample from the rest.
 
 **Tips**: You can add collaborators from a jsonline file when you create a project by
 
@@ -102,7 +102,7 @@ selects is recorded as a positive sample and `quesadiya` chooses a negative samp
 
   $ quesadiya create queso me data/triplets.jsonl -a data/collaborators.jsonl
 
-Note that `<collaborator_path>` must be a jsonline file, where each row must follow the format below:
+Note that ``<collaborator_path>`` must be a jsonline file, where each row must follow the format below:
 
 .. code-block:: javascript
 
@@ -129,7 +129,7 @@ You can specify the port number to run the quesadiya server by option. For examp
 
   $ quesadiya run -p 4000
 
-Quesadiya's default port number is `1133`.
+Quesadiya's default port number is ``1133``.
 
 Once you run a project, open your browser and access http://localhost:1133/.
 
@@ -150,7 +150,7 @@ Data Annotation
 
 Data annotation is very simple and intuitive in Quesadiya. **Anchor text** is shown
 on the left hand side of the screen and **Candidates** are on the right. Collaborators
-can either `select` positive sample among candidates or **discard** a sample if the sample is corrupted for some reason.
+can either ``select`` positive sample among candidates or **discard** a sample if the sample is corrupted for some reason.
 Admin can view discarded samples and push a sample back to the project in the admin page.
 
 Export Data
@@ -198,14 +198,16 @@ This will generate a jsonline file, where each row follows:
 Security
 ========
 
-A disclaimer: **Quesadiya** and its contributors take no responsibility for protecting your data.
-That said, we encrypt password using  `argon2 <https://pypi.org/project/argon2-cffi/>`__ to encrypt admin password.
+**A disclaimer: Quesadiya and its contributors take no responsibility for protecting your data.**
 
-If you'd like to prohibit any other user from accessing your data, we encourage you to change the accessibility of
+That said, we encrypt all passwords using `argon2 <https://pypi.org/project/argon2-cffi/>`__.
+
+If you'd like to prohibit any other user on your environment from accessing your data, we encourage you to change the accessibility of
 project folder. You can see the path to the quesadiya root by
 
 .. code-block:: bash
 
   $ quesadiya path
 
-This command shows the absolute path to your project folder.
+This command shows the absolute path to quesadiya project folder.
+Go to the directory, and you'll find your project folder.
