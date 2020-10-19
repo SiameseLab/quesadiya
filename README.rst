@@ -18,7 +18,7 @@ Quesadiya
     :target: https://siameselab.github.io/quesadiya/
     :alt: Docs
 
-`Quesdadiya <file:///C:/Users/under/github/quesadiya/docs/build/html/index.html>`__ is a data annotation project management platform where you can manage a
+`Quesdadiya <https://siameselab.github.io/quesadiya/build/html/index.html>`__ is a data annotation project management platform where you can manage a
 project through `Command Line Interface (CLI) <https://siameselab.github.io/quesadiya/build/html/cli.html#cli>`__ and annotate data on
 `Web GUI <https://siameselab.github.io/quesadiya/build/html/collaborator.html#collaborator>`__ to generate a triplet data set for developing Siamese models.
 
