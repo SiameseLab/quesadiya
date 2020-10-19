@@ -3,7 +3,7 @@
 Login
 =====
 
-The admin user can login to a project by opening browser and typing **<ip_address>:<port>**.
+The admin user can login to a project by opening browser and typing ``<ip_address>:<port>``.
 For example, http://localhost:1133/.
 The admin user can run the quesadiya server by
 
@@ -11,7 +11,7 @@ The admin user can run the quesadiya server by
 
   $ quesadiya run
 
-The code above runs the server at port 1133. You can specify the port by
+The code above runs the server at port ``1133``. You can specify the port by
 
 .. code-block:: bash
 
@@ -27,7 +27,7 @@ Once you get to the login page, select your project and enter admin name and pas
 Project Status
 ==============
 
-Admin can view the current progress of a project in **View Status** tab.
+Admin can view the current progress of a project in ``View Status`` tab.
 This page shows the progress of each collaborator.
 
 .. image:: ../images/status.png
@@ -40,7 +40,7 @@ Discarded Samples
 
 Admin can view all discarded samples. To view sample, you can simply click
 anchor sample id. If you'd like to push a sample back to the project, you can do so
-by clicking **undo** button. Once a sample is pushed back, quesadiya randomly assigns the sample to
+by clicking ``undo`` button. Once a sample is pushed back, quesadiya randomly assigns the sample to
 a collaborator.
 
 .. image:: ../images/discarded.png
@@ -51,7 +51,7 @@ a collaborator.
 Manage Collaborators
 ====================
 
-Admin can also manage collaborators in **Edit User** tab. You can either add a new
+Admin can also manage collaborators in ``Edit User`` tab. You can either add a new
 collaborator or remove an existing collaborator in your project.
 
 .. image:: ../images/edit_collaborator.png
