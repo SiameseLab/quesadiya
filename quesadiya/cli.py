@@ -82,9 +82,16 @@ def create(
 
 
 @cli.command()
-def run():
+@click.option(
+    "-p",
+    "--port",
+    default=1133,
+    help="Select a port number to run quesadiya. The default port for "
+         "quesadiya is 1133."
+)
+def run(port):
     """Run annotation project indicated by project name."""
-    quesadiya.commands.run.operator()
+    quesadiya.commands.run.operator(port)
 
 
 @cli.command()

@@ -36,14 +36,6 @@ except ModuleNotFoundError:
         "package in your environment and try again. For example, you can "
         "install the package by `pip install sqlalchemy`."
     )
-try:
-    import argon2
-except ModuleNotFoundError:
-    raise ModuleNotFoundError(
-        "`argon2-cffi` is required to install quesadiya. Please install the "
-        "package in your environment and try again. For example, you can "
-        "install the package by `pip install argon2-cffi`."
-    )
 # check sqlite version
 if sqlite3.sqlite_version_info < (3, 6):
     sys.exit(
@@ -105,7 +97,7 @@ setup(
         "prettytable>=0.7",
         "jsonlines>=1.2",
         "tqdm>=4.48",
-        "argon2-cffi>=20.1"
+        "argon2-cffi==20.1"
     ],
     tests_require=["pytest>=5.4"],
     entry_points="""
