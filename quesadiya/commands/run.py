@@ -14,11 +14,11 @@ import subprocess
 def operator(port_number):
     admin_interface = factory.get_admindb_interface()
     run_path = os.path.join(quesadiya.get_base_path(), 'django_tool', 'manage.py')
-    subprocess.call(
+    subprocess.Popen(
         [
             run_path,
             "runserver",
             "localhost:{}".format(port_number),
             "--insecure"
-        ], shell=True
+        ], shell=False
     )
