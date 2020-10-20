@@ -20,5 +20,5 @@ def operator(port_number):
             "runserver",
             "localhost:{}".format(port_number),
             "--insecure"
-        ], shell=False
+        ], shell=True
     )
