@@ -347,7 +347,7 @@ def ViewStatus(request):
     return render(request, "registration/login.html")
 
 
-def EditCooperator(request):
+def EditCollaborator(request):
     if 'user' in request.session and request.session['user']['is_superuser'] == 1:
         user = request.session['user']
         print(user)
@@ -360,7 +360,7 @@ def EditCooperator(request):
         # context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
         #                 'candidate_groups': candidate_groups}
         context_dict = {'users': users}
-        return render(request, "edit_cooperator.html", context_dict)
+        return render(request, "edit_collaborator.html", context_dict)
     logout(request)
     return render(request, "registration/login.html")
 
@@ -387,4 +387,19 @@ def updateUser(request):
             with connections[projectName].cursor() as cursor:
                 cursor.execute("INSERT INTO auth_user (id, password, is_superuser, username, last_name, email, is_staff, is_active,date_joined, first_name) VALUES ('" +
                                str(id)+"', '"+password+"', '"+str(status)+"', '"+username+"', ' ', ' ', '1', '0', strftime('%Y-%m-%d %H:%M:%S.%f','now'), ' ')")
-        return EditCooperator(request)
+        return EditCollaborator(request)
+
+
+@ csrf_exempt
+def deleteUser(request):
+    if request.method == 'POST':
+        projectName = request.session['projectName']
+        id = request.POST.get('id')
+        username = request.POST.get('username')
+        print(projectName, id, username)
+        with connections[projectName].cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM auth_user WHERE username='"+username+"' and id='"+id+"'")
+            cursor.execute(
+                "UPDATE triplet_dataset SET username=-1, is_active=0 WHERE username='"+username+"' and status='unfinished' and is_active=1 ")
+        return EditCollaborator(request)

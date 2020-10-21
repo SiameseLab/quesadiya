@@ -34,8 +34,9 @@ urlpatterns = [
     path('ReviewDiscarded/', tool_view.ReviewDiscarded, name='ReviewDiscarded'),
     path('reviewDiscarded/', tool_view.reviewDiscarded),
     path('ViewStatus/', tool_view.ViewStatus, name='ViewStatus'),
-    path('EditCooperator/', tool_view.EditCooperator, name='EditCooperator'),
+    path('EditCollaborator/', tool_view.EditCollaborator, name='EditCollaborator'),
     path('updateUser/', tool_view.updateUser),
+    path('deleteUser/', tool_view.deleteUser),
 ]
 handler404 = 'tool.views.error'
 handler500 = 'tool.views.error'

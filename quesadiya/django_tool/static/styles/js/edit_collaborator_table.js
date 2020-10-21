@@ -1,8 +1,10 @@
 
 $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: 'hover'
+    })
     var actions = $("table tr:last td:last-child").html();
-    console.log(actions)
+    // console.log(actions)
     // var actions = '<a class="add" title="Add" data-toggle="tooltip"><i class="material - icons">&#xE03B;</i></a>' + '< a class="edit" title = "Edit" data - toggle="tooltip" > <i class="material-icons">&#xE254;</i></a > '
     var act = 0
     // Append table with add row form on add new button click
@@ -21,7 +23,7 @@ $(document).ready(function () {
             '</tr>';
         $("table").append(row);
         $("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip('hide')
         act = 1
     });
     // Add row on add button click
@@ -45,7 +47,7 @@ $(document).ready(function () {
         if (!empty) {
             console.log("act :" + act)
             var data = { 'id': id, 'username': username, 'password': password, 'status': status, 'act': act };
-            console.log(data)
+            // console.log(data)
             $.ajax({
                 data: data,
                 url: '/updateUser/',
@@ -66,6 +68,7 @@ $(document).ready(function () {
 
             $(this).parents("tr").find(".add, .edit").toggle();
             $(".add-new").removeAttr("disabled");
+            $(this).siblings(".delete").show();
 
         }
     });
@@ -76,7 +79,8 @@ $(document).ready(function () {
         //     // $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
         //     $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
         // });
-
+        console.log($(this).closest("delete"))
+        $(this).siblings(".delete").hide();
         var username = $(this).parents("tr").find("td:eq(1)");
         username.html('<input type="text" class="form-control" value="' + username.text() + '">');
         $(this).parents("tr").find("td:eq(2)").html('<input type="text" class="form-control" value="">');
@@ -86,8 +90,21 @@ $(document).ready(function () {
         act = 0
     });
     // Delete row on delete button click
-    // $(document).on("click", ".delete", function () {
-    //     $(this).parents("tr").remove();
-    //     $(".add-new").removeAttr("disabled");
-    // });
+    $(document).on("click", ".delete", function () {
+        $(this).tooltip('hide')
+        var id = $(this).parents("tr").find("td:eq(0)").text()
+        var username = $(this).parents("tr").find("td:eq(1)").text()
+        var data = { 'id': id, 'username': username };
+        $.ajax({
+            data: data,
+            url: '/deleteUser/',
+            method: 'POST',
+            success: function (data) {
+
+            }
+        });
+        $(this).parents("tr").remove();
+        $(".add-new").removeAttr("disabled");
+
+    });
 });
