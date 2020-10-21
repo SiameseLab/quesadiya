@@ -1,5 +1,8 @@
 include data/*
 include test/*
 include LICENSE
-include README.md
+include README.rst
+include CHANGELOG.rst
 include quesadiya/*
+exclude quesadiya/projects/*
+include docs/*

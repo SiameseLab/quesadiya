@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="python" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Quesadiya &mdash; quesadiya 0.2 (beta) documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> quesadiya
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2 (beta)
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Quesadiya</a></li>
+<li><a class="reference internal" href="#id1">Quickstart</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#installation-from-source">Installation from Source</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#project-management">Project Management</a><ul>
+<li><a class="reference internal" href="#create-project">Create Project</a></li>
+<li><a class="reference internal" href="#run-project">Run Project</a></li>
+<li><a class="reference internal" href="#data-annotation">Data Annotation</a></li>
+<li><a class="reference internal" href="#export-data">Export Data</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#security">Security</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">quesadiya</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Quesadiya</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/quickstart.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="quesadiya">
+<span id="quickstart"></span><h1>Quesadiya<a class="headerlink" href="#quesadiya" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://badge.fury.io/py/quesadiya"><img alt="PyPi" src="https://badge.fury.io/py/quesadiya.svg" /></a>
+<a class="reference external image-reference" href="https://travis-ci.com/SiameseLab/quesadiya"><img alt="Build Status" src="https://travis-ci.com/SiameseLab/quesadiya.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://github.com/SiameseLab/quesadiya"><img alt="Supported Python Version" src="https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-success" /></a>
+<a class="reference external image-reference" href="https://siameselab.github.io/quesadiya/"><img alt="Docs" src="https://img.shields.io/badge/docs-available-informational" /></a>
+<p><a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/index.html">Quesdadiya</a> is a data annotation project management platform where you can manage a
+project through <a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/cli.html#cli">Command Line Interface (CLI)</a> and annotate data on
+<a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/collaborator.html#collaborator">Web GUI</a> to generate a triplet data set for developing Siamese models.</p>
+</div>
+<div class="section" id="id1">
+<h1>Quickstart<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>You can install <code class="docutils literal notranslate"><span class="pre">quesadiya</span></code> by running</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install quesadiya
+</pre></div>
+</div>
+<p>Check installation by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya
+</pre></div>
+</div>
+</div>
+<div class="section" id="installation-from-source">
+<h2>Installation from Source<a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> this repo.</li>
+<li><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">quesadiya</span></code>.</li>
+<li>run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>.</li>
+<li>check installation by running <code class="docutils literal notranslate"><span class="pre">quesadiya</span></code> on your terminal.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="project-management">
+<h1>Project Management<a class="headerlink" href="#project-management" title="Permalink to this headline">¶</a></h1>
+<p>Quesadiya provides the command-line interface (CLI) to manage data annotation projects.</p>
+<div class="section" id="create-project">
+<h2>Create Project<a class="headerlink" href="#create-project" title="Permalink to this headline">¶</a></h2>
+<p>You can create a data annotation project by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya create &lt;project_name&gt; &lt;admin_name&gt; &lt;datapath&gt; <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p>For example,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya create queso me data/sample_triplets.jsonl
+Loading input data: <span class="m">5</span> row <span class="o">[</span><span class="m">00</span>:00, <span class="m">1495</span>.40 row/s<span class="o">]</span>
+Admin password:
+Repeat <span class="k">for</span> confirmation:
+Inserting data. This may take a <span class="k">while</span>...
+Finish creating a new project <span class="s1">&#39;queso&#39;</span>
+</pre></div>
+</div>
+<p><strong>Caution</strong>:
+<code class="docutils literal notranslate"><span class="pre">&lt;datapath&gt;</span></code> must be a jsonline file, where each row must follow the format below:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;anchor_sample_id&quot;</span><span class="o">:</span> <span class="s2">&quot;string (max 100 char)&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;anchor_sample_text&quot;</span><span class="o">:</span> <span class="s2">&quot;list of text&quot;</span><span class="p">,</span> <span class="c1">// each element is a paragraph</span>
+  <span class="s2">&quot;anchor_sample_title&quot;</span><span class="o">:</span> <span class="s2">&quot;text (nullable)&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;candidate_group_id&quot;</span><span class="o">:</span> <span class="s2">&quot;string (max 100 char)&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;candidates&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s2">&quot;item&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;candidate_sample_id&quot;</span><span class="o">:</span> <span class="s2">&quot;string (max 100 char)&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;candidate_sample_text&quot;</span><span class="o">:</span> <span class="s2">&quot;list of text&quot;</span><span class="p">,</span> <span class="c1">// each element is a paragraph</span>
+      <span class="s2">&quot;candidate_sample_title&quot;</span><span class="o">:</span> <span class="s2">&quot;text (nullable)&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">anchor</span></code> is the sample you want to compare to the positive sample and the negative sample.
+<code class="docutils literal notranslate"><span class="pre">candidates</span></code> is a list of candidates for a positive and a negative sample. The sample collaborator
+selects is recorded as a positive sample and <code class="docutils literal notranslate"><span class="pre">quesadiya</span></code> chooses a negative sample from the rest.</p>
+<p><strong>Tips</strong>: You can add collaborators from a jsonline file when you create a project by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya create queso me data/triplets.jsonl -a data/sample_collaborators1.jsonl
+</pre></div>
+</div>
+<p>You can view sample data <a class="reference external" href="https://github.com/SiameseLab/quesadiya/tree/master/data">here</a>.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">&lt;collaborator_path&gt;</span></code> must be a jsonline file, where each row must follow the format below:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s2">&quot;string (max 150 char)&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;password&#39;</span><span class="o">:</span> <span class="s2">&quot;string (max 128 char)&quot;</span><span class="p">,</span>
+  <span class="s1">&#39;contact&#39;</span><span class="o">:</span> <span class="s2">&quot;string (max 254 char)&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/cli.html#cli">Command Line Interface Guide</a> for more details.</p>
+</div>
+<div class="section" id="run-project">
+<h2>Run Project<a class="headerlink" href="#run-project" title="Permalink to this headline">¶</a></h2>
+<p>You can annotate a data set by running quesadiya:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya run <span class="o">[</span>OPTION<span class="o">]</span>
+</pre></div>
+</div>
+<p>You can specify the port number to run the quesadiya server by option. For example,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya run -p <span class="m">4000</span>
+</pre></div>
+</div>
+<p>Quesadiya's default port number is <code class="docutils literal notranslate"><span class="pre">1133</span></code>.</p>
+<p>Once you run a project, open your browser and access <a class="reference external" href="http://localhost:1133/">http://localhost:1133/</a>.</p>
+<p>Then, select a project and type admin name and password.</p>
+<dl class="docutils">
+<dt>This leads you to the admin page. In the admin page, you can do the followings:</dt>
+<dd><ul class="first last simple">
+<li>view discarded samples</li>
+<li>view progress of each collaborator</li>
+<li>edit collaborators</li>
+</ul>
+</dd>
+</dl>
+<p><strong>Tips</strong>: Admin user cannot annotate data. If you're the admin and like to annotate
+samples, make a collaborator account for yourself and login with the account.</p>
+<p>See <a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/admin.html#admin">Admin Guide</a> for more details.</p>
+</div>
+<div class="section" id="data-annotation">
+<h2>Data Annotation<a class="headerlink" href="#data-annotation" title="Permalink to this headline">¶</a></h2>
+<p>Data annotation is very simple and intuitive in Quesadiya. <strong>Anchor text</strong> is shown
+on the left hand side of the screen and <strong>Candidates</strong> are on the right. Collaborators
+can either <code class="docutils literal notranslate"><span class="pre">select</span></code> positive sample among candidates or <strong>discard</strong> a sample if the sample is corrupted for some reason.
+Admin can view discarded samples and push a sample back to the project in the admin page.</p>
+</div>
+<div class="section" id="export-data">
+<h2>Export Data<a class="headerlink" href="#export-data" title="Permalink to this headline">¶</a></h2>
+<p>You can export a snapshot of annotated data set by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya <span class="nb">export</span> &lt;project_name&gt; &lt;output_path&gt;
+</pre></div>
+</div>
+<p>The output path must be a jsonline file. Each row follows the format below:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;anchor_sample_id&quot;</span><span class="o">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;positive_sample_id&quot;</span><span class="o">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;negative_sample_id&quot;</span><span class="o">:</span> <span class="s2">&quot;text&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that this operation requires the admin privilege.</p>
+<p>The operation above only generates a triplet data set with samples ids.
+If you'd like to include text for each sample, add <strong>-i</strong> option. For example,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya <span class="nb">export</span> queso data.jsonl -i
+</pre></div>
+</div>
+<p>This will generate a jsonline file, where each row follows:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;anchor_sample_id&quot;</span><span class="o">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;positive_sample_id&quot;</span><span class="o">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;negative_sample_id&quot;</span><span class="o">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;anchor_sample_text&quot;</span><span class="o">:</span> <span class="s2">&quot;list of text&quot;</span> <span class="c1">// each element is a paragraph,</span>
+    <span class="s2">&quot;positive_sample_text&quot;</span><span class="o">:</span> <span class="s2">&quot;list of text&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;negative_sample_text&quot;</span><span class="o">:</span> <span class="s2">&quot;list of text&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="security">
+<h1>Security<a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h1>
+<p><strong>A disclaimer: Quesadiya and its contributors take no responsibility for protecting your data.</strong></p>
+<p>That said, we encrypt all passwords using <a class="reference external" href="https://pypi.org/project/argon2-cffi/">argon2</a>.</p>
+<p>If you'd like to prohibit any other user on your environment from accessing your data, we encourage you to change the accessibility of
+project folder. You can see the path to the quesadiya root by</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya path
+</pre></div>
+</div>
+<p>This command shows the absolute path to quesadiya project folder.
+Go to the directory, and you'll find your project folder.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, SiameseLab
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

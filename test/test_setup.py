@@ -108,22 +108,3 @@ class TestSQLQuery:
         expected = set(['projects', 'collaborators'])
         assert set(engine.table_names()) == expected
         os.remove(os.path.join(self.root_dir, "test.db"))
-
-
-class TestImport:
-
-    # ../quesadiya
-    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    def test_import(self):
-        """Test loading module from file path."""
-        import importlib.util
-        schema_path = os.path.join(self.root_dir, "quesadiya", "db", "schema.py")
-        spec = importlib.util.spec_from_file_location('queso', schema_path)
-        queso = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(queso)
-        # make sure module path is correct
-        assert queso.__file__ == schema_path
-        # make sure datatypes are correct
-        assert isinstance(queso.AdminDB.Base, DeclarativeMeta)
-        assert isinstance(queso.Project, DeclarativeMeta)

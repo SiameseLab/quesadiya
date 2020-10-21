@@ -16,3 +16,10 @@ def get_base_path():
 
 def get_projects_path():
     return PROJECT_DIR
+
+
+# init admin.db if it doesn't exist
+admin_path = os.path.join(PROJECT_DIR, "admin.db")
+if not os.path.exists(admin_path):
+    from quesadiya.init_admin import init_admin
+    init_admin()
