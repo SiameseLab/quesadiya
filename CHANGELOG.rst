@@ -1,3 +1,12 @@
+0.2.2 (10-20-2020)
+==================
+
+Bugs
+----
+* Fixed an ``quesadiya run`` issue by making subprocess executable.
+* Fixed a type in ``setup.py`` so it downloads django package when being
+  donwloaded by pip install.
+
 0.2.1 (10-19-2020)
 ==================
 
