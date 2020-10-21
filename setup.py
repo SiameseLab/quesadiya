@@ -50,7 +50,7 @@ setup(
     ],
     install_requires=[
         "click>=7.1",
-        "click-spinner>=0.1.10"
+        "click-spinner>=0.1.10",
         "django>=3.1",
         "sqlalchemy>=1.3.12",
         "prettytable>=0.7",
