@@ -14,7 +14,7 @@ def get_include_files(directory):
     return [os.path.join("..", path) for path in files]
 
 
-__version__ = "0.2.2"
+__version__ = "0.3"
 
 
 with open(os.path.join(os.path.dirname(__file__), "README.rst"), "r") as f:
