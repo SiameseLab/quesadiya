@@ -284,41 +284,52 @@ def ProjectInfo(request):
     return render(request, "registration/login.html")
 
 
-# def AdminPanel(request):
-#     print("welcome from admin panel")
-#     if 'user' in request.session:
-#         user = request.session['user']
-#         print(user)
-#         projectName = request.session['projectName']
-#         projectId = request.session['projectId']
-#         with connections[projectName].cursor() as cursor:
-#             cursor.execute(
-#                 "SELECT anchor_sample_id, status, username from triplet_dataset")
-#             anchors = dictfetchall(cursor)
-#         # context_dict = {'user': user, 'infos': infos, 'anchor_data': anchor_data,
-#         #                 'candidate_groups': candidate_groups}
-#         context_dict = {'anchors': anchors}
-#         return render(request, "admin_panel.html", context_dict)
-#     logout(request)
-#     return render(request, "registration/login.html")
-
-
 def ReviewDiscarded(request):
     if 'user' in request.session and request.session['user']['is_superuser'] == 1:
         user = request.session['user']
         projectName = request.session['projectName']
         with connections[projectName].cursor() as cursor:
             cursor.execute(
+                "SELECT anchor_sample_id, status, username,candidate_group_id from triplet_dataset where status='discarded' ORDER by time_changed LIMIT 1")
+            discarded_anchor = dictfetchall(cursor)
+            cursor.execute(
                 "SELECT anchor_sample_id, status, username from triplet_dataset where status='discarded'")
             anchors = dictfetchall(cursor)
-        context_dict = {'anchors': anchors}
+            if(discarded_anchor != []):
+                cursor.execute("UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now') WHERE anchor_sample_id='" +
+                               discarded_anchor[0].get("anchor_sample_id")+"'")
+            print(discarded_anchor)
+        # context_dict = {'anchors': anchors}
+        if(discarded_anchor != []):
+            anchor_data = getSampleData(projectName,
+                                        discarded_anchor[0].get("anchor_sample_id"))
+            print(anchor_data)
+            candidate_groups = getCandidateGroup(projectName,
+                                                 discarded_anchor[0].get("candidate_group_id"))
+
+            context_dict = {'anchor_data': anchor_data,
+                            'candidate_groups': candidate_groups, 'anchors': anchors}
+        else:
+            context_dict = {'anchor_data': [],
+                            'candidate_groups': []}
         return render(request, "review_discarded.html", context_dict)
     logout(request)
     return render(request, "registration/login.html")
 
 
 @ csrf_exempt
-def reviewDiscarded(request):
+def UpdateReviewDiscarded(request):
+    if request.method == 'POST':
+        projectName = request.session['projectName']
+        anchor_id = request.POST.get('anchor_id')
+        with connections[projectName].cursor() as cursor:
+            cursor.execute(
+                "UPDATE triplet_dataset SET status='unfinished', username='-1', is_active=0 WHERE anchor_sample_id='"+anchor_id + "'")
+        return ReviewDiscarded(request)
+
+
+@ csrf_exempt
+def GetReviewDiscarded(request):
     if request.method == 'POST':
         projectName = request.session['projectName']
         anchor_id = request.POST.get('anchor_id')
