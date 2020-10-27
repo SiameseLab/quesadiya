@@ -60,7 +60,7 @@ $(document).ready(function() {
     $('.card-text').each(function() {
         var content = $(this).html();
         var child = $(this).children('p')
-        var html = '<span class="moreelipses"><a class="morelink less">+&nbsp; more</a></span > ';
+        var html = '<span class="moreelipses"><a class="morelink less">+&nbsp; more</a></span><br/><br/> ';
 
         if (child.length > 1) {
             $(this).append(html)
