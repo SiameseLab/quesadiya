@@ -7,7 +7,7 @@ Data Annotation Platform for Siamese Nets
 =========================================
 
 Quesadiya is an open source project that provides a data annotation project management
-platform for training Siamese Neural Networks by `SiameseLab <https://github.com/SiameseLab>`__.
+platform for developing Siamese Neural Networks by `SiameseLab <https://github.com/SiameseLab>`__.
 
 With Quesadiya, you can:
  * manage a data annotation project through :ref:`cli`.
@@ -24,5 +24,5 @@ Table of Contents
 
 * :ref:`Get Started<quickstart>`
 * :ref:`Admin <admin>`
-* :ref:`Annotation <collaborator>`
+* :ref:`Data Annotation <collaborator>`
 * :ref:`cli`

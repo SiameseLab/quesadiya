@@ -19,7 +19,7 @@ The code above runs the server at port ``1133``. You can specify the port by
 
 Once you get to the login page, select your project and enter admin name and password.
 
-.. image:: ../images/login.png
+.. image:: ../images/admin_login.gif
   :width: 400
   :align: center
   :alt: Login
@@ -30,7 +30,7 @@ Project Status
 Admin can view the current progress of a project in ``View Status`` tab.
 This page shows the progress of each collaborator.
 
-.. image:: ../images/status.png
+.. image:: ../images/collaborator_status.gif
   :width: 600
   :align: center
   :alt: Project Status
@@ -40,10 +40,10 @@ Discarded Samples
 
 Admin can view all discarded samples. To view sample, you can simply click
 anchor sample id. If you'd like to push a sample back to the project, you can do so
-by clicking ``undo`` button. Once a sample is pushed back, quesadiya randomly assigns the sample to
+by clicking ``Revert`` button. Once a sample is pushed back, quesadiya randomly assigns the sample to
 a collaborator.
 
-.. image:: ../images/discarded.png
+.. image:: ../images/discarded_sample.gif
   :width: 600
   :align: center
   :alt: Discarded Samples
@@ -54,7 +54,7 @@ Manage Collaborators
 Admin can also manage collaborators in ``Edit User`` tab. You can either add a new
 collaborator or remove an existing collaborator in your project.
 
-.. image:: ../images/edit_collaborator.png
+.. image:: ../images/edit_collaborator.gif
   :width: 600
   :align: center
   :alt: Edit Collaborator

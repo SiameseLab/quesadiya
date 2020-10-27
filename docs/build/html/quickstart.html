@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Quesadiya &mdash; quesadiya 0.2 (beta) documentation</title>
+  <title>Quesadiya &mdash; quesadiya 0.3 (beta) documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                0.2 (beta)
+                0.3 (beta)
               </div>
             
           
@@ -86,7 +86,7 @@
             
               <!-- Local TOC -->
               <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Quesadiya</a></li>
+<li><a class="reference internal" href="#">Quesadiya</a><ul>
 <li><a class="reference internal" href="#id1">Quickstart</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#installation-from-source">Installation from Source</a></li>
@@ -100,6 +100,8 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#security">Security</a></li>
+</ul>
+</li>
 </ul>
 </div>
             
@@ -174,11 +176,11 @@
 <p><a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/index.html">Quesdadiya</a> is a data annotation project management platform where you can manage a
 project through <a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/cli.html#cli">Command Line Interface (CLI)</a> and annotate data on
 <a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/collaborator.html#collaborator">Web GUI</a> to generate a triplet data set for developing Siamese models.</p>
-</div>
+<img alt="_images/overall.gif" src="_images/overall.gif" />
 <div class="section" id="id1">
-<h1>Quickstart<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h2>Quickstart<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
 <p>You can install <code class="docutils literal notranslate"><span class="pre">quesadiya</span></code> by running</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ pip install quesadiya
 </pre></div>
@@ -189,7 +191,7 @@ project through <a class="reference external" href="https://siameselab.github.io
 </div>
 </div>
 <div class="section" id="installation-from-source">
-<h2>Installation from Source<a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h2>
+<h3>Installation from Source<a class="headerlink" href="#installation-from-source" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
 <li><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span></code> this repo.</li>
 <li><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">quesadiya</span></code>.</li>
@@ -199,10 +201,10 @@ project through <a class="reference external" href="https://siameselab.github.io
 </div>
 </div>
 <div class="section" id="project-management">
-<h1>Project Management<a class="headerlink" href="#project-management" title="Permalink to this headline">¶</a></h1>
+<h2>Project Management<a class="headerlink" href="#project-management" title="Permalink to this headline">¶</a></h2>
 <p>Quesadiya provides the command-line interface (CLI) to manage data annotation projects.</p>
 <div class="section" id="create-project">
-<h2>Create Project<a class="headerlink" href="#create-project" title="Permalink to this headline">¶</a></h2>
+<h3>Create Project<a class="headerlink" href="#create-project" title="Permalink to this headline">¶</a></h3>
 <p>You can create a data annotation project by</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya create &lt;project_name&gt; &lt;admin_name&gt; &lt;datapath&gt; <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
@@ -252,7 +254,7 @@ selects is recorded as a positive sample and <code class="docutils literal notra
 <p>See <a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/cli.html#cli">Command Line Interface Guide</a> for more details.</p>
 </div>
 <div class="section" id="run-project">
-<h2>Run Project<a class="headerlink" href="#run-project" title="Permalink to this headline">¶</a></h2>
+<h3>Run Project<a class="headerlink" href="#run-project" title="Permalink to this headline">¶</a></h3>
 <p>You can annotate a data set by running quesadiya:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya run <span class="o">[</span>OPTION<span class="o">]</span>
 </pre></div>
@@ -278,14 +280,14 @@ samples, make a collaborator account for yourself and login with the account.</p
 <p>See <a class="reference external" href="https://siameselab.github.io/quesadiya/build/html/admin.html#admin">Admin Guide</a> for more details.</p>
 </div>
 <div class="section" id="data-annotation">
-<h2>Data Annotation<a class="headerlink" href="#data-annotation" title="Permalink to this headline">¶</a></h2>
+<h3>Data Annotation<a class="headerlink" href="#data-annotation" title="Permalink to this headline">¶</a></h3>
 <p>Data annotation is very simple and intuitive in Quesadiya. <strong>Anchor text</strong> is shown
 on the left hand side of the screen and <strong>Candidates</strong> are on the right. Collaborators
 can either <code class="docutils literal notranslate"><span class="pre">select</span></code> positive sample among candidates or <strong>discard</strong> a sample if the sample is corrupted for some reason.
 Admin can view discarded samples and push a sample back to the project in the admin page.</p>
 </div>
 <div class="section" id="export-data">
-<h2>Export Data<a class="headerlink" href="#export-data" title="Permalink to this headline">¶</a></h2>
+<h3>Export Data<a class="headerlink" href="#export-data" title="Permalink to this headline">¶</a></h3>
 <p>You can export a snapshot of annotated data set by</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ quesadiya <span class="nb">export</span> &lt;project_name&gt; &lt;output_path&gt;
 </pre></div>
@@ -318,7 +320,7 @@ If you'd like to include text for each sample, add <strong>-i</strong> option. F
 </div>
 </div>
 <div class="section" id="security">
-<h1>Security<a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h1>
+<h2>Security<a class="headerlink" href="#security" title="Permalink to this headline">¶</a></h2>
 <p><strong>A disclaimer: Quesadiya and its contributors take no responsibility for protecting your data.</strong></p>
 <p>That said, we encrypt all passwords using <a class="reference external" href="https://pypi.org/project/argon2-cffi/">argon2</a>.</p>
 <p>If you'd like to prohibit any other user on your environment from accessing your data, we encourage you to change the accessibility of
@@ -328,6 +330,7 @@ project folder. You can see the path to the quesadiya root by</p>
 </div>
 <p>This command shows the absolute path to quesadiya project folder.
 Go to the directory, and you'll find your project folder.</p>
+</div>
 </div>
 
 

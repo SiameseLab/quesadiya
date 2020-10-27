@@ -28,9 +28,9 @@ copyright = '2020, SiameseLab'
 author = 'SiameseLab'
 
 # The short X.Y version
-version = '0.2 (beta)'
+version = '0.3 (beta)'
 # The full version, including alpha/beta/rc tags
-release = '0.2 (beta)'
+release = '0.3 (beta)'
 
 
 # -- General configuration ---------------------------------------------------
@@ -107,6 +107,14 @@ html_static_path = ['_static']
 # 'searchbox.html']``.
 #
 # html_sidebars = {}
+
+# HTML images
+# source: https://stackoverflow.com/questions/45969711/sphinx-doc-how-do-i-render-an-animated-gif-when-building-for-html-but-a-png-wh
+from sphinx.builders.html import StandaloneHTMLBuilder
+StandaloneHTMLBuilder.supported_image_types = [
+    'image/gif',
+    'image/png',
+]
 
 
 # -- Options for HTMLHelp output ---------------------------------------------

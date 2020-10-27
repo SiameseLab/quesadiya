@@ -90,7 +90,7 @@ def create(
          "quesadiya is 1133."
 )
 def run(port):
-    """Run quesadiya project on browser."""
+    """Run annotation project."""
     quesadiya.commands.run.operator(port)
 
 

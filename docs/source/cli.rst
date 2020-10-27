@@ -26,7 +26,7 @@ available commands, either run ``quesadiya`` or ``quesadiya --help``.
     inspect  Show project information indicated by project name.
     modify   Modify a project indicated by project name.
     path     Print path to this package.
-    run      Run annotation project indicated by project name.
+    run      Run annotation project.
 
 .. click:: quesadiya.cli:cli
   :prog: quesadiya

@@ -1,5 +1,6 @@
 .. _quickstart:
 
+=========
 Quesadiya
 =========
 
@@ -23,6 +24,7 @@ Quesadiya
 project through `Command Line Interface (CLI) <https://siameselab.github.io/quesadiya/build/html/cli.html#cli>`__ and annotate data on
 `Web GUI <https://siameselab.github.io/quesadiya/build/html/collaborator.html#collaborator>`__ to generate a triplet data set for developing Siamese models.
 
+.. image:: ../images/overall.gif
 
 
 Quickstart

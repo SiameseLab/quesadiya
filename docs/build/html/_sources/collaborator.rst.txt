@@ -9,7 +9,7 @@ For example, http://localhost:1133/. Note that the admin must run quesadiya serv
 
 Once you get to the login page, select your project and enter your name and password assigned by the admin.
 
-.. image:: ../images/login.png
+.. image:: ../images/collaborator_login.gif
   :width: 400
   :align: center
   :alt: Login
@@ -22,14 +22,14 @@ discard the sample you're viewing. If you discard a sample, quesadiya will show 
 
 The menu bar on the left side shows the current status of the project.
 
-.. image:: ../images/annotate.png
+.. image:: ../images/annotation.gif
   :width: 600
   :align: center
   :alt: Annotation
 
 Once all samples in a project are annotated, you will see the following. Congratulations!
 
-.. image:: ../images/finished.png
+.. image:: ../images/annotation_finished.gif
   :width: 400
   :align: center
   :alt: Finished
