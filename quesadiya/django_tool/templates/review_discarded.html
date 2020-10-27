@@ -3,9 +3,10 @@
 
 {% block link %}
 {% load static %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href='/static/styles/css/table.css'/>
-
+{% load text_split_tag %}
+{% comment %} <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> {% endcomment %}
+{% comment %} <link rel="stylesheet" href='/static/styles/css/table.css'/> {% endcomment %}
+<link rel="stylesheet" href='/static/styles/css/dashboard.css'/>
 {% endblock %}
 {% block title %}Admin Panel{% endblock %}
 {% block content %}
@@ -27,33 +28,31 @@
     <a class="nav-link" href="{% url 'ViewStatus' %}">View Status</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="{% url 'EditCooperator' %}">Edit User</a>
+    <a class="nav-link" href="{% url 'EditCollaborator' %}">Edit Collaborator</a>
   </li> 
 </ul>
   <br>
-<div class="container-lg">
-    {% if anchors is not None %}
-    <div class="table-responsive">
-        <div class="table-wrapper">
-            <div class="table-title">
-                <div class="row">
-                    <div class="col-lg-8"><h2>Review <b>Discarded</b></h2></div>
-                </div>
-                
-            </div>
-            <table class="table table-bordered">
+<div class="container-fluid ">
+{% if anchor_data|length > 0 %}
+   <div class="row">
+   <div class="col-4">
+
+   <div class="table-responsive text-nowrap table-hover">
+        <!--Table-->
+        <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Anchor Sample ID</th>
-                        <th>Status</th>
-                        <th>Cooperator</th>
-                        <th>Actions</th>
+                        <th scope="col-2">Anchor Sample ID</th>
+                        <th scope="col-1">Status</th>
+                        <th scope="col-1">Collaborator</th>
+                        {% comment %} <th scope="col">Actions</th> {% endcomment %}
                     </tr>
                 </thead>
                 <tbody>
+                    
                     {% for anchor in anchors %}
-                    <tr>
-                        <td>{{anchor.anchor_sample_id}}</td>
+                    <tr class="clickable-row" style="cursor: pointer;"> 
+                        <td scope="row" class="anchor-id" id='{{ anchor.anchor_sample_id }}'>{{anchor.anchor_sample_id}}</td>
                         <td>{{anchor.status}}</td>
                         <td>
                         {% if anchor.username != "-1" %}
@@ -62,35 +61,62 @@
                           N/A
                         {% endif %}
                         </td>
-                        <td>
-                            {% comment %} <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a> {% endcomment %}
+                        {% comment %} <td>
                             <a class="edit" title="Undo" data-toggle="tooltip"><span class="material-icons">replay</span></a>
-                        </td>
+                        </td> {% endcomment %}
                     </tr>
-                    {% endfor %}
-                    {% comment %} <tr>
-                        <td>Peter Parker</td>
-                        <td>Customer Service</td>
-                        <td>(313) 555-5735</td>
-                        <td>
-                            <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
-                            <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
-                        </td>
-                    </tr>     {% endcomment %}
+                    {% endfor %}    
                 </tbody>
-            </table>
-        </div>
+    </table>
     </div>
-    {% else %}
-    No Discarded Anchor Sample
-    {% endif %}
+   </div>
+   <div class="col-8">
+                        {% comment %} <div class="col-4 w-auto border-right"> {% endcomment %}
+                        <div class="row">
+                          <div class="card">
+                            <div class="card-body">
+                              
+                              <h6 class="card-subtitle mb-2 text-muted">Anchor Sample ID</h6>
+                              <h5 class="card-title anchor-id selected selected-sample-anchor" id='{{ anchor_data.0.sample_id }}'>{{ anchor_data.0.sample_id }}</h5>
+                              <div class="card-text">{% textSplit anchor_data.0.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</div>
+                              <button id="anchor_redo" class="card-link btn btn-success" name="redo_btn">Revert</button>
+                              {% comment %} <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Next</button> {% endcomment %}
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        {% comment %} <div class="col-8"  id="sample_cards"> {% endcomment %}
+                        <div class="row">
+                          {% for candidate in candidate_groups %}
+                          <div class="card mb-2">
+                          
+                            <h5 class="card-header">{{ candidate.candidate_sample_id }}</h5>
+                            <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Candidate ID</h6>
+                              <h5 class="card-title">{{ candidate.sample_title }}</h5>
+                                <div class="card-text more">{% textSplit candidate.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</div>
+                              {% comment %} <button id="sample_btn" class="btn btn-primary">Select</button> {% endcomment %}
+                            </div>
+                          </div>
+                          {% endfor %}
+                          {% csrf_token %}
+                        </div>
+                        
+                    </div>
+    </div>
+{% else %}
+    <h1>No Discarded</h1>
+{% endif %}
 </div>
 {% else %}
   Your Need To <a href="{% url 'login' %}">login</a>
 {% endif %}
 {% endblock %}
 {% block script %}
-<script src="{% static '/styles/js/assign_collaborator_table.js' %}"></script>
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+  feather.replace()
+</script>
+<script src="{% static '/styles/js/discarded.js' %}"></script>
 {% endblock %}
 

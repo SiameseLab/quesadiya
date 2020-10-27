@@ -26,7 +26,7 @@
     <a class="nav-link" href="{% url 'ViewStatus' %}">View Status</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link active" href="{% url 'EditCooperator' %}">Edit User</a>
+    <a class="nav-link active" href="{% url 'EditCollaborator' %}">Edit Collaborator</a>
   </li> 
 </ul>
   <br>
@@ -64,6 +64,7 @@
                           {% if user.status == 0 %}
                             <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
                             <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                            <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
                           {% endif %}
                         </td>
                     </tr>
