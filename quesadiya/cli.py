@@ -86,11 +86,11 @@ def create(
     "-p",
     "--port",
     default=1133,
-    help="Select a port number to run quesadiya. The default port for "
+    help="Select the port number to run quesadiya server. The default port for "
          "quesadiya is 1133."
 )
 def run(port):
-    """Run annotation project indicated by project name."""
+    """Run quesadiya project on browser."""
     quesadiya.commands.run.operator(port)
 
 
