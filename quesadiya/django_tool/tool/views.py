@@ -77,27 +77,16 @@ def login(request):
         password = request.POST.get('password')
         request.session['projectName'] = projectName
         request.session['projectId'] = projectId
-        # swapDB(projectName)
+        request.session['discardedAnchor'] = ""
         create_connection(projectName)
-        # print(projectName, " : ", userName, " : ", password, " : ",
-        #       projectId, " : ", checkProjectUser(userName, projectId))
         md = CustomAuthBackend()
         user = md.authenticate(
             request, username=userName, password=password)
-        # request.user = user
-        # md = ModelBackend()
-        # user = md.authenticate(
-        #     request, username=userName, password=password)
-        print(user)
         if user is not None:
             org_login(request, user, 'tool.views.CustomAuthBackend')
-            # print(request.user.is_authenticated)
-            # print(request.user)
             user = {'username': user.username,
                     'is_superuser': user.is_superuser}
             request.session['user'] = user
-            # return HttpResponseRedirect("/")
-            # return ProjectInfo(request)
             if user['is_superuser'] == 1:
                 print("ap")
                 return redirect("ReviewDiscarded")
@@ -142,7 +131,6 @@ def getUnfinish(p_name, username):
         cursor.execute(
             "select * from Triplet_Dataset WHERE status='unfinished' and is_active=1 and username='"+username+"' ORDER by time_changed LIMIT 1")
         data = dictfetchall(cursor)
-        print(data)
         if(data == []):
             cursor.execute(
                 "select * from Triplet_Dataset WHERE status='unfinished' and is_active=0 ORDER by time_changed LIMIT 1")
@@ -217,7 +205,6 @@ def getStatus(p_name):
         cursor.execute(
             "select status, count(*) from Triplet_dataset GROUP by status")
         data = cursor.fetchall()
-    print(type(data))
     # data = json.dumps(data)
     total = 0
     for value in data:
@@ -246,7 +233,6 @@ def updateAnchor(request):
         positive_anchor_id = request.POST.get('positive_anchor_id')
         username = request.session['user']['username']
         # username = user.username
-        print(anchor_id, "+ :", positive_anchor_id)
         updatePositiveAnchor(projectName, anchor_id,
                              positive_anchor_id, username)
         return ProjectInfo(request)
@@ -284,26 +270,39 @@ def ProjectInfo(request):
     return render(request, "registration/login.html")
 
 
+@ csrf_exempt
 def ReviewDiscarded(request):
     if 'user' in request.session and request.session['user']['is_superuser'] == 1:
+        if request.method == 'POST':
+            anchor_id = request.POST.get('anchor_id')
+            request.session['discardedAnchor'] = anchor_id
+        discardedAnchor = request.session['discardedAnchor']
         user = request.session['user']
+        discardedAnchor = request.session['discardedAnchor']
         projectName = request.session['projectName']
+        discarded_anchor = []
         with connections[projectName].cursor() as cursor:
+            if discardedAnchor != "":
+                cursor.execute(
+                    "SELECT anchor_sample_id, status, username,candidate_group_id from triplet_dataset where status='discarded' and anchor_sample_id='"+discardedAnchor+"'")
+                discarded_anchor = dictfetchall(cursor)
+                print(discarded_anchor, "discarded_anchor")
+            if not discarded_anchor:
+                print(discarded_anchor, "he ist")
+                cursor.execute(
+                    "SELECT anchor_sample_id, status, username,candidate_group_id from triplet_dataset where status='discarded' ORDER by anchor_sample_id LIMIT 1")
+                discarded_anchor = dictfetchall(cursor)
             cursor.execute(
-                "SELECT anchor_sample_id, status, username,candidate_group_id from triplet_dataset where status='discarded' ORDER by time_changed LIMIT 1")
-            discarded_anchor = dictfetchall(cursor)
-            cursor.execute(
-                "SELECT anchor_sample_id, status, username from triplet_dataset where status='discarded'")
+                "SELECT anchor_sample_id, status, username from triplet_dataset where status='discarded' ORDER by anchor_sample_id ")
             anchors = dictfetchall(cursor)
-            if(discarded_anchor != []):
-                cursor.execute("UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now') WHERE anchor_sample_id='" +
-                               discarded_anchor[0].get("anchor_sample_id")+"'")
-            print(discarded_anchor)
+            # if(discarded_anchor != []):
+            #     cursor.execute("UPDATE triplet_dataset SET time_changed=strftime('%Y-%m-%d %H:%M:%S.%f','now') WHERE anchor_sample_id='" +
+            #                    discarded_anchor[0].get("anchor_sample_id")+"'")
+            # print(discarded_anchor)
         # context_dict = {'anchors': anchors}
         if(discarded_anchor != []):
             anchor_data = getSampleData(projectName,
                                         discarded_anchor[0].get("anchor_sample_id"))
-            print(anchor_data)
             candidate_groups = getCandidateGroup(projectName,
                                                  discarded_anchor[0].get("candidate_group_id"))
 
@@ -330,20 +329,35 @@ def UpdateReviewDiscarded(request):
 
 @ csrf_exempt
 def GetReviewDiscarded(request):
-    if request.method == 'POST':
-        projectName = request.session['projectName']
+    if 'user' in request.session and request.session['user']['is_superuser'] == 1:
         anchor_id = request.POST.get('anchor_id')
+        projectName = request.session['projectName']
+        print("getReviewDiscarded", anchor_id)
         with connections[projectName].cursor() as cursor:
             cursor.execute(
-                "UPDATE triplet_dataset SET status='unfinished', username='-1', is_active=0 WHERE anchor_sample_id='"+anchor_id + "'")
-        return ReviewDiscarded(request)
+                "SELECT anchor_sample_id, status, username,candidate_group_id from triplet_dataset where status='discarded' and anchor_sample_id='"+anchor_id+"'")
+            discarded_anchor = dictfetchall(cursor)
+            cursor.execute(
+                "SELECT anchor_sample_id, status, username from triplet_dataset where status='discarded'")
+            anchors = dictfetchall(cursor)
+        # context_dict = {'anchors': anchors}
+        print(discarded_anchor[0].get("anchor_sample_id"))
+        anchor_data = getSampleData(projectName,
+                                    discarded_anchor[0].get("anchor_sample_id"))
+        candidate_groups = getCandidateGroup(projectName,
+                                             discarded_anchor[0].get("candidate_group_id"))
+        print(discarded_anchor[0].get("candidate_group_id"))
+        context_dict = {'anchor_data': anchor_data,
+                        'candidate_groups': candidate_groups, 'anchors': anchors}
+        return render(request, "review_discarded.html", context_dict)
+    logout(request)
+    return render(request, "registration/login.html")
 
 
 def ViewStatus(request):
     print("welcome from CooperatorStatus")
     if 'user' in request.session and request.session['user']['is_superuser'] == 1:
         user = request.session['user']
-        print(user)
         projectName = request.session['projectName']
         # projectId = request.session['projectId']
         with connections[projectName].cursor() as cursor:
@@ -387,7 +401,6 @@ def updateUser(request):
         act = request.POST.get('act')
         # print(id, " ", username, " ", password, " ", status)
         password = PH.hash(password)
-        print(password)
         # status = 0 if status.lower() == 'cooperator' else 1
         status = 0
         if act == "0":
@@ -407,7 +420,6 @@ def deleteUser(request):
         projectName = request.session['projectName']
         id = request.POST.get('id')
         username = request.POST.get('username')
-        print(projectName, id, username)
         with connections[projectName].cursor() as cursor:
             cursor.execute(
                 "DELETE FROM auth_user WHERE username='"+username+"' and id='"+id+"'")

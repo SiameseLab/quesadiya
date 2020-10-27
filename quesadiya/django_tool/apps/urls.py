@@ -31,7 +31,7 @@ urlpatterns = [
     path('updateAnchor/', tool_view.updateAnchor),
     path('nextAnchor/', tool_view.nextAnchor),
     path('auth/login/', tool_view.login, name='login'),
-    path('ReviewDiscarded/', tool_view.ReviewDiscarded, name='ReviewDiscarded'),
+    path('ReviewDiscarded', tool_view.ReviewDiscarded, name='ReviewDiscarded'),
     path('updateReviewDiscarded/', tool_view.UpdateReviewDiscarded),
     path('getReviewDiscarded/', tool_view.GetReviewDiscarded),
     path('ViewStatus/', tool_view.ViewStatus, name='ViewStatus'),

@@ -78,9 +78,9 @@
                               
                               <h6 class="card-subtitle mb-2 text-muted">Anchor Sample ID</h6>
                               <h5 class="card-title anchor-id selected selected-sample-anchor" id='{{ anchor_data.0.sample_id }}'>{{ anchor_data.0.sample_id }}</h5>
-                              <p class="card-text">{% textSplit anchor_data.0.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</p>
+                              <div class="card-text">{% textSplit anchor_data.0.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</div>
                               <button id="anchor_redo" class="card-link btn btn-success" name="redo_btn">Revert</button>
-                              <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Next</button>
+                              {% comment %} <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Next</button> {% endcomment %}
                             </div>
                           </div>
                         </div>
@@ -94,7 +94,7 @@
                             <div class="card-body">
                             <h6 class="card-subtitle mb-2 text-muted">Candidate ID</h6>
                               <h5 class="card-title">{{ candidate.sample_title }}</h5>
-                                <p class="card-text">{% textSplit candidate.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</p>
+                                <div class="card-text more">{% textSplit candidate.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</div>
                               {% comment %} <button id="sample_btn" class="btn btn-primary">Select</button> {% endcomment %}
                             </div>
                           </div>
