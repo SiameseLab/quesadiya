@@ -23,6 +23,9 @@ project through `Command Line Interface (CLI) <https://siameselab.github.io/ques
 `Web GUI <https://siameselab.github.io/quesadiya/build/html/collaborator.html#collaborator>`__ to generate a triplet data set for developing Siamese models.
 
 .. image:: ./docs/images/overall.gif
+   :width: 400
+   :align: center
+   :alt: Demo
 
 
 Quickstart
