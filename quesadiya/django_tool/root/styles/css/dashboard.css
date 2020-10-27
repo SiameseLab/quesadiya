@@ -117,6 +117,10 @@
     display: none;
 }
 
+.morelink {
+    cursor: pointer;
+}
+
 
 /* with connection.cursor() as cursor:
         cursor.execute(
@@ -129,7 +133,3 @@
             "select candidate_sample_id, sample_body, sample_title from candidate_groups INNER join sample_text on sample_text.sample_id = candidate_groups.candidate_sample_id where(candidate_group_id='"+candidate_group_id+"')")
         datas = dictfetchall(cursor)
     return datas */
-
-.clickable {
-    cursor: pointer;
-}

@@ -1,6 +1,6 @@
 
 {% extends 'base.html' %}
-
+{% load static %}
 {% block link %}
 
 <link rel="stylesheet" href='/static/styles/css/dashboard.css'/>
@@ -112,7 +112,7 @@
                 <div class="card-body">
                   <h5 class="card-title anchor-id">{{ anchor_data.0.sample_id }}</h5>
                   {% comment %} <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> {% endcomment %}
-                  <p class="card-text">{% textSplit anchor_data.0.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</p>
+                  <div class="card-text">{% textSplit anchor_data.0.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</div>
                   <button id="anchor_submit" class="card-link btn btn-success disabled" name="finish_btn">Submit</button>
                   <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Discard</button>
                 </div>
@@ -124,7 +124,7 @@
                 <h5 class="card-header">{{ candidate.candidate_sample_id }}</h5>
                 <div class="card-body">
                   <h5 class="card-title">{{ candidate.sample_title }}</h5>
-                    <p class="card-text">{% textSplit candidate.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</p>
+                    <div class="card-text">{% textSplit candidate.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</div>
                   <button id="sample_btn" class="btn btn-primary">Select</button>
                 </div>
               </div>
@@ -145,96 +145,7 @@
 {% endblock %}
 {% block script %}
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-<script>
-  feather.replace()
-  var header = document.getElementById("sample_cards");
-  var btns = header.getElementsByClassName("btn btn-primary");
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].addEventListener("click", function() {
-    var current = header.getElementsByClassName("btn-success");
-    var current_header = header.getElementsByClassName("card-header");
-    if(current[0] != undefined){
-      current[0].className = current[0].className.replace(" btn-success", " btn-primary");
-      current_header[0].className = current_header[0].className.replace("card-header positive-anchor-id", "card-header");
-    }
-
-    var parent = $(this).parent().parent();
-    
-    var current_header = parent.children(".card-header");
-    console.log(current_header)
-    current_header[0].className = current_header[0].className.replace("card-header", "card-header positive-anchor-id");
-    
-    this.className = this.className.replace("btn btn-primary", "btn btn-success");
-    var element = document.getElementById("anchor_submit");
-    element.classList.remove("disabled");
-    });
-  }
-  $('#anchor_submit').click(function() {   
-      var positive_anchor_id = document.getElementsByClassName("card-header positive-anchor-id")[0].innerText;
-      var anchor_id = document.getElementsByClassName("card-title anchor-id")[0].innerText;
-      var data = {anchor_id: anchor_id,positive_anchor_id:positive_anchor_id};
-      $.ajax({
-          data: data,
-          url: 'updateAnchor/',
-          method: 'POST',
-          success: function (data) {        
-              location.reload(true)
-          }
-      });
-  });
-  $('#anchor_next').click(function() {   
-      var anchor_id = document.getElementsByClassName("card-title anchor-id")[0].innerText;
-      var data = {anchor_id: anchor_id};
-      var txt;
-      var r = confirm("Are you sure to go next anchor and discarded this?");
-      if (r == true) {
-        $.ajax({
-          data: data,
-          url: 'nextAnchor/',
-          method: 'POST',
-          success: function (data) {        
-              location.reload(true)
-          }
-      });
-      } else {
-      } 
-      
-  });
-  coll()
-  function coll(){
-    var showChar = 250;
-    var ellipsestext = "...";
-    var moretext = "more";
-    var lesstext = "less";
-    $('.card-text').each(function () {
-        var content = $(this).html();
-        console.log($(this).children())
-        if (content.length > showChar) {
-
-            var c = content.substr(0, showChar);
-            var h = content.substr(showChar - 1, content.length - showChar);
-
-            var html = c + '<span class="moreelipses">' + ellipsestext + '</span>&nbsp;<span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="" class="morelink">' + moretext + '</a></span>';
-            console.log(html)
-            $(this).html(html);
-        }
-
-    });
-
-    $(".morelink").click(function () {
-        if ($(this).hasClass("less")) {
-            $(this).removeClass("less");
-            $(this).html(moretext);
-        } else {
-            $(this).addClass("less");
-            $(this).html(lesstext);
-        }
-        $(this).parent().prev().toggle();
-        $(this).prev().toggle();
-        return false;
-    });
-  };
-</script>
+<script src="{% static '/styles/js/home.js' %}"></script>
 {% endblock %}
 
   {% comment %} $('#anchor_submit').click(function() {    
