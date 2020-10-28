@@ -4,12 +4,12 @@ WORKDIR /app
 
 ADD . /app
 
-RUN apt-get update && \
-    # install sqlite3
-    apt-get install -y sqlite3 libsqlite3-dev && \
-    # run setup.py
-    pip install --upgrade pip && \
-    pip install --no-cache-dir . \
+RUN apt-get update
+# install sqlite3
+RUN apt-get install -y sqlite3 libsqlite3-dev
+# run setup.py
+RUN pip install --upgrade pip
+RUN pip install . --no-cache-dir 
 
 # run quesadiya to create projects folder
-RUN quesadiya inspect all    
+RUN quesadiya inspect all
