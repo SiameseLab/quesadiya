@@ -2,9 +2,9 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block link %}
-
+{% comment %} <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"> {% endcomment %}
 <link rel="stylesheet" href='/static/styles/css/dashboard.css'/>
-
+{% comment %} <link rel="stylesheet" href='/static/styles/css/card.css'/> {% endcomment %}
 {% endblock %}
 {% block title %}Home{% endblock %}
 
@@ -116,8 +116,11 @@
                   <h5 class="card-title anchor-id">{{ anchor_data.0.sample_id }}</h5>
                   {% comment %} <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> {% endcomment %}
                   <div class="card-text">{% textSplit anchor_data.0.sample_body as textSplits%}{% for ts in textSplits %}<p>{{ts}}</p>{% endfor %}</div>
-                  <button id="anchor_submit" class="card-link btn btn-success disabled" name="finish_btn">Submit</button>
-                  <button id="anchor_next" class="card-link btn btn-success" name="next_btn">Discard</button>
+
+                    <button id="anchor_submit" class=" btn btn-success disabled btn-pdd" name="finish_btn">Submit</button> 
+                    {% comment %} <div class="d-none d-sm-block d-md-none">asd<br></div> {% endcomment %}
+                    <button id="anchor_next" class=" btn btn-success btn-pdd" name="next_btn">Discard</button>
+                  
                 </div>
               </div>
             </div>

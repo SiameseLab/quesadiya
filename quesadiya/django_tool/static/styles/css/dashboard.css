@@ -121,6 +121,10 @@
     cursor: pointer;
 }
 
+.btn-pdd {
+    margin-top: 5px;
+}
+
 
 /* with connection.cursor() as cursor:
         cursor.execute(
