@@ -23,6 +23,7 @@ Quesadiya
 `Quesdadiya <https://siameselab.github.io/quesadiya/build/html/index.html>`__ is a data annotation project management platform where you can manage a
 project through `Command Line Interface (CLI) <https://siameselab.github.io/quesadiya/build/html/cli.html#cli>`__ and annotate data on
 `Web GUI <https://siameselab.github.io/quesadiya/build/html/collaborator.html#collaborator>`__ to generate a triplet data set for developing Siamese models.
+Let's say you have a section as anchor and an article (i.e. a group of sections) as candidate. With quesadiya, you can visually select a section in the candidate, which is the most similar to the anchor.
 
 .. image:: ../images/overall.gif
 
