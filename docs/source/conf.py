@@ -28,9 +28,9 @@ copyright = '2020, SiameseLab'
 author = 'SiameseLab'
 
 # The short X.Y version
-version = '0.3 (beta)'
+version = '1.0'
 # The full version, including alpha/beta/rc tags
-release = '0.3 (beta)'
+release = '1.0'
 
 
 # -- General configuration ---------------------------------------------------
