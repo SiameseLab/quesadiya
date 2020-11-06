@@ -27,6 +27,12 @@ project through `Command Line Interface (CLI) <https://siameselab.github.io/ques
    :align: center
    :alt: Demo
 
+ When to use?
+ ============
+
+ Let's say you have a section as anchor and an article (i.e. a group of sections)
+ as candidate. With quesadiya, you can visually select a section in the candidate,
+ which is the most similar to the anchor.
 
 Quickstart
 ==========
